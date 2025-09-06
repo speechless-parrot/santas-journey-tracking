@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Festive Quiz ❓</title>
+    <link rel="icon" type="image/png" href="../assets/santa-chimney-waving.png">
+    <link href="https://fonts.googleapis.com/css?family=Google+Sans:100,300,400,500,700,900,100i,300i,400i,500i,700i,900i" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,400,1,0">
+    <style>
+        :root {
+            --christmas-red: #d42426;
+            --christmas-green: #165b33;
+            --snow-white: #ffffff;
+            --gold: #ffd700;
+            --paper: #f8f9fa;
+            --text: #2c3e50;
+            --correct: #4caf50;
+            --wrong: #f44336;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Google Sans', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #fff5f5 0%, #f0f8ff 100%);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .top-bar {
+            background: linear-gradient(135deg, var(--christmas-red), var(--christmas-green));
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            z-index: 100;
+        }
+
+        .page-title {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 500;
+        }
+
+        .home-button {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .home-button:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.1);
+        }
+
+        .quiz-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 1rem;
+            flex-grow: 1;
+        }
+
+        .card {
+            background: white;
+            border-radius: 24px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            width: 100%;
+    min-width: 300px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            animation: slideIn 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--christmas-red), var(--gold), var(--christmas-green));
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .progress-bar {
+            background: rgba(255,255,255,0.5);
+            height: 8px;
+            border-radius: 4px;
+            margin: 1rem 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, var(--christmas-red), var(--christmas-green));
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .start-screen {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .start-screen h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--christmas-red), var(--christmas-green));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .tutorial {
+            max-width: 600px;
+            margin: 2rem auto;
+            text-align: left;
+        }
+
+        .tutorial h3 {
+            color: var(--christmas-red);
+            margin: 1.5rem 0 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .question {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--christmas-red);
+        }
+
+        .options {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .option {
+            background: var(--paper);
+            padding: 1rem;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .option:hover {
+            transform: translateX(8px);
+            background: #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .option.correct {
+            background: var(--correct);
+            color: white;
+        }
+
+        .option.wrong {
+            background: var(--wrong);
+            color: white;
+        }
+
+        .option.disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .badge {
+            background: linear-gradient(135deg, var(--christmas-red), var(--christmas-green));
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+        }
+
+        .game-button {
+            background: linear-gradient(135deg, var(--christmas-red), var(--christmas-green));
+            color: white;
+            border: none;
+            padding: 1.2rem 2.4rem;
+            border-radius: 16px;
+            font-size: 1.2rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .game-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #fff, #f8f9fa);
+            padding: 1.5rem;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--christmas-red);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin: 1.5rem 0;
+    background: linear-gradient(135deg, var(--christmas-red), var(--gold));
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    line-height: 1.2;
+}
+
+        @media (max-width: 600px) {
+            .quiz-container {
+                padding: 0.5rem;
+            }
+
+            .card {
+                padding: 1.5rem;
+            }
+
+            .option {
+                padding: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <audio id="bgMusic" loop>
+        <source src="../assets/music.mp3" type="audio/mp3">
+    </audio>
+    <div class="top-bar">
+        <h1 class="page-title">Festive Quiz ❓</h1>
+        <button class="home-button" onclick="window.location.href='../index.html'">
+            <span class="material-symbols-rounded">home</span>
+        </button>
+    </div>
+
+    <div class="quiz-container" id="quiz-content"></div>
+
+    <script>
+  const questions = [
+    {
+        question: "What was the original name of Santa's lead reindeer before Rudolph joined?",
+        options: ["Dasher", "Prancer", "Comet", "Donner"],
+        correct: "Dasher"
+    },
+    {
+        question: "In which modern-day country was Saint Nicholas born?",
+        options: ["Turkey", "Greece", "Italy", "Spain"],
+        correct: "Turkey"
+    },
+    {
+        question: "What Christmas decoration was originally made from strands of silver?",
+        options: ["Tinsel", "Baubles", "Star", "Wreath"],
+        correct: "Tinsel"
+    },
+    {
+        question: "Which country started the tradition of putting up Christmas trees?",
+        options: ["Germany", "USA", "England", "Norway"],
+        correct: "Germany"
+    },
+    {
+        question: "What was the first company to use Santa Claus in advertising?",
+        options: ["Coca-Cola", "Pepsi", "Ford", "Macy's"],
+        correct: "Coca-Cola"
+    },
+    {
+        question: "In Victorian England, what was Father Christmas traditionally dressed in?",
+        options: ["Green", "Red", "Blue", "Brown"],
+        correct: "Green"
+    },
+    {
+        question: "What's the best-selling Christmas song of all time?",
+        options: ["White Christmas", "Silent Night", "Jingle Bells", "Last Christmas"],
+        correct: "White Christmas"
+    },
+    {
+        question: "Which country introduced the custom of sending Christmas cards?",
+        options: ["England", "USA", "France", "Germany"],
+        correct: "England"
+    },
+    {
+        question: "What did the other reindeer not let Rudolph do because of his nose?",
+        options: ["Join in any reindeer games", "Eat with them", "Sleep in the stable", "Lead the sleigh"],
+        correct: "Join in any reindeer games"
+    },
+    {
+        question: "What's the traditional Christmas meal in Japan?",
+        options: ["KFC", "Turkey", "Ham", "Fish"],
+        correct: "KFC"
+    },
+    {
+        question: "How many ghosts visit Scrooge in 'A Christmas Carol'?",
+        options: ["Four", "Three", "Five", "Two"],
+        correct: "Four"
+    },
+    {
+        question: "What does Advent mean?",
+        options: ["Coming", "Waiting", "Celebration", "Holiday"],
+        correct: "Coming"
+    },
+    {
+        question: "Which Christmas plant is actually a parasitic plant?",
+        options: ["Mistletoe", "Holly", "Poinsettia", "Pine"],
+        correct: "Mistletoe"
+    },
+    {
+        question: "What was the first artificial Christmas tree made of?",
+        options: ["Goose Feathers", "Paper", "Plastic", "Metal"],
+        correct: "Goose Feathers"
+    },
+    {
+        question: "In which decade did Coca-Cola start using Santa in advertisements?",
+        options: ["1920s", "1930s", "1940s", "1950s"],
+        correct: "1920s"
+    },
+
+    // New Qs start here
+    {
+        question: "In the song 'The Twelve Days of Christmas,' what is given on the 7th day?",
+        options: ["Swans a-swimming", "Geese a-laying", "Lords a-leaping", "Maids a-milking"],
+        correct: "Swans a-swimming"
+    },
+    {
+        question: "What is Frosty the Snowman's nose made of?",
+        options: ["Button", "Carrot", "Coal", "Stone"],
+        correct: "Button"
+    },
+    {
+        question: "Which country is credited with the Yule log tradition?",
+        options: ["Norway", "France", "Germany", "Sweden"],
+        correct: "Norway"
+    },
+    {
+        question: "What popular Christmas beverage is also known as 'milk punch'?",
+        options: ["Eggnog", "Hot Chocolate", "Mulled Wine", "Cider"],
+        correct: "Eggnog"
+    },
+    {
+        question: "What does the word 'Noel' mean in French?",
+        options: ["Christmas", "Peace", "Joy", "Star"],
+        correct: "Christmas"
+    },
+    {
+        question: "In which city is the famous Rockefeller Center Christmas Tree displayed?",
+        options: ["New York", "Chicago", "Boston", "Philadelphia"],
+        correct: "New York"
+    },
+    {
+        question: "Which country is known for celebrating Christmas with a 'Witch' named Befana?",
+        options: ["Italy", "Spain", "France", "Poland"],
+        correct: "Italy"
+    },
+    {
+        question: "What gift did the little drummer boy give to baby Jesus?",
+        options: ["He played his drum", "A lamb", "Gold", "Bread"],
+        correct: "He played his drum"
+    },
+    {
+        question: "Which reindeer shares its name with a Valentine's Day symbol?",
+        options: ["Cupid", "Blitzen", "Dasher", "Vixen"],
+        correct: "Cupid"
+    },
+    {
+        question: "What do the red and green colors of Christmas symbolize?",
+        options: ["Blood and Life", "Love and Money", "Joy and Peace", "Fire and Nature"],
+        correct: "Blood and Life"
+    },
+    {
+        question: "Which Christmas movie has a character named Kevin McCallister?",
+        options: ["Home Alone", "Elf", "The Grinch", "Miracle on 34th Street"],
+        correct: "Home Alone"
+    },
+    {
+        question: "Which saint is known as the patron saint of children?",
+        options: ["Saint Nicholas", "Saint Peter", "Saint John", "Saint Francis"],
+        correct: "Saint Nicholas"
+    },
+    {
+        question: "What does Santa traditionally say?",
+        options: ["Ho Ho Ho!", "Merry Ho!", "Ha Ha Ha!", "Ho Merry Ho!"],
+        correct: "Ho Ho Ho!"
+    },
+    {
+        question: "What is the most popular Christmas ballet?",
+        options: ["The Nutcracker", "Swan Lake", "Sleeping Beauty", "Cinderella"],
+        correct: "The Nutcracker"
+    },
+    {
+        question: "In the song 'Jingle Bells,' how many horses pull the sleigh?",
+        options: ["One", "Two", "Four", "Six"],
+        correct: "One"
+    },
+    {
+        question: "What holiday plant has white berries?",
+        options: ["Mistletoe", "Holly", "Poinsettia", "Fir"],
+        correct: "Mistletoe"
+    },
+    {
+        question: "In which ocean is Christmas Island located?",
+        options: ["Indian Ocean", "Pacific Ocean", "Atlantic Ocean", "Arctic Ocean"],
+        correct: "Indian Ocean"
+    },
+    {
+        question: "Which British monarch delivered the first Christmas broadcast?",
+        options: ["King George V", "Queen Victoria", "King George VI", "Queen Elizabeth II"],
+        correct: "King George V"
+    },
+    {
+        question: "What year was 'How the Grinch Stole Christmas!' first published?",
+        options: ["1957", "1960", "1965", "1950"],
+        correct: "1957"
+    },
+    {
+        question: "In 'Elf,' what is the first rule of The Code of Elves?",
+        options: ["Treat every day like Christmas", "Eat candy daily", "Always believe in Santa", "Spread joy"],
+        correct: "Treat every day like Christmas"
+    },
+    {
+        question: "What carol includes the lyric 'Fa la la la la'?",
+        options: ["Deck the Halls", "Silent Night", "Joy to the World", "O Holy Night"],
+        correct: "Deck the Halls"
+    },
+    {
+        question: "What do kids in the Netherlands put out for Santa instead of stockings?",
+        options: ["Shoes", "Hats", "Gloves", "Bags"],
+        correct: "Shoes"
+    },
+    {
+        question: "Which Christmas dessert is made with dried fruit and traditionally set on fire?",
+        options: ["Christmas Pudding", "Fruitcake", "Panettone", "Stollen"],
+        correct: "Christmas Pudding"
+    },
+    {
+        question: "What beverage company created the modern image of Santa in red?",
+        options: ["Coca-Cola", "Pepsi", "Sprite", "Nestle"],
+        correct: "Coca-Cola"
+    },
+    {
+        question: "What snack is often left out for Santa in the USA?",
+        options: ["Cookies and Milk", "Pie", "Candy", "Cocoa"],
+        correct: "Cookies and Milk"
+    },
+    {
+        question: "What are the two other most popular names for Santa Claus?",
+        options: ["Kris Kringle and Saint Nick", "Father Frost and Papa Noel", "Old Man Winter and Jack Frost", "Santa Father and Noel"],
+        correct: "Kris Kringle and Saint Nick"
+    },
+    {
+        question: "What does 'X' in Xmas stand for?",
+        options: ["Christ", "Cross", "Snow", "Peace"],
+        correct: "Christ"
+    },
+    {
+        question: "In 'The Polar Express,' what is the first gift of Christmas?",
+        options: ["A Bell", "A Sleigh", "A Train Ticket", "A Star"],
+        correct: "A Bell"
+    },
+    {
+        question: "Which US state was the first to recognize Christmas as an official holiday?",
+        options: ["Alabama", "New York", "Virginia", "Massachusetts"],
+        correct: "Alabama"
+    },
+    {
+        question: "What does Santa give to naughty children?",
+        options: ["Coal", "Nothing", "Sticks", "Socks"],
+        correct: "Coal"
+    },
+    {
+        question: "Which country calls Santa 'Père Noël'?",
+        options: ["France", "Belgium", "Switzerland", "Canada"],
+        correct: "France"
+    },
+    {
+        question: "What guided the Three Wise Men to baby Jesus?",
+        options: ["A Star", "An Angel", "A Drum", "A Shepherd"],
+        correct: "A Star"
+    },
+    {
+        question: "What color are traditional Christmas berries?",
+        options: ["Red", "Blue", "White", "Yellow"],
+        correct: "Red"
+    },
+    {
+        question: "What type of calendar counts down to Christmas?",
+        options: ["Advent Calendar", "Holiday Calendar", "Countdown Chart", "Winter Calendar"],
+        correct: "Advent Calendar"
+    },
+    {
+        question: "In 'A Charlie Brown Christmas,' what color is the lone ornament that bends the tree?",
+        options: ["Red", "Gold", "Silver", "Blue"],
+        correct: "Red"
+    },
+    {
+        question: "In Iceland, children are visited by 13 mischievous creatures. What are they called?",
+        options: ["Yule Lads", "Snow Trolls", "Ice Elves", "Winter Giants"],
+        correct: "Yule Lads"
+    },
+    {
+        question: "What is Santa’s workshop said to be filled with?",
+        options: ["Elves", "Fairies", "Robots", "Snowmen"],
+        correct: "Elves"
+    },
+    {
+        question: "Which Christmas song was the first to be broadcast from space?",
+        options: ["Jingle Bells", "Silent Night", "Deck the Halls", "O Holy Night"],
+        correct: "Jingle Bells"
+    },
+    {
+        question: "What animal pulls Santa’s sleigh in Australia instead of reindeer?",
+        options: ["Kangaroos", "Emus", "Horses", "Dogs"],
+        correct: "Kangaroos"
+    },
+    {
+        question: "What type of pie is typically left for Santa in Britain?",
+        options: ["Mince Pie", "Apple Pie", "Pumpkin Pie", "Cherry Pie"],
+        correct: "Mince Pie"
+    },
+    {
+        question: "What popular Christmas story begins with 'Marley was dead, to begin with'?",
+        options: ["A Christmas Carol", "The Grinch", "The Nutcracker", "The Little Match Girl"],
+        correct: "A Christmas Carol"
+    },
+    {
+        question: "In 'The Night Before Christmas,' visions of what danced in children's heads?",
+        options: ["Sugarplums", "Candy Canes", "Stars", "Reindeer"],
+        correct: "Sugarplums"
+    },
+    {
+        question: "What do Germans hide inside Christmas trees?",
+        options: ["A Pickle Ornament", "Candy", "Coins", "Bells"],
+        correct: "A Pickle Ornament"
+    },
+    {
+        question: "Which U.S. President banned Christmas trees in the White House?",
+        options: ["Theodore Roosevelt", "Abraham Lincoln", "John Adams", "Ulysses S. Grant"],
+        correct: "Theodore Roosevelt"
+    },
+    {
+        question: "Which reindeer is known as 'the red-nosed reindeer'?",
+        options: ["Rudolph", "Dasher", "Blitzen", "Vixen"],
+        correct: "Rudolph"
+    },
+    {
+        question: "In Spain, what do people eat at midnight on New Year’s Eve?",
+        options: ["12 Grapes", "Cake", "Oranges", "Chocolate"],
+        correct: "12 Grapes"
+    },
+    {
+        question: "What famous Christmas ballet was composed by Tchaikovsky?",
+        options: ["The Nutcracker", "Swan Lake", "Sleeping Beauty", "Coppélia"],
+        correct: "The Nutcracker"
+    },
+    {
+        question: "Which U.S. state is the leading producer of Christmas trees?",
+        options: ["Oregon", "North Carolina", "Wisconsin", "Michigan"],
+        correct: "Oregon"
+    },
+    {
+        question: "What color are mistletoe berries?",
+        options: ["White", "Red", "Green", "Purple"],
+        correct: "White"
+    },
+    {
+        question: "In 'Home Alone 2,' which city does Kevin end up in?",
+        options: ["New York", "Chicago", "Los Angeles", "Miami"],
+        correct: "New York"
+    },
+    {
+        question: "What gift did the Wise Men NOT bring?",
+        options: ["Silver", "Gold", "Frankincense", "Myrrh"],
+        correct: "Silver"
+    },
+    {
+        question: "What is another name for a Christmas log cake?",
+        options: ["Bûche de Noël", "Panettone", "Stollen", "Fruitcake"],
+        correct: "Bûche de Noël"
+    },
+    {
+        question: "What is traditionally hidden in a Christmas pudding?",
+        options: ["A Coin", "A Ring", "A Button", "A Candy"],
+        correct: "A Coin"
+    },
+    {
+        question: "What animal is often seen in nativity scenes?",
+        options: ["Donkey", "Tiger", "Elephant", "Camel"],
+        correct: "Donkey"
+    },
+    {
+        question: "Which U.S. city hosts the largest Christmas parade?",
+        options: ["Chicago", "New York", "Los Angeles", "Philadelphia"],
+        correct: "Chicago"
+    },
+    {
+        question: "Which Christmas carol was the first song ever played on the radio?",
+        options: ["O Holy Night", "Silent Night", "Joy to the World", "Hark! The Herald Angels Sing"],
+        correct: "O Holy Night"
+    },
+    {
+        question: "What do Italians traditionally eat on Christmas Eve?",
+        options: ["Fish", "Pasta", "Turkey", "Lamb"],
+        correct: "Fish"
+    },
+    {
+        question: "Which European city is famous for its Christmas markets?",
+        options: ["Vienna", "Paris", "London", "Rome"],
+        correct: "Vienna"
+    },
+    {
+        question: "What animal carried Mary to Bethlehem in many depictions?",
+        options: ["Donkey", "Horse", "Camel", "Ox"],
+        correct: "Donkey"
+    },
+    {
+        question: "What Christmas carol mentions a 'partridge in a pear tree'?",
+        options: ["The Twelve Days of Christmas", "Deck the Halls", "Joy to the World", "We Wish You a Merry Christmas"],
+        correct: "The Twelve Days of Christmas"
+    },
+    {
+        question: "Which famous scientist was born on Christmas Day?",
+        options: ["Isaac Newton", "Albert Einstein", "Galileo Galilei", "Nikola Tesla"],
+        correct: "Isaac Newton"
+    },
+    {
+        question: "What’s the Grinch’s dog’s name?",
+        options: ["Max", "Buddy", "Charlie", "Jack"],
+        correct: "Max"
+    },
+    {
+        question: "Which carol includes 'sleep in heavenly peace'?",
+        options: ["Silent Night", "O Holy Night", "Joy to the World", "Away in a Manger"],
+        correct: "Silent Night"
+    },
+    {
+        question: "What traditional drink is made of mulled wine?",
+        options: ["Glühwein", "Cider", "Punch", "Eggnog"],
+        correct: "Glühwein"
+    },
+    {
+        question: "What Christmas symbol is also called 'Poinsettia'?",
+        options: ["Christmas Star", "Christmas Rose", "Christmas Tree", "Christmas Bell"],
+        correct: "Christmas Star"
+    },
+    {
+        question: "Which U.S. president first decorated the White House Christmas tree?",
+        options: ["Franklin Pierce", "Theodore Roosevelt", "Abraham Lincoln", "Ulysses S. Grant"],
+        correct: "Franklin Pierce"
+    },
+    {
+        question: "What animal represents Christmas in Finland?",
+        options: ["Goat", "Reindeer", "Bear", "Moose"],
+        correct: "Goat"
+    },
+    {
+        question: "What’s the traditional flower of Christmas?",
+        options: ["Poinsettia", "Rose", "Lily", "Tulip"],
+        correct: "Poinsettia"
+    }
+];
+
+
+        class Quiz {
+    constructor() {
+        this.totalQuestions = 8;
+        this.currentQuestion = 0;
+        this.score = 0;
+        this.startTime = Date.now();
+        this.selectedQuestions = this.selectRandomQuestions();
+        this.showStartScreen();
+    }
+
+    selectRandomQuestions() {
+        return this.shuffleArray([...questions]).slice(0, this.totalQuestions);
+    }
+
+    shuffleArray(array) {
+        return array.sort(() => Math.random() - 0.5);
+    }
+
+    showStartScreen() {
+        const content = document.getElementById('quiz-content');
+        content.innerHTML = `
+            <div class="card start-screen">
+                <h1>Christmas Quiz Challenge! 🎄</h1>
+                <p>Test your holiday knowledge with our tricky Christmas quiz!</p>
+                
+                <div class="tutorial">
+                    <h3><span class="material-symbols-rounded">school</span>Your Challenge</h3>
+                    <p>Answer ${this.totalQuestions} challenging questions about Christmas traditions, history, and fun facts!</p>
+                    
+                    <h3><span class="material-symbols-rounded">psychology</span>Remember</h3>
+                    <p>• Each question has only one correct answer</p>
+                    <p>• Questions get randomized each time</p>
+                    <p>• You can't change your answer once selected</p>
+                    
+                    <h3><span class="material-symbols-rounded">warning</span>Scoring</h3>
+                    <p>• Every correct answer counts!</p>
+                    <p>• Try to beat your best time</p>
+                    <p>• Aim for a perfect score</p>
+
+                    <div class="badge">Ready to test your Christmas knowledge?</div>
+                </div>
+                <br>
+                <button class="game-button" onclick="quiz.startQuiz()">
+                    <span class="material-symbols-rounded">play_arrow</span>
+                    Start Quiz
+                </button>
+            </div>
+        `;
+    }
+
+    startQuiz() {
+        this.renderQuestion();
+    }
+
+    renderQuestion() {
+        const question = this.selectedQuestions[this.currentQuestion];
+        const progress = (this.currentQuestion / this.totalQuestions) * 100;
+        const shuffledOptions = this.shuffleArray([...question.options]);
+        
+        const content = document.getElementById('quiz-content');
+        content.innerHTML = `
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: ${progress}%"></div>
+            </div>
+            <div class="card">
+                <div class="question">${this.currentQuestion + 1}. ${question.question}</div>
+                <div class="options">
+                    ${shuffledOptions.map(option => `
+                        <div class="option" onclick="quiz.checkAnswer('${option}')">
+                            <span class="material-symbols-rounded">radio_button_unchecked</span>
+                            ${option}
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+    }
+
+    checkAnswer(selected) {
+    const question = this.selectedQuestions[this.currentQuestion];
+    const options = document.querySelectorAll('.option');
+    options.forEach(option => {
+        option.classList.add('disabled');
+        const optionText = option.textContent.trim();
+        if (optionText === question.correct) {
+            option.classList.add('correct');
+            option.querySelector('.material-symbols-rounded').textContent = 'check_circle';
+        } else if (optionText === selected && selected !== question.correct) {
+            option.classList.add('wrong');
+            option.querySelector('.material-symbols-rounded').textContent = 'cancel';
+        }
+    });
+
+    if (selected === question.correct) this.score++;
+
+    // Remove the setTimeout and just call the next steps directly!
+    this.currentQuestion++;
+    if (this.currentQuestion < this.totalQuestions) {
+        this.renderQuestion();
+    } else {
+        this.showResults();
+    }
+}
+
+    showResults() {
+        const timeSpent = Math.floor((Date.now() - this.startTime) / 1000);
+        const percentage = (this.score / this.totalQuestions) * 100;
+        const passed = percentage >= 75;
+
+        // Fun Christmas titles based on score
+        const getChristmasTitle = () => {
+            if (percentage === 100) return "Santa's Top Helper";
+            if (percentage >= 90) return "Christmas Expert";
+            if (percentage >= 75) return "Holiday Pro";
+            if (percentage >= 60) return "Christmas Enthusiast";
+            return "Holiday Learner";
+        };
+
+        const content = document.getElementById('quiz-content');
+        content.innerHTML = `
+            <div class="card results">
+                <h2>${passed ? 'Ho Ho Ho! Well Done!' : 'Keep the Christmas Spirit Going!'}</h2>
+                <div class="stat-title">${getChristmasTitle()}</div>
+                
+                <div class="stats">
+                    <div class="stat-card">
+                        <div class="stat-value">${this.score}/${this.totalQuestions}</div>
+                        <div>Correct Answers</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${Math.round(percentage)}%</div>
+                        <div>Score</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${timeSpent}s</div>
+                        <div>Time Spent</div>
+                    </div>
+                </div>
+
+                <p>${passed ? 
+                    'Amazing job! You really know your Christmas facts! 🎅' : 
+                    'The magic of Christmas has more secrets to share! Try again! 🎄'}</p>
+                <br>
+                <button class="game-button" onclick="startQuiz()">
+                    <span class="material-symbols-rounded">replay</span>
+                    Try Again
+                </button>
+            </div>
+        `;
+    }
+}
+
+let quiz;
+function startQuiz() {
+    quiz = new Quiz();
+}
+
+startQuiz();
+        // Background music handling
+        document.addEventListener('DOMContentLoaded', function() {
+    const bgMusic = document.getElementById('bgMusic');
+    
+    // Try to play automatically
+    bgMusic.play().catch(function(error) {
+        console.log("Autoplay prevented, waiting for user interaction");
+    });
+
+    // Add click listener to document to start music on first interaction
+    document.addEventListener('click', function startMusic() {
+        bgMusic.play().then(function() {
+            // Remove the click listener once music starts
+            document.removeEventListener('click', startMusic);
+        }).catch(function(error) {
+            console.log("Playback failed:", error);
+        });
+    }, { once: true });
+
+    // Keep trying to play music when tab becomes visible
+    document.addEventListener('visibilitychange', function() {
+        if (!document.hidden) {
+            bgMusic.play().catch(function(error) {
+                console.log("Playback failed on visibility change");
+            });
+        }
+    });
+});
+    </script>
+</body>
+</html>

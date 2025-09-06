@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Santa's Magical Helpers ✨</title>
+    <link rel="icon" type="image/png" href="../assets/santa-chimney-waving.png">
+    <link href="https://fonts.googleapis.com/css?family=Google+Sans:100,300,400,500,700,900,100i,300i,400i,500i,700i,900i" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,400,1,0">
+    <style>
+        :root {
+            --christmas-red: #d42426;
+            --christmas-green: #165b33;
+            --snow-white: #ffffff;
+            --gold: #ffd700;
+            --paper: #f8f9fa;
+            --text: #2c3e50;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Google Sans', sans-serif;
+        }
+
+        body {
+            background-color: var(--paper);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .top-bar {
+            background: linear-gradient(135deg, var(--christmas-red), var(--christmas-green));
+            padding: 1rem;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .page-title {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 500;
+        }
+
+        .home-button {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .home-button:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.1);
+        }
+
+        .content {
+            max-width: 800px;
+            margin: 80px auto 40px;
+            padding: 2rem;
+        }
+
+        .story-card {
+            background: white;
+            border-radius: 24px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .story-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--christmas-red), var(--gold), var(--christmas-green));
+        }
+
+        .story-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--christmas-red);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .highlight {
+            color: var(--christmas-green);
+            font-weight: 500;
+        }
+
+        ul {
+            list-style: none;
+            padding-left: 1.5rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+            position: relative;
+        }
+
+        li::before {
+            content: "✨";
+            position: absolute;
+            left: -1.5rem;
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .team-member {
+            background: linear-gradient(135deg, #fff, var(--paper));
+            padding: 1.5rem;
+            border-radius: 16px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .team-member .material-symbols-rounded {
+            font-size: 32px;
+            color: var(--christmas-red);
+        }
+
+        .fun-fact {
+            background: linear-gradient(135deg, #fff5f5, #f0f8ff);
+            padding: 1rem;
+            border-radius: 12px;
+            margin-top: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .fun-fact .material-symbols-rounded {
+            color: var(--gold);
+        }
+
+        .machine-card {
+            background: var(--paper);
+            padding: 1rem;
+            border-radius: 12px;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .machine-card .material-symbols-rounded {
+            color: var(--christmas-red);
+            font-size: 24px;
+        }
+
+        @media (max-width: 600px) {
+            .content {
+                padding: 1rem;
+            }
+
+            .story-card {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <h1 class="page-title">Santa's Magical Helpers 🧝‍♂️</h1>
+        <button class="home-button" onclick="window.location.href='../index.html'">
+            <span class="material-symbols-rounded">home</span>
+        </button>
+    </div>
+
+    <div class="content">
+        <div class="story-card">
+            <div class="section-title">
+                <span class="material-symbols-rounded">group</span>
+                The Elves: Santa's MVPs
+            </div>
+            <ul>
+                <li><span class="highlight">Toy Makers</span> craft everything from plush dragons to flying robots! 🧸</li>
+                <li><span class="highlight">Gift Wrappers</span> create tiny works of art with sparkly paper and ribbons 🎁</li>
+                <li><span class="highlight">Magic Team</span> infuses each gift with pure Christmas joy ✨</li>
+                <li><span class="highlight">Quality Control</span> ensures every toy is perfect and safe 🔍</li>
+            </ul>
+            <div class="fun-fact">
+                <span class="material-symbols-rounded">tips_and_updates</span>
+                <span>Elves love candy cane dodgeball and snowball battles between shifts! 🍬❄️</span>
+            </div>
+        </div>
+
+        <div class="story-card">
+            <div class="section-title">
+                <span class="material-symbols-rounded">pets</span>
+                The Reindeer Squad
+            </div>
+            <div class="team-grid">
+                <div class="team-member">
+                    <span class="material-symbols-rounded">light</span>
+                    <strong>Rudolph</strong>
+                    <span>Lead Navigator 🔴</span>
+                </div>
+                <div class="team-member">
+                    <span class="material-symbols-rounded">speed</span>
+                    <strong>Dasher</strong>
+                    <span>Speed Master ⚡</span>
+                </div>
+                <div class="team-member">
+                    <span class="material-symbols-rounded">visibility_off</span>
+                    <strong>Dancer</strong>
+                    <span>Stealth Expert 👀</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="story-card">
+            <div class="section-title">
+                <span class="material-symbols-rounded">precision_manufacturing</span>
+                Magical Machine Masters
+            </div>
+            <div class="machine-card">
+                <span class="material-symbols-rounded">toys</span>
+                <div>
+                    <strong>Toy-O-Matic</strong>
+                    <p>Lightning-fast toy production! 🏎️</p>
+                </div>
+            </div>
+            <div class="machine-card">
+                <span class="material-symbols-rounded">featured_seasonal_and_gifts</span>
+                <div>
+                    <strong>Wrap-O-Matic</strong>
+                    <p>Perfect wrapping every time! 🎁</p>
+                </div>
+            </div>
+            <div class="machine-card">
+                <span class="material-symbols-rounded">fact_check</span>
+                <div>
+                    <strong>List Checker</strong>
+                    <p>Nice List verification system 📝</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="story-card">
+            <div class="section-title">
+                <span class="material-symbols-rounded">groups_3</span>
+                Special Ops Teams
+            </div>
+            <ul>
+                <li><span class="highlight">Weather Wizards</span> control perfect flying conditions ⛈️</li>
+                <li><span class="highlight">Gift Teleportation Team</span> handles mid-flight resupply 🌌</li>
+                <li><span class="highlight">Chimney Fit Squad</span> tests sleigh shape-shifting 🏠</li>
+                <li><span class="highlight">Elf Magic Mentors</span> train new elves in Christmas magic 📚</li>
+            </ul>
+        </div>
+
+        <div class="story-card">
+            <div class="section-title">
+                <span class="material-symbols-rounded">celebration</span>
+                Behind-the-Scenes Fun
+            </div>
+            <div class="team-grid">
+                <div class="team-member">
+                    <span class="material-symbols-rounded">cookie</span>
+                    <strong>Candy Labs</strong>
+                    <span>Magical treats 🍬</span>
+                </div>
+                <div class="team-member">
+                    <span class="material-symbols-rounded">ac_unit</span>
+                    <strong>Snow Fields</strong>
+                    <span>Games & races ❄️</span>
+                </div>
+                <div class="team-member">
+                    <span class="material-symbols-rounded">music_note</span>
+                    <strong>Elf Choir</strong>
+                    <span>Magic songs 🎶</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="story-card">
+            <div class="section-title">
+                <span class="material-symbols-rounded">stars</span>
+                The Magic Never Stops
+            </div>
+            <p>
+                From elves and reindeer to magical machines and special teams, 
+                <span class="highlight">hundreds of magical beings work year-round</span> to make every Christmas morning 
+                absolutely perfect! That's the real magic of Santa's helpers! 🎄✨
+            </p>
+        </div>
+    </div>
+</body>
+</html>

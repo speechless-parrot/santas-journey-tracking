@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ - Santa's Journey Tracking ❓</title>
+    <link rel="icon" type="image/png" href="../assets/santa-chimney-waving.png">
+    <link href="https://fonts.googleapis.com/css?family=Google+Sans:100,300,400,500,700,900,100i,300i,400i,500i,700i,900i" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,400,1,0">
+    <style>
+        :root {
+            --christmas-red: #d42426;
+            --christmas-green: #165b33;
+            --snow-white: #ffffff;
+            --gold: #ffd700;
+            --paper: #f8f9fa;
+            --text: #2c3e50;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Google Sans', sans-serif;
+        }
+
+        body {
+            background-color: var(--paper);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .top-bar {
+            background: linear-gradient(135deg, var(--christmas-red), var(--christmas-green));
+            padding: 1rem;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .page-title {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 500;
+        }
+
+        .home-button {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .home-button:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.1);
+        }
+
+        .content {
+            max-width: 800px;
+            margin: 80px auto 40px;
+            padding: 2rem;
+        }
+
+        .intro-text {
+            background: white;
+            border-radius: 24px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .section-card {
+            background: white;
+            border-radius: 24px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--christmas-red);
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--paper);
+        }
+
+        .faq-item {
+            margin-bottom: 1.5rem;
+        }
+
+        .faq-question {
+            display: flex;
+            align-items: start;
+            gap: 0.5rem;
+            color: var(--christmas-green);
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+
+        .faq-question:hover {
+            background-color: var(--paper);
+        }
+
+        .faq-question .material-symbols-rounded {
+            font-size: 1.4rem;
+            flex-shrink: 0;
+            margin-top: 0.2rem;
+        }
+
+        .faq-answer {
+            padding-left: 2.4rem;
+            color: var(--text);
+        }
+
+        .highlight {
+            color: var(--christmas-red);
+            font-weight: 500;
+        }
+
+        .quick-links {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 2rem 0;
+        }
+
+        .quick-link {
+            background: white;
+            color: var(--christmas-green);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .quick-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            background: var(--christmas-green);
+            color: white;
+        }
+
+        @media (max-width: 600px) {
+            .content {
+                padding: 1rem;
+            }
+
+            .section-card {
+                padding: 1.5rem;
+            }
+
+            .quick-links {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .quick-link {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <h1 class="page-title">Frequently Asked Questions ❓</h1>
+        <button class="home-button" onclick="window.location.href='index.html'">
+            <span class="material-symbols-rounded">home</span>
+        </button>
+    </div>
+
+    <div class="content">
+        <div class="intro-text">
+            <h2>Welcome to Santa's FAQ Center! 🎅✨</h2>
+            <p>Find answers to all your questions about Santa's Journey, Christmas traditions, and holiday magic!</p>
+            
+            <div class="quick-links">
+                <a href="#tracker" class="quick-link">
+                    <span class="material-symbols-rounded">track_changes</span>
+                    Tracker Questions
+                </a>
+                <a href="#santa" class="quick-link">
+                    <span class="material-symbols-rounded">magic_button</span>
+                    About Santa
+                </a>
+                <a href="#christmas" class="quick-link">
+                    <span class="material-symbols-rounded">celebration</span>
+                    Christmas Magic
+                </a>
+            </div>
+        </div>
+
+<!-- Santa Tracker FAQs -->
+<div id="tracker" class="section-card">
+    <div class="section-title">
+        <span class="material-symbols-rounded">map</span>
+        Santa Tracker FAQs
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question">
+            <span class="material-symbols-rounded">schedule</span>
+            When does the Santa Tracker start?
+        </div>
+        <div class="faq-answer">
+            The tracker officially goes live every <span class="highlight">December 24th</span>! Santa begins his final preparations at <span class="highlight">8:30 AM UTC</span>, which is when we start pre-tracking—you'll see little hints of Santa getting ready in the North Pole, reindeer stretching, and elves bustling around. He officially takes off <span class="highlight">1 hour and 30 minutes later</span>, kicking off his magical journey around the world. Santa completes his route and returns home to the North Pole at <span class="highlight">11:00 AM UTC</span>.
+            <ul>
+                <li>🇺🇸 New York, USA: 3:30 AM EST (pre-tracking begins)</li>
+                <li>🇬🇧 London, UK: 8:30 AM GMT</li>
+                <li>🇦🇺 Sydney, Australia: 7:30 PM AEDT</li>
+                <li>🇯🇵 Tokyo, Japan: 5:30 PM JST</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question">
+            <span class="material-symbols-rounded">home</span>
+            When will Santa arrive at my home?
+        </div>
+        <div class="faq-answer">
+            Santa usually delivers gifts <span class="highlight">close to midnight local time</span> to make sure all the presents arrive just in time for Christmas morning magic. The tracker provides an <span class="highlight">estimated arrival time</span> based on your location, so you can see when he's nearby. If you don't see your local ETA, check that your location permissions are enabled in your browser. This helps the tracker calculate the closest stop to your home for a more accurate estimate. Remember, Santa's journey is magical and fast, so the tracker gives you a really good idea, but he might appear slightly earlier or later depending on weather, reindeer speed, and other North Pole factors!
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question">
+            <span class="material-symbols-rounded">public</span>
+            What is the first and last place Santa visits?
+        </div>
+        <div class="faq-answer">
+            Santa kicks off his journey with his first stop in <span class="highlight">Provideniya, Russia</span>, shortly after takeoff. From there, he zooms across the globe, hitting millions of homes in dozens of countries. His <span class="highlight">final delivery stop</span> is the <span class="highlight">islands of Hawaii</span>, about 25 hours later, before returning to the North Pole. This route ensures that kids everywhere experience the magic of Christmas in order of time zones. The tracker lets you follow along in real-time and watch Santa's progress across continents—it's literally like flying with him!
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question">
+            <span class="material-symbols-rounded">satellite_alt</span>
+            How do you track Santa?
+        </div>
+        <div class="faq-answer">
+            We use a combination of <span class="highlight">real-time satellite imagery</span> and advanced magical North Pole tech to pinpoint Santa's location with incredible accuracy. Think of it like mixing top-secret elf radar with a sprinkle of festive magic—Santa's sleigh and reindeer movements are calculated in real-time, so you can watch him zoom across the globe with precision. The tracker automatically updates every second, so there's no refreshing needed—you'll always know exactly where he is on his journey!
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question">
+            <span class="material-symbols-rounded">track_changes</span>
+            How is this tracker different from Google's and NORAD's?
+        </div>
+        <div class="faq-answer">
+            Each tracker has its own unique style:
+            <ul>
+                <li><span class="highlight">NORAD Tracks Santa</span> comes from a real military command center, giving it a rich history and official tracking background.</li>
+                <li><span class="highlight">Google's Santa Tracker</span> is known for its colorful games, videos, and fun interactive content.</li>
+                <li><span class="highlight">Our Santa Tracker</span> focuses on a cozy, interactive North Pole village experience, with original games, North Pole news, and a fan-made festive journey for people who love Christmas.</li>
+            </ul>
+            Because of differences in tracking methods, each tracker may show Santa in slightly different locations. We pride ourselves on accuracy, but the slight differences just show the magic of Santa's speed and how creative tracking can be! We are <span class="highlight">not affiliated</span> with NORAD, the US military, or Google—we just share their love for spreading holiday cheer.
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question">
+            <span class="material-symbols-rounded">location_city</span>
+            Why did Santa skip my city?
+        </div>
+        <div class="faq-answer">
+            Santa's route is carefully planned, but it's impossible to visit <span class="highlight">every single city on Earth</span>. Some larger cities are skipped if nearby areas are already being covered, while smaller or more remote towns are included to ensure the Christmas spirit reaches everyone. Even if Santa doesn't land directly in your city, he still passes by and delivers gifts to homes nearby! Think of it as Santa prioritizing the smoothest and fastest route for all the reindeer to get home safely.
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question">
+            <span class="material-symbols-rounded">fullscreen</span>
+            Can I make the tracker fullscreen?
+        </div>
+        <div class="faq-answer">
+            Absolutely! There's a <span class="highlight">built-in fullscreen button</span> in the tracker for the cleanest experience. Click it once to expand the tracker, and again to exit fullscreen mode. You can also use your browser's native fullscreen option (F11 on most browsers), but sometimes tabs or other browser elements can still appear, so we recommend using the built-in tracker button. This way, you can see Santa zooming across the globe without distractions, like you're on the sleigh with him!
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question">
+            <span class="material-symbols-rounded">timer</span>
+            How accurate is the ETA?
+        </div>
+        <div class="faq-answer">
+            The ETA is based on the <span class="highlight">closest Santa stop to your location</span>, so it's really reliable. While Santa is magical and super fast, the tracker gives a <span class="highlight">practical estimate</span> of when he'll pass by your area. This allows you to plan your cookie setup, stocking placements, and last-minute festive surprises. It's almost like having your own personal North Pole assistant guiding you through the night!
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question">
+            <span class="material-symbols-rounded">done_all</span>
+            What happens after tracking is complete?
+        </div>
+        <div class="faq-answer">
+            Once Santa finishes his deliveries, the tracker closes for the year. But don't worry! You can <span class="highlight">still access the games and activities</span> for the rest of December. When the new year begins, day-specific activities will lock again until next December, and the homepage countdown will reset so we can <span class="highlight">prepare for next year's magical journey</span>. Essentially, the tracker transforms back into a cozy holiday hub until Santa's next flight!
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question">
+            <span class="material-symbols-rounded">calendar_month</span>
+            Can I track Santa before Christmas Eve?
+        </div>
+        <div class="faq-answer">
+            Nope! Santa doesn't start his journey until Dec 24th. But you can explore all the <span class="highlight">interactive games, activities, and North Pole content</span> beforehand to get ready for the big night. Think of it as an <span class="highlight">elf-training camp</span> before the main event!
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question">
+            <span class="material-symbols-rounded">devices</span>
+            Can I track Santa on multiple devices?
+        </div>
+        <div class="faq-answer">
+            Yes! The tracker works on any device with an internet connection—phone, tablet, or computer. Just open the tracker in your browser and follow Santa's journey from wherever you are. This is perfect for families who want to track together or for friends in different locations!
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question">
+            <span class="material-symbols-rounded">monitoring</span>
+            Can I see how many presents Santa has delivered so far?
+        </div>
+        <div class="faq-answer">
+            Totally! The tracker displays <span class="highlight">live stats</span> showing the total presents delivered, distance traveled, and more. You can watch as the numbers climb while Santa zips around the world—it's addictive, magical, and super satisfying to see the progress in real-time!
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question">
+            <span class="material-symbols-rounded">child_care</span>
+            Are the tracker and games suitable for kids?
+        </div>
+        <div class="faq-answer">
+            Absolutely! Everything is <span class="highlight">family-friendly and safe</span> for all ages. The tracker's interface is intuitive, fun, and designed to bring the <span class="highlight">magic of Christmas</span> to children and adults alike. Parents can even follow along for extra festive fun!
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question">
+            <span class="material-symbols-rounded">security</span>
+            Does the tracker use my personal information?
+        </div>
+        <div class="faq-answer">
+            Nope! Your privacy is completely protected. We <span class="highlight">do not collect, store, or share</span> personal data. There are <span class="highlight">no cookies or trackers</span>, and letters sent through the North Pole Post Office go <span class="highlight">directly to Santa</span>, not through our servers. You can enjoy the magic worry-free!
+        </div>
+    </div>
+</div>
+
+<!-- Santa FAQs -->
+<div id="santa" class="section-card">
+    <div class="section-title">
+        <span class="material-symbols-rounded">person</span>
+        About Santa
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question">
+            <span class="material-symbols-rounded">auto_awesome</span>
+            Is Santa real?
+        </div>
+        <div class="faq-answer">
+            Yes… in the most magical and joyful sense! Santa Claus is the embodiment of the Christmas spirit: generosity, kindness, and joy. For centuries, he's inspired children and adults alike to believe in magic, celebrate giving, and spread holiday cheer. While some think of him as a legendary figure, the magic of Santa is <span class="highlight">very real</span>—you can see it in the twinkle in children's eyes, the joy of giving gifts, and the excitement that fills homes on Christmas Eve! ✨🎄
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question">
+            <span class="material-symbols-rounded">cake</span>
+            How old is Santa?
+        </div>
+        <div class="faq-answer">
+            Santa Claus is <span class="highlight">very, very old</span>—older than most records can even measure! He's said to have been delivering gifts for centuries, evolving from historical figures like Saint Nicholas, Sinterklaas, and Father Christmas. His age is a secret, but let's just say he has enough experience to be the <span class="highlight">ultimate gift-delivery expert</span> 🎁🧝‍♂️💫. He never seems to age, which is part of his magic!
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question">
+            <span class="material-symbols-rounded">home</span>
+            Where does Santa live?
+        </div>
+        <div class="faq-answer">
+            Santa's home base is the <span class="highlight">North Pole</span>, a snowy, cozy village bustling with elves, reindeer, and festive magic. Think of it as a combination of a workshop, a research lab for toy innovation, and a winter wonderland. There are candy cane lampposts, magical snow that never melts, and a secret flight deck where Santa preps the sleigh for its annual journey. Visitors are rare, but elves ensure everything runs smoothly year-round ❄️🛷✨.
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question">
+            <span class="material-symbols-rounded">groups</span>
+            Does Santa have helpers?
+        </div>
+        <div class="faq-answer">
+            Absolutely! Santa has a <span class="highlight">team of elves</span>, each specializing in different tasks: toy making, wrapping, sleigh maintenance, reindeer care, letter sorting, and magical operations. There are also magical reindeer who help pull the sleigh, each with unique skills (yes, Rudolph's nose really guides the way!). Santa and his helpers work year-round to make Christmas possible for children around the world 🌟🎁🦌.
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question">
+            <span class="material-symbols-rounded">rocket_launch</span>
+            How does Santa travel around the world in just 25 hours?
+        </div>
+        <div class="faq-answer">
+            Santa's sleigh is powered by <span class="highlight">magic, advanced North Pole tech, and extremely fast reindeer</span>! He uses precise time-zone planning and stops briefly in key cities to ensure he delivers all gifts efficiently. Magical portals, time dilation tricks, and a little elf-engineered tech allow him to zip across continents in record time, so no child is left waiting for their gifts 🛷🌍✨.
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question">
+            <span class="material-symbols-rounded">cookie</span>
+            Should I leave anything for Santa?
+        </div>
+        <div class="faq-answer">
+            YES! Traditionally, kids leave <span class="highlight">cookies and milk</span>, or treats that Santa enjoys. You can also leave carrots for the reindeer! This is a fun, festive tradition that lets you feel connected to Santa and show appreciation for his hard work. Bonus: some elves say Santa's favorite cookie flavor changes each year, so surprises are encouraged! 🥛🍪🦌
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question">
+            <span class="material-symbols-rounded">inventory_2</span>
+            How many presents does Santa deliver?
+        </div>
+        <div class="faq-answer">
+            On average, Santa delivers <span class="highlight">around 11.55 billion gifts</span> in one night! This includes presents for children who celebrate Christmas around the world. It's a massive logistical feat, which is why Santa relies on elves, magical technology, and his carefully optimized route to get it all done 🎄💥.
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question">
+            <span class="material-symbols-rounded">bedtime</span>
+            Do I have to be asleep for Santa to come?
+        </div>
+        <div class="faq-answer">
+            Traditionally, yes! Santa prefers to deliver gifts <span class="highlight">while children are asleep</span>, so the magic isn't disturbed and everyone wakes up to a perfect surprise. But if you're awake, don't worry—he's careful and magical enough to deliver gifts without being seen 👀🎁💖.
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question">
+            <span class="material-symbols-rounded">volunteer_activism</span>
+            How can I help Santa?
+        </div>
+        <div class="faq-answer">
+            You can help by:
+            <ul>
+                <li>Being kind and spreading holiday cheer 💖</li>
+                <li>Writing thoughtful letters to Santa 💌</li>
+                <li>Preparing your home for Christmas Eve surprises (cookies, milk, and carrots!) 🍪🥛🦌</li>
+                <li>Enjoying the tracker and games responsibly 🎮✨</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+        <!-- Christmas FAQs -->
+        <div id="christmas" class="section-card">
+            <div class="section-title">
+                <span class="material-symbols-rounded">celebration</span>
+                Christmas Magic
+            </div>
+        
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span class="material-symbols-rounded">calendar_month</span>
+                    What is Christmas?
+                </div>
+                <div class="faq-answer">
+                    Christmas is a global holiday celebrated on December 25th, marking the birth of Jesus Christ in Christian tradition. Over centuries, it's grown into a worldwide celebration of giving, kindness, family, and joy. People decorate homes, exchange gifts, sing songs, and gather with loved ones. Even in non-religious contexts, Christmas is a magical time of year filled with traditions, cozy vibes, and festive cheer! 🌟✨
+                </div>
+            </div>
+        
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span class="material-symbols-rounded">person</span>
+                    Why do we celebrate Christmas with Santa?
+                </div>
+                <div class="faq-answer">
+                    Santa Claus embodies the spirit of giving and generosity. He's inspired by historical figures like Saint Nicholas, a bishop famous for his kindness and gift-giving, and has evolved over centuries into the jolly, red-suited figure we know today. Santa is a symbol of joy, magic, and the excitement of Christmas Eve—reminding everyone to be kind, hopeful, and generous during the holidays! 🎁🧝‍♂️💫
+                </div>
+            </div>
+        
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span class="material-symbols-rounded">park</span>
+                    Why do we put up Christmas trees?
+                </div>
+                <div class="faq-answer">
+                    The tradition of decorating trees comes from ancient winter rituals, where evergreen trees symbolized life and hope during the darkest days of winter. Over time, people began decorating them with lights, ornaments, and tinsel to celebrate the season and bring warmth and cheer indoors. Today, Christmas trees are a centerpiece for families, full of ornaments, gifts, and holiday magic! 🌟🎄✨
+                </div>
+            </div>
+        
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span class="material-symbols-rounded">lightbulb</span>
+                    Why do we use Christmas lights?
+                </div>
+                <div class="faq-answer">
+                    Lights represent hope, warmth, and the magic of the season. Originally, candles were placed on trees to symbolize the light of Christ or to celebrate the sun during winter solstice festivals. Today, twinkling LED lights decorate homes, streets, and trees worldwide, spreading joy and creating that cozy, festive glow we all love 🌟💡❄️
+                </div>
+            </div>
+        
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span class="material-symbols-rounded">featured_seasonal_and_gifts</span>
+                    Why do we give gifts at Christmas?
+                </div>
+                <div class="faq-answer">
+                    Gift-giving is rooted in religious tradition, folklore, and history. Christians celebrate the gifts brought to baby Jesus by the Three Wise Men, while other traditions evolved to honor generosity and kindness. Today, gifts are a way to show love, appreciation, and thoughtfulness. Whether big or small, each gift carries joy and holiday spirit! 💖🎁✨
+                </div>
+            </div>
+        
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span class="material-symbols-rounded">music_note</span>
+                    Why do we sing Christmas songs?
+                </div>
+                <div class="faq-answer">
+                    Christmas carols and songs go back hundreds of years. They were originally sung to tell stories about the birth of Jesus or to celebrate winter festivals. Modern Christmas songs now cover joy, family, love, and holiday fun, spreading cheer and helping everyone feel festive. Singing together is a way to connect with loved ones and share the season's magic 🎤🎄🎶
+                </div>
+            </div>
+        
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span class="material-symbols-rounded">styler</span>
+                    Why do people hang stockings?
+                </div>
+                <div class="faq-answer">
+                    Stockings come from a story about Saint Nicholas secretly giving coins to children by dropping them in their socks. Today, stockings are hung by the fireplace (or elsewhere) and filled with small gifts, candy, and treats. They add an element of fun surprise and anticipation to Christmas morning! 🧦🎁✨
+                </div>
+            </div>
+        
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span class="material-symbols-rounded">public</span>
+                    What are some common Christmas traditions around the world?
+                </div>
+                <div class="faq-answer">
+                    Christmas traditions vary widely:
+                    <ul>
+                        <li>Japan: Families eat KFC and enjoy festive cakes 🍗🎂</li>
+                        <li>Sweden: Watch Donald Duck cartoons at 3 PM on Christmas Eve 🦆📺</li>
+                        <li>Mexico: Celebrate Las Posadas with songs, piñatas, and tamales 🎶🪅</li>
+                        <li>Ghana: Community feasts called Bronya bring neighbors together 🍛🎉</li>
+                        <li>Australia: Beach BBQs and surfing with Santa 🏖️🎅</li>
+                    </ul>
+                    No matter where you are, Christmas is about connection, joy, and celebrating together 🌎💖
+                </div>
+            </div>
+        
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span class="material-symbols-rounded">restaurant</span>
+                    What foods are traditionally eaten at Christmas?
+                </div>
+                <div class="faq-answer">
+                    Foods vary by culture! Some favorites include:
+                    <ul>
+                        <li>Cookies and milk for Santa 🍪🥛</li>
+                        <li>Roast meats and stuffing 🍖</li>
+                        <li>Yule logs or festive cakes 🎂</li>
+                        <li>Candy canes, chocolates, and gingerbread cookies 🍬🏠</li>
+                    </ul>
+                    Eating together is part of celebrating love, family, and community during the holidays ❤️
+                </div>
+            </div>
+        
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span class="material-symbols-rounded">favorite</span>
+                    What is the meaning of Christmas for people today?
+                </div>
+                <div class="faq-answer">
+                    Beyond religion, Christmas represents hope, generosity, and joy. It's a time to give, connect with loved ones, and create memories. It reminds everyone to pause, celebrate, and enjoy the magic that life has to offer during the darkest winter days 🌟❄️
+                </div>
+            </div>
+        
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span class="material-symbols-rounded">group</span>
+                    Can anyone celebrate Christmas?
+                </div>
+                <div class="faq-answer">
+                    Absolutely! Christmas is celebrated by millions around the world in many ways. You are doing so right now, by visiting this website. You don't have to follow a religion to enjoy the magic, decorations, food, and festive traditions. It's about spreading cheer and enjoying the season together 🎄✨💖
+                </div>
+            </div>
+        </div>
+
+</body>
+</html>

@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Santa's List Maker 📝</title>
+    <link rel="icon" type="image/png" href="../assets/santa-chimney-waving.png">
+    <link href="https://fonts.googleapis.com/css?family=Google+Sans:100,300,400,500,700,900,100i,300i,400i,500i,700i,900i" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,400,1,0">
+    <style>
+        :root {
+            --christmas-red: #d42426;
+            --christmas-green: #165b33;
+            --snow-white: #ffffff;
+            --gold: #ffd700;
+            --paper: #f8f9fa;
+            --text: #2c3e50;
+            --nice: #4caf50;
+            --naughty: #f44336;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Google Sans', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #fff5f5 0%, #f0f8ff 100%);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .top-bar {
+            background: linear-gradient(135deg, var(--christmas-red), var(--christmas-green));
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            z-index: 100;
+        }
+
+        .page-title {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 500;
+        }
+
+        .home-button {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .home-button:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.1);
+        }
+
+        .game-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 1rem;
+            flex-grow: 1;
+        }
+
+        .start-screen, .tutorial-screen {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .start-screen h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--christmas-red), var(--christmas-green));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .progress-bar {
+            background: rgba(255,255,255,0.5);
+            height: 8px;
+            border-radius: 4px;
+            margin: 1rem 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, var(--christmas-red), var(--christmas-green));
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .card {
+            background: white;
+            border-radius: 24px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            width: 100%;
+    min-width: 300px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            animation: slideIn 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--christmas-red), var(--gold), var(--christmas-green));
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .child-info {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .child-avatar {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #fff5f5, #f0f8ff);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .child-avatar .material-symbols-rounded {
+            font-size: 40px;
+            background: linear-gradient(135deg, var(--christmas-red), var(--christmas-green));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .child-details h2 {
+            font-size: 1.8rem;
+            margin-bottom: 0.25rem;
+            color: var(--christmas-red);
+        }
+
+        .context-info {
+            background: linear-gradient(135deg, #fff5f5, #f0f8ff);
+            padding: 1rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            font-style: italic;
+        }
+
+        .actions-list {
+            list-style: none;
+            margin: 1.5rem 0;
+        }
+
+        .action-item {
+            background: linear-gradient(135deg, #fff, #f8f9fa);
+            padding: 1rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            transition: transform 0.2s ease;
+        }
+
+        .action-item:hover {
+            transform: translateX(4px);
+        }
+
+        .button-container {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .decision-button {
+            flex: 1;
+            padding: 1.2rem;
+            border: none;
+            border-radius: 16px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .nice-button {
+            background: linear-gradient(135deg, var(--nice), #45a049);
+            color: white;
+        }
+
+        .naughty-button {
+            background: linear-gradient(135deg, var(--naughty), #d32f2f);
+            color: white;
+        }
+
+        .decision-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .results {
+            text-align: center;
+            padding: 3rem 2rem;
+        }
+
+        .grade {
+            font-size: 5rem;
+            font-weight: 700;
+            margin: 1.5rem 0;
+            background: linear-gradient(135deg, var(--christmas-red), var(--gold));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #fff, #f8f9fa);
+            padding: 1.5rem;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--christmas-red);
+            margin-bottom: 0.5rem;
+        }
+
+        .game-button {
+            background: linear-gradient(135deg, var(--christmas-red), var(--christmas-green));
+            color: white;
+            border: none;
+            padding: 1.2rem 2.4rem;
+            border-radius: 16px;
+            font-size: 1.2rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .game-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+
+        .tutorial {
+            max-width: 600px;
+            margin: 2rem auto;
+            text-align: left;
+        }
+
+        .tutorial h3 {
+            color: var(--christmas-red);
+            margin: 1.5rem 0 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .badge {
+            background: linear-gradient(135deg, var(--christmas-red), var(--christmas-green));
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+        }
+
+        @media (max-width: 600px) {
+            .game-container {
+                padding: 0.5rem;
+            }
+
+            .card {
+                padding: 1.5rem;
+            }
+
+            .button-container {
+                flex-direction: column;
+            }
+
+            .child-info {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <audio id="bgMusic" loop>
+        <source src="../assets/music.mp3" type="audio/mp3">
+    </audio>
+    <div class="top-bar">
+        <h1 class="page-title">Santa's List Maker 📝</h1>
+        <button class="home-button" onclick="window.location.href='../index.html'">
+            <span class="material-symbols-rounded">home</span>
+        </button>
+    </div>
+
+    <div class="game-container" id="game-content"></div>
+
+    <script>
+const actions = {
+    good: [
+        "Volunteered every weekend at animal shelter",
+        "Donated all birthday money to children's hospital",
+        "Helped elderly neighbors with groceries all year",
+        "Started recycling program at school",
+        "Tutored struggling classmates for free",
+        "Organized fundraiser for local homeless shelter",
+        "Spent summer helping at soup kitchen",
+        "Created care packages for kids in hospital",
+        "Cleaned up entire neighborhood park alone",
+        "Raised $1000 for endangered animals",
+        "Made cards for everyone in nursing home",
+        "Started anti-bullying club at school",
+        "Gave lunch money to hungry classmate daily",
+        "Found lost dog and searched for owner for weeks",
+        "Shoveled snow for whole neighborhood free",
+        "Helped mom cook meals for the family every weekend",
+        "Visited orphanage to play with children every month",
+        "Planted a tree for Earth Day",
+        "Walked neighborhood dogs for free",
+        "Collected school supplies for underprivileged kids",
+        "Made handmade gifts for friends instead of buying",
+        "Cleaned school library and organized books",
+        "Helped a new student find friends",
+        "Baked cookies for elderly neighbors",
+        "Participated in beach cleanup every holiday",
+        "Hosted a reading club for younger students",
+        "Created art for local hospital walls",
+        "Volunteered at animal adoption events",
+        "Held a charity garage sale for local shelters",
+        "Helped coach younger kids in sports",
+        "Donated clothes to community shelter",
+        "Supported classmates struggling with homework",
+        "Participated in charity marathon",
+        "Gave free music lessons to neighborhood kids",
+        "Organized a book drive for public library",
+        "Assisted in community garden every weekend",
+        "Started a kindness journal and shared with friends",
+        "Wrote letters to soldiers abroad",
+        "Held fundraiser for local library",
+        "Helped neighbors with yard work",
+        "Made blankets for animal shelters",
+        "Hosted a bake sale for hospital funding",
+        "Cleaned local river and park areas",
+        "Volunteered at local nursing home activities",
+        "Shared toys with less fortunate kids",
+        "Helped classmates understand difficult lessons",
+        "Participated in local charity plays",
+        "Organized clothing swap for community",
+        "Tutored siblings in multiple subjects"
+    ],
+    bad: [
+        "Bullied multiple classmates severely",
+        "Stole money from charity collection",
+        "Vandalized school property repeatedly",
+        "Started harmful rumors about teachers",
+        "Cheated on every test this semester",
+        "Broke into neighbor's house",
+        "Deliberately hurt animals for fun",
+        "Cyberbullied classmates anonymously", 
+        "Stole from multiple stores regularly",
+        "Set fire to playground equipment",
+        "Blackmailed other students for money",
+        "Hacked school system to change grades",
+        "Sold fake concert tickets to classmates",
+        "Destroyed other kids' projects intentionally",
+        "Pushed kid down stairs on purpose",
+        "Trashed public park on purpose",
+        "Graffiti-ed school walls with offensive messages",
+        "Spiked classmate's drink as a joke",
+        "Sabotaged class project for fun",
+        "Hid classmate's homework to get them in trouble",
+        "Destroyed neighbor's mailbox",
+        "Spread false rumors about principal",
+        "Tricked classmates into giving allowance",
+        "Ran away with school pets",
+        "Cheated in school competition to win prize",
+        "Intentionally scared younger students",
+        "Destroyed library books",
+        "Set up harmful prank that injured friend",
+        "Impersonated teacher online for mischief",
+        "Stealing candy from local store daily",
+        "Intentionally broke friend's toy",
+        "Tricked friend into breaking rules",
+        "Spread false stories online",
+        "Pulled fire alarm as prank",
+        "Used fake excuses to skip school repeatedly",
+        "Wrote mean notes to classmates",
+        "Hacked friend's social media account",
+        "Threw trash on school grounds",
+        "Broke neighbor's garden decorations",
+        "Destroyed class science experiment",
+        "Stole lunch money from classmates",
+        "Skipped responsibility to blame others",
+        "Encouraged others to cheat",
+        "Damaged community property",
+        "Tricked friend into eating something gross",
+        "Broke rules intentionally during sports",
+        "Played dangerous pranks on pets",
+        "Spread lies to ruin friendship",
+        "Created fake donation campaign for profit"
+    ],
+    complex: [
+        "Stole food but shared with homeless friend",
+        "Started fight defending bullied kid",
+        "Cheated on test but confessed voluntarily",
+        "Skipped school to help sick grandparent",
+        "Broke into shelter to feed stray animals",
+        "Used bad words defending disabled friend",
+        "Took money from wallet for friend's medicine",
+        "Spread rumors about bully to protect others",
+        "Hacked school computers to expose cheating ring",
+        "Forged parent signature to join volunteer program",
+        "Kept quiet about friend's shoplifting but made them return items",
+        "Broke promise to keep dangerous secret",
+        "Pretended to be sick to avoid bully",
+        "Lied to protect friend from abusive situation",
+        "Used allowance to buy lunch for poor classmate instead of paying back sibling",
+        "Skipped class to attend sibling's recital",
+        "Accidentally broke neighbor's window but helped fix it",
+        "Cheated in game but gave prize to underdog",
+        "Borrowed item without permission but returned it with gift",
+        "Spread small rumor to stop bigger bullying incident",
+        "Helped friend sneak out for good cause",
+        "Ignored rules to save injured animal",
+        "Took test answers to help struggling friend but reported later",
+        "Skipped chores to help community cleanup",
+        "Borrowed toy but built new one for owner",
+        "Accidentally broke device but fixed it secretly",
+        "Played prank but made amends creatively",
+        "Used fake excuse to skip event but helped secretly",
+        "Told small lie to prevent bigger harm",
+        "Ignored teacher rule to save friend from danger",
+        "Traded test answers to learn honestly later",
+        "Skipped online game to tutor younger student",
+        "Borrowed art supplies without asking but donated later",
+        "Did mischievous act but helped classmates after",
+        "Cheated once to prevent serious harm to others",
+        "Borrowed lunch to share but apologized to cafeteria",
+        "Skipped TV time to volunteer",
+        "Sneaked candy but gave to sick classmate",
+        "Broke minor rule to protect someone",
+        "Shared secret but prevented bigger lie",
+        "Pranked teacher but organized school fair after",
+        "Took shortcut to complete big project but credited team",
+        "Helped friend break minor rule to avoid punishment",
+        "Did minor mischief but replaced what was taken",
+        "Used trick to help friend but faced consequences",
+        "Skipped party to help local charity",
+        "Borrowed book without asking but returned with gift"
+    ]
+};
+
+const names = [
+    "Oliver", "Emma", "Liam", "Ava", "Noah", "Isabella", "Ethan", "Sophia",
+    "Mason", "Mia", "Lucas", "Charlotte", "Alexander", "Amelia", "James",
+    "Harper", "Benjamin", "Evelyn", "William", "Abigail", "Henry", "Emily",
+    "Sebastian", "Elizabeth", "Jack", "Sofia", "Daniel", "Avery", "Michael",
+    "Ella", "Samuel", "Scarlett", "David", "Victoria", "Joseph", "Madison",
+    "Carter", "Luna", "Owen", "Grace",
+    "Levi", "Chloe", "Gabriel", "Aria", "Julian", "Layla", "Wyatt", "Hannah",
+    "Caleb", "Nora", "Isaac", "Zoe", "Nathan", "Lily", "Ryan", "Aurora",
+    "Aaron", "Penelope", "Luke", "Riley", "Christian", "Violet", "Hunter",
+    "Stella", "Dylan", "Hazel", "Jonathan", "Ellie", "Eli", "Paisley",
+    "Anthony", "Lucy", "Isaiah", "Claire", "Thomas", "Skylar", "Jordan",
+    "Sadie", "Connor", "Madeline", "Omar", "Naomi", "Adam", "Bella",
+    "Colton", "Gianna", "Robert", "Alice", "Charles", "Kennedy", "Josiah",
+    "Ruby", "Angel", "Eva", "Evan", "Maya", "Justin", "Sarah", "Jaxon"
+];
+    
+        const ages = Array.from({length: 12}, (_, i) => i + 5);
+    
+        class Child {
+            constructor(difficulty) {
+    const nameIndex = Math.floor(Math.random() * game.availableNames.length);
+    this.name = game.availableNames.splice(nameIndex, 1)[0]; // Remove and use the name
+    this.age = ages[Math.floor(Math.random() * ages.length)];
+    this.actions = this.generateActions(difficulty);
+    this.isNice = this.calculateMoralScore() > 0.6;
+}
+    
+            generateActions(difficulty) {
+                const actionsCount = Math.floor(3 + difficulty * 2);
+                let selectedActions = [];
+    
+                if (difficulty < 0.2) {
+                    // Early game - Clear good or bad
+                    if (Math.random() < 0.5) {
+                        selectedActions = this.getRandomItems(actions.good, actionsCount);
+                        this.type = 'good';
+                    } else {
+                        selectedActions = this.getRandomItems(actions.bad, actionsCount);
+                        this.type = 'bad';
+                    }
+                } else if (difficulty < 0.4) {
+                    // Early-mid game - Mostly clear with one complex
+                    if (Math.random() < 0.5) {
+                        selectedActions = [
+                            ...this.getRandomItems(actions.good, actionsCount - 1),
+                            ...this.getRandomItems(actions.complex, 1)
+                        ];
+                        this.type = 'mostly-good';
+                    } else {
+                        selectedActions = [
+                            ...this.getRandomItems(actions.bad, actionsCount - 1),
+                            ...this.getRandomItems(actions.complex, 1)
+                        ];
+                        this.type = 'mostly-bad';
+                    }
+                } else {
+                    // Late game - Complex mix
+                    selectedActions = [
+                        ...this.getRandomItems(actions.complex, Math.ceil(actionsCount/2)),
+                        ...this.getRandomItems(Math.random() < 0.5 ? actions.good : actions.bad, Math.floor(actionsCount/2))
+                    ];
+                    this.type = 'complex';
+                }
+    
+                return this.shuffleArray(selectedActions);
+            }
+    
+            calculateMoralScore() {
+                let score = 0.5;
+                
+                if (this.type === 'good') return 0.9;
+                if (this.type === 'bad') return 0.1;
+                if (this.type === 'mostly-good') return 0.7 + (Math.random() * 0.2);
+                if (this.type === 'mostly-bad') return 0.3 - (Math.random() * 0.2);
+                
+                // For complex types, calculate based on actions
+                this.actions.forEach(action => {
+                    if (actions.good.includes(action)) score += 0.2;
+                    if (actions.bad.includes(action)) score -= 0.2;
+                    if (actions.complex.includes(action)) score += (Math.random() * 0.4 - 0.2);
+                });
+    
+                return Math.min(Math.max(score, 0), 1);
+            }
+    
+            getRandomItems(array, count) {
+                const shuffled = this.shuffleArray([...array]);
+                return shuffled.slice(0, count);
+            }
+    
+            shuffleArray(array) {
+                return array.sort(() => Math.random() - 0.5);
+            }
+        }
+    
+        class Game {
+            constructor() {
+    this.totalChildren = 25;
+    this.currentChild = 0;
+    this.decisions = [];
+    this.startTime = Date.now();
+    this.availableNames = [...names]; // Create a copy of all names
+    this.showStartScreen();
+}
+    
+            showStartScreen() {
+                const content = document.getElementById('game-content');
+                content.innerHTML = `
+                    <div class="card start-screen">
+                        <h1>Welcome to Elf Training Academy! 🎄</h1>
+                        <p>You're about to take your final exam to become one of Santa's Official List Makers!</p>
+                        <div class="tutorial">
+                            <h3><span class="material-symbols-rounded">school</span>Your Mission</h3>
+                            <p>Review ${this.totalChildren} children's actions and decide if they belong on the Nice or Naughty list.</p>
+                            
+                            <h3><span class="material-symbols-rounded">psychology</span>Remember</h3>
+                            <p>• Good deeds and bad deeds carry different weights</p>
+                            <p>• Some actions are not as simple as they seem</p>
+                            <p>• Think carefully about each decision</p>
+                            
+                            <h3><span class="material-symbols-rounded">warning</span>Be Careful</h3>
+                            <p>• Decisions get harder as you progress</p>
+                            <p>• Santa's standards are very high</p>
+                            <p>• You need 75% accuracy to pass</p>
+    
+                            <div class="badge">Are you ready to prove yourself?</div>
+                        </div>
+                        <br>
+                        <button class="game-button" onclick="game.startGame()">
+                            <span class="material-symbols-rounded">play_arrow</span>
+                            Begin Test
+                        </button>
+                    </div>
+                `;
+            }
+    
+            startGame() {
+                this.children = this.generateChildren();
+                this.renderChild();
+            }
+    
+            generateChildren() {
+                return Array.from({length: this.totalChildren}, (_, i) => {
+                    const difficulty = i / this.totalChildren;
+                    return new Child(difficulty);
+                });
+            }
+    
+            renderChild() {
+                const child = this.children[this.currentChild];
+                const progress = (this.currentChild / this.totalChildren) * 100;
+                
+                const content = document.getElementById('game-content');
+                content.innerHTML = `
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${progress}%"></div>
+                    </div>
+                    <div class="card">
+                        <div class="child-info">
+                            <div class="child-avatar">
+                                <span class="material-symbols-rounded">face</span>
+                            </div>
+                            <div class="child-details">
+                                <h2>${child.name}</h2>
+                                <p>Age: ${child.age}</p>
+                            </div>
+                        </div>
+    
+                        <div class="actions-list">
+                            ${child.actions.map(action => `
+                                <div class="action-item">${action}</div>
+                            `).join('')}
+                        </div>
+    
+                        <div class="button-container">
+                            <button class="decision-button nice-button" onclick="game.makeDecision(true)">
+                                <span class="material-symbols-rounded">check_circle</span>
+                                Nice List
+                            </button>
+                            <button class="decision-button naughty-button" onclick="game.makeDecision(false)">
+                                <span class="material-symbols-rounded">cancel</span>
+                                Naughty List
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+    
+            makeDecision(isNice) {
+                const child = this.children[this.currentChild];
+                this.decisions.push({
+                    child: child,
+                    decision: isNice,
+                    correct: isNice === child.isNice
+                });
+    
+                this.currentChild++;
+                if (this.currentChild < this.totalChildren) {
+                    this.renderChild();
+                } else {
+                    this.showResults();
+                }
+            }
+    
+            calculateGrade() {
+                const correct = this.decisions.filter(d => d.correct).length;
+                const percentage = (correct / this.totalChildren) * 100;
+                
+                if (percentage >= 95) return 'A+';
+                if (percentage >= 90) return 'A';
+                if (percentage >= 85) return 'A-';
+                if (percentage >= 80) return 'B+';
+                if (percentage >= 75) return 'B';
+                if (percentage >= 70) return 'C+';
+                if (percentage >= 65) return 'C';
+                if (percentage >= 60) return 'C-';
+                if (percentage >= 55) return 'D+';
+                if (percentage >= 50) return 'D';
+                return 'F';
+            }
+    
+            getElfRank(percentage) {
+                if (percentage >= 95) return 'Senior List Maker 🌟';
+                if (percentage >= 85) return 'Master List Checker ⭐';
+                if (percentage >= 75) return 'Junior List Maker 📝';
+                if (percentage >= 65) return 'List Apprentice 📚';
+                return 'List Trainee 🎄';
+            }
+    
+            showResults() {
+                const correct = this.decisions.filter(d => d.correct).length;
+                const percentage = (correct / this.totalChildren) * 100;
+                const grade = this.calculateGrade();
+                const elfRank = this.getElfRank(percentage);
+                const passed = percentage >= 75;
+                const timeSpent = Math.floor((Date.now() - this.startTime) / 1000);
+    
+                const content = document.getElementById('game-content');
+                content.innerHTML = `
+                    <div class="card results">
+                        <h2>${passed ? 'Congratulations!' : 'Keep Practicing!'}</h2>
+                        <div class="grade">${grade}</div>
+                        <h3>${elfRank}</h3>
+                        
+                        <div class="stats">
+                            <div class="stat-card">
+                                <div class="stat-value">${correct}</div>
+                                <div>Correct Decisions</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value">${Math.round(percentage)}%</div>
+                                <div>Accuracy</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value">${timeSpent}s</div>
+                                <div>Time Spent</div>
+                            </div>
+                        </div>
+    
+                        <p>${passed ? 
+                            'You\'ve proven yourself worthy of being Santa\'s List Maker! 🎉' : 
+                            'Santa\'s standards are high! Try again to improve your accuracy. 💪'}</p>
+                        <br>
+                        <button class="game-button" onclick="startGame()">
+                            <span class="material-symbols-rounded">replay</span>
+                            Try Again
+                        </button>
+                    </div>
+                `;
+            }
+        }
+    
+        let game;
+        function startGame() {
+            game = new Game();
+        }
+    
+        startGame();
+
+                // Background music handling
+document.addEventListener('DOMContentLoaded', function() {
+    const bgMusic = document.getElementById('bgMusic');
+    
+    // Try to play automatically
+    bgMusic.play().catch(function(error) {
+        console.log("Autoplay prevented, waiting for user interaction");
+    });
+
+    // Add click listener to document to start music on first interaction
+    document.addEventListener('click', function startMusic() {
+        bgMusic.play().then(function() {
+            // Remove the click listener once music starts
+            document.removeEventListener('click', startMusic);
+        }).catch(function(error) {
+            console.log("Playback failed:", error);
+        });
+    }, { once: true });
+
+    // Keep trying to play music when tab becomes visible
+    document.addEventListener('visibilitychange', function() {
+        if (!document.hidden) {
+            bgMusic.play().catch(function(error) {
+                console.log("Playback failed on visibility change");
+            });
+        }
+    });
+});
+    </script>
+</body>
+</html>

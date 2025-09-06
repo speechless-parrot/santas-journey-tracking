@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Family Guide - Santa's Journey Tracking 👨‍👩‍👧‍👦</title>
+    <link rel="icon" type="image/png" href="../assets/santa-chimney-waving.png">
+    <link href="https://fonts.googleapis.com/css?family=Google+Sans:100,300,400,500,700,900,100i,300i,400i,500i,700i,900i" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,400,1,0">
+    <style>
+        :root {
+            --christmas-red: #d42426;
+            --christmas-green: #165b33;
+            --snow-white: #ffffff;
+            --gold: #ffd700;
+            --paper: #f8f9fa;
+            --text: #2c3e50;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Google Sans', sans-serif;
+        }
+
+        body {
+            background-color: var(--paper);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .top-bar {
+            background: linear-gradient(135deg, var(--christmas-red), var(--christmas-green));
+            padding: 1rem;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .page-title {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .home-button {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .home-button:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.1);
+        }
+
+        .content {
+            max-width: 1200px;
+            margin: 80px auto 40px;
+            padding: 2rem;
+        }
+
+        .intro-card {
+            background: white;
+            border-radius: 24px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .intro-card h2 {
+            color: var(--christmas-red);
+            font-family: 'Lobster', cursive;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .section-card {
+            background: white;
+            border-radius: 24px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--christmas-red);
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            font-family: 'Google Sans', cursive;
+        }
+
+        .activity-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .activity-card {
+            background: var(--paper);
+            border-radius: 16px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .activity-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--gold);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+        }
+
+        .activity-card h3 {
+            color: var(--christmas-green);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .highlight {
+            color: var(--christmas-red);
+            font-weight: 500;
+        }
+
+        .tip-box {
+            background: linear-gradient(135deg, #fff5f5, #f0f8ff);
+            padding: 1rem;
+            border-radius: 12px;
+            margin-top: 1rem;
+            display: flex;
+            align-items: start;
+            gap: 0.5rem;
+        }
+
+        .tip-box .material-symbols-rounded {
+            color: var(--gold);
+            flex-shrink: 0;
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                padding: 1rem;
+            }
+
+            .activity-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <h1 class="page-title">
+            <span class="material-symbols-rounded">family_restroom</span>
+            Family Guide
+        </h1>
+        <button class="home-button" onclick="window.location.href='../index.html'">
+            <span class="material-symbols-rounded">home</span>
+        </button>
+    </div>
+
+    <div class="content">
+        <div class="intro-card">
+            <h2>Welcome to the Family Guide! 👨‍👩‍👧‍👦</h2>
+            <p>Let's make this Christmas season magical together! Here's your complete guide to enjoying all the festive activities with your loved ones.</p>
+        </div>
+
+        <div class="section-card">
+            <div class="section-title">
+                <span class="material-symbols-rounded">track_changes</span>
+                Tracking Santa on the Big Day
+            </div>
+            <p>December 24th is the highlight of our magical journey! Gather the family around as we track Santa's global gift-giving adventure.</p>
+            
+            <div class="activity-grid">
+                <div class="activity-card" onclick="window.location.href='tracker.html'">
+                    <h3>
+                        <span class="material-symbols-rounded">map</span>
+                        Live Santa Tracker
+                    </h3>
+                    <p>Watch Santa's journey in real-time, starting from Provideniya, Russia! 🗺️</p>
+                </div>
+                <div class="activity-card">
+                    <h3>
+                        <span class="material-symbols-rounded">timer</span>
+                        ETA Updates
+                    </h3>
+                    <p>Know exactly when Santa will reach your area! ⏰</p>
+                </div>
+                <div class="activity-card">
+                    <h3>
+                        <span class="material-symbols-rounded">inventory_2</span>
+                        Present Counter
+                    </h3>
+                    <p>Watch the gift count climb into billions! 🎁</p>
+                </div>
+            </div>
+
+            <div class="tip-box">
+                <span class="material-symbols-rounded">tips_and_updates</span>
+                <p>Pro Tip: Put the tracker on your TV for a family mission control experience! 📺✨</p>
+            </div>
+        </div>
+
+        <div class="section-card">
+            <div class="section-title">
+                <span class="material-symbols-rounded">extension</span>
+                Family Activities
+            </div>
+            <p>Explore these magical activities together while waiting for Santa!</p>
+
+            <div class="activity-grid">
+                <div class="activity-card" onclick="window.location.href='games/memory-match.html'">
+                    <h3>
+                        <span class="material-symbols-rounded">extension</span>
+                        Memory Match
+                    </h3>
+                    <p>Challenge the family to find matching holiday pairs! 🃏</p>
+                </div>
+                <div class="activity-card" onclick="window.location.href='games/quiz.html'">
+                    <h3>
+                        <span class="material-symbols-rounded">quiz</span>
+                        Christmas Quiz
+                    </h3>
+                    <p>Test your family's holiday knowledge! 🎄</p>
+                </div>
+                <div class="activity-card" onclick="window.location.href='interactive/post-office.html'">
+                    <h3>
+                        <span class="material-symbols-rounded">mail</span>
+                        North Pole Post Office
+                    </h3>
+                    <p>Write letters to Santa together! 💌</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-card">
+            <div class="section-title">
+                <span class="material-symbols-rounded">calendar_month</span>
+                Month-Long Celebration
+            </div>
+            <p>Make every December day special with these festive activities!</p>
+
+            <div class="activity-grid">
+                <div class="activity-card" onclick="window.location.href='interactive/jokes.html'">
+                    <h3>
+                        <span class="material-symbols-rounded">sentiment_very_satisfied</span>
+                        Daily Christmas Jokes
+                    </h3>
+                    <p>Share laughs at dinner time! 😂</p>
+                </div>
+                <div class="activity-card" onclick="window.location.href='knowledge/workshop.html'">
+                    <h3>
+                        <span class="material-symbols-rounded">engineering</span>
+                        Santa's Workshop Tour
+                    </h3>
+                    <p>Discover how the magic happens! 🛠️</p>
+                </div>
+                <div class="activity-card" onclick="window.location.href='interactive/traditions.html'">
+                    <h3>
+                        <span class="material-symbols-rounded">public</span>
+                        Global Traditions
+                    </h3>
+                    <p>Explore Christmas around the world! 🌍</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-card">
+            <div class="section-title">
+                <span class="material-symbols-rounded">favorite</span>
+                Keeping the Magic Alive
+            </div>
+            <p>The Christmas spirit doesn't have to end on December 25th! Here are ways to keep the joy going all year long:</p>
+
+            <div class="activity-grid">
+                <div class="activity-card">
+                    <h3>
+                        <span class="material-symbols-rounded">volunteer_activism</span>
+                        Daily Kindness
+                    </h3>
+                    <p>Spread joy like Santa's elves! 💖</p>
+                </div>
+                <div class="activity-card">
+                    <h3>
+                        <span class="material-symbols-rounded">event_repeat</span>
+                        Family Traditions
+                    </h3>
+                    <p>Create your own magical moments! 🌟</p>
+                </div>
+                <div class="activity-card">
+                    <h3>
+                        <span class="material-symbols-rounded">magic_button</span>
+                        Year-Round Wonder
+                    </h3>
+                    <p>Keep the Christmas spirit alive! ✨</p>
+                </div>
+            </div>
+
+            <div class="tip-box">
+                <span class="material-symbols-rounded">tips_and_updates</span>
+                <p>Remember: The real magic of Christmas lives in the kindness we share and the memories we make together! 💫</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

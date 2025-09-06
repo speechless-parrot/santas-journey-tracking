@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Holiday Traditions 🌍</title>
+    <link rel="icon" type="image/png" href="../assets/santa-chimney-waving.png">
+    <link href="https://fonts.googleapis.com/css?family=Google+Sans:100,300,400,500,700,900,100i,300i,400i,500i,700i,900i" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,400,1,0">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        :root {
+            --christmas-red: #d42426;
+            --christmas-green: #165b33;
+            --snow-white: #ffffff;
+            --gold: #ffd700;
+            --paper: #f8f9fa;
+            --text: #2c3e50;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Google Sans', sans-serif;
+        }
+
+        body {
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .top-bar {
+            background: linear-gradient(135deg, var(--christmas-red), var(--christmas-green));
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        .page-title {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 500;
+            flex-grow: 1;
+        }
+
+        .home-button {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .home-button:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.1);
+        }
+
+        #map {
+            flex-grow: 1;
+            width: 100%;
+            z-index: 1;
+        }
+
+        .custom-popup {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            max-width: 300px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+
+        .custom-popup .leaflet-popup-content-wrapper {
+            background: transparent;
+            box-shadow: none;
+        }
+
+        .custom-popup .leaflet-popup-tip-container {
+            display: none;
+        }
+
+        .custom-popup .country-title {
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+            color: var(--christmas-red);
+        }
+
+        .custom-popup .tradition-text {
+            font-size: 1rem;
+            line-height: 1.5;
+            color: var(--text);
+        }
+
+        .custom-tooltip {
+            background: white;
+            border: none;
+            border-radius: 12px;
+            padding: 0.5rem 1rem;
+            font-family: 'Google Sans', sans-serif;
+            font-size: 1rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        /* Customize Leaflet controls */
+        .leaflet-control-zoom {
+            border: none !important;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+        }
+
+        .leaflet-control-zoom a {
+            background: white !important;
+            color: var(--text) !important;
+            border: none !important;
+            width: 40px !important;
+            height: 40px !important;
+            line-height: 40px !important;
+            font-size: 18px !important;
+        }
+
+        .leaflet-control-zoom a:first-child {
+            border-radius: 12px 12px 0 0 !important;
+        }
+
+        .leaflet-control-zoom a:last-child {
+            border-radius: 0 0 12px 12px !important;
+        }
+
+        .leaflet-popup-content-wrapper {
+            padding: 0 !important;
+            border-radius: 16px !important;
+        }
+
+        .leaflet-popup-content {
+            margin: 0 !important;
+        }
+    </style>
+</head>
+<body>
+    <audio id="bgMusic" loop>
+        <source src="../assets/music.mp3" type="audio/mp3">
+    </audio>
+    <div class="top-bar">
+        <h1 class="page-title">Holiday Traditions 🌍</h1>
+        <button class="home-button" onclick="window.location.href='../index.html'">
+            <span class="material-symbols-rounded">home</span>
+        </button>
+    </div>
+
+    <div id="map"></div>
+
+    <script>
+
+const holidayTraditions = [
+    {
+        country: "🇺🇸 United States",
+        coordinates: [39.8283, -98.5795],
+        tradition: "Americans go absolutely WILD for Christmas light displays! 🎄✨ Entire neighborhoods compete to see who can turn their house into the most dazzling winter wonderland, with some displays using thousands of lights that can be seen from space! 🌟 Families pile into cars with hot cocoa ☕ and drive around for hours just to 'ooh' and 'ahh' at the twinkling spectacle! 🚗💫"
+    },
+    {
+        country: "🇲🇽 Mexico",
+        coordinates: [23.6345, -102.5528],
+        tradition: "Las Posadas is like a 9-day Christmas block party! 🎉 From December 16-24, families reenact Mary and Joseph's search for shelter by going house to house singing traditional songs! 🎵 Each night ends with piñatas, tamales, and hot ponche (spiced fruit punch) that makes everyone feel all warm and fuzzy inside! 🪅🫔✨"
+    },
+    {
+        country: "🇮🇹 Italy",
+        coordinates: [41.8719, 12.5674],
+        tradition: "Italian children believe La Befana, a magical witch on a broomstick, delivers gifts on January 6th! 🧙‍♀️✨ This sweet old lady comes down chimneys (just like Santa!) and fills stockings with candy for good kids and coal for naughty ones! 🍭 But plot twist - even the 'coal' is actually delicious black rock candy! 🖤😋"
+    },
+    {
+        country: "🇯🇵 Japan",
+        coordinates: [36.2048, 138.2529],
+        tradition: "Christmas in Japan means one thing: KFC! 🍗✨ Thanks to a brilliant 1970s marketing campaign, Japanese families now pre-order their Christmas chicken dinner months in advance! The Colonel becomes Santa's helper as millions line up for their festive fried chicken feast! 🎅🍗 Some locations even have Colonel Sanders dressed as Santa! 🎄"
+    },
+    {
+        country: "🇪🇸 Spain",
+        coordinates: [40.4637, -3.7492],
+        tradition: "Spanish kids don't get gifts from Santa - they get them from the Three Wise Men! 👑✨ On January 5th, children leave their shoes out with grass and water for the camels! 🐪 The next morning, they wake up to presents and the grass is gone (the camels were hungry!) 🎁 Plus, there are MASSIVE parades with elaborate floats! 🎭🎪"
+    },
+    {
+        country: "🇬🇷 Greece",
+        coordinates: [39.0742, 21.8243],
+        tradition: "Greek families keep a basil-wrapped cross and a bowl of holy water by their Christmas tree! ✝️🌿 Throughout the holiday season, they sprinkle this blessed water around the house to ward off mischievous goblins called Kallikantzaroi who supposedly cause chaos during the 12 days of Christmas! 💧✨ It's like a spiritual house blessing! 🏠"
+    },
+    {
+        country: "🇦🇺 Australia",
+        coordinates: [-25.2744, 133.7751],
+        tradition: "Aussies celebrate Christmas on the beach! 🏖️🎄 While the rest of the world shivers, Australians are building sandmen instead of snowmen! ⛄➡️🏖️ They have massive beach BBQs, play cricket in the sand, and Santa arrives on a surfboard! 🏄‍♂️🎅 Christmas carols by candlelight under the stars are absolutely magical! ✨🕯️"
+    },
+    {
+        country: "🇳🇴 Norway",
+        coordinates: [60.4720, 8.4689],
+        tradition: "Norwegians hide all their brooms on Christmas Eve! 🧹👻 Why? Because they believe witches and evil spirits come out to steal them for midnight joy rides! So every single broom, mop, and cleaning supply gets locked away until Christmas morning! It's like the ultimate spring cleaning... in reverse! 😂✨"
+    },
+    {
+        country: "🇩🇰 Denmark",
+        coordinates: [56.2639, 9.5018],
+        tradition: "Danish families dance around their Christmas tree while holding hands and singing carols! 💃🕺🎄 After dinner, everyone joins hands in a big circle around the tree and dances while belting out traditional songs! It's like a holiday conga line that brings the whole family together in the most wholesome way! 🎵❤️"
+    },
+    {
+        country: "🇫🇮 Finland",
+        coordinates: [61.9241, 25.7482],
+        tradition: "Finnish families visit cemeteries on Christmas Eve to light candles for their departed loved ones! 🕯️❄️ Entire graveyards twinkle with thousands of candles creating the most beautiful, peaceful winter wonderland! It's a touching way to include those who've passed in the Christmas celebration! ✨👼"
+    },
+    {
+        country: "🇸🇪 Sweden",
+        coordinates: [60.1282, 18.6435],
+        tradition: "Swedes watch Donald Duck cartoons every Christmas Eve at 3 PM sharp! 🦆📺 'Kalle Anka och hans vänner önskar God Jul' (Donald Duck and his friends wish you Merry Christmas) has been a tradition since 1960! Families literally stop everything to watch Disney cartoons together - it's more popular than the royal Christmas speech! 👑😂"
+    },
+    {
+        country: "🇳🇱 Netherlands",
+        coordinates: [52.1326, 5.2913],
+        tradition: "Dutch kids put their shoes by the fireplace with carrots and hay for Sinterklaas's horse! 🐴🥕 Sint Nikolaas rides across rooftops on his white horse Amerigo, and children sing songs to let him know they've been good! In the morning, the horse treats are gone and the shoes are filled with presents and treats! 👞🎁"
+    },
+    {
+        country: "🇩🇪 Germany",
+        coordinates: [51.1657, 10.4515],
+        tradition: "Germans have Christmas pickle ornaments hidden deep in their Christmas trees! 🥒🎄 On Christmas morning, the first child to find the pickle gets an extra present and good luck for the year! It's like the world's most festive treasure hunt, and it turns tree decorating into a strategic game! 🔍✨"
+    },
+    {
+        country: "🇫🇷 France",
+        coordinates: [46.6034, 1.8883],
+        tradition: "French families create elaborate Nativity scenes called 'crèches' with hundreds of tiny figurines! 👶✨ But here's the twist - they include little clay figures called 'santons' representing everyone in the village: the baker, the fisherman, the mayor! It's like having the whole community celebrate baby Jesus's birth! 🏘️❤️"
+    },
+    {
+        country: "🇵🇱 Poland",
+        coordinates: [51.9194, 19.1451],
+        tradition: "Polish families share a special Christmas wafer called 'opłatek' before dinner! 🍞✨ Everyone takes turns breaking off pieces from each other's wafer while sharing wishes and forgiveness! It's the most beautiful way to clear the air and start Christmas with love and reconciliation! 💕 Even the pets and farm animals get pieces! 🐕🐄"
+    },
+    {
+        country: "🇨🇿 Czech Republic",
+        coordinates: [49.8175, 15.4730],
+        tradition: "Czech girls throw shoes over their shoulders on Christmas Eve to predict their future! 👠✨ If the shoe lands pointing toward the door, they'll get married within the year! If it points away from the door, they'll stay single! It's like fortune telling with footwear! 🔮 Some girls throw multiple shoes just to be sure! 😂"
+    },
+    {
+        country: "🇭🇺 Hungary",
+        coordinates: [47.1625, 19.5033],
+        tradition: "Hungarian children polish their boots to a perfect shine and place them on windowsills for Mikulás (St. Nicholas)! 👢✨ On December 6th, Saint Nick fills clean boots with candy and small toys! But if your boots are dirty? You might find a golden birch branch instead - a gentle reminder to be better! 🌟🍭"
+    },
+    {
+        country: "🇷🇺 Russia",
+        coordinates: [61.5240, 105.3188],
+        tradition: "Russian children receive gifts from Ded Moroz (Grandfather Frost) and his granddaughter Snegurochka (Snow Maiden)! 🎅❄️👧 Unlike Santa, Ded Moroz wears blue instead of red and walks instead of flying! The Snow Maiden helps him deliver presents, making it a beautiful family affair! 💙✨"
+    },
+    {
+        country: "🇺🇦 Ukraine",
+        coordinates: [48.3794, 31.1656],
+        tradition: "Ukrainians decorate their Christmas trees with intricate spider web ornaments for good luck! 🕷️✨ Legend says a poor widow's tree was decorated by spiders overnight, and their webs turned to silver and gold at dawn! Now, finding a spider web on Christmas morning means prosperity for the year! 🕸️💰"
+    },
+    {
+        country: "🇧🇬 Bulgaria",
+        coordinates: [42.7339, 25.4858],
+        tradition: "Bulgarian Christmas dinner includes an odd number of meatless dishes - usually 7, 9, or 12! 🍽️✨ The most important is a round loaf with coins baked inside! Whoever finds the coin in their slice gets luck and health for the new year! It's like a delicious lottery where everyone wins dinner! 🪙🍞"
+    },
+    {
+        country: "🇷🇴 Romania",
+        coordinates: [45.9432, 24.9668],
+        tradition: "Romanian children go caroling with a star-shaped lantern called 'Steaua'! ⭐🏮 Groups of kids walk house to house carrying these beautiful illuminated stars while singing the story of Jesus's birth! Homeowners reward them with traditional sweets, apples, and coins! It's like trick-or-treating but with more singing! 🎵🍎"
+    },
+    {
+        country: "🇱🇹 Lithuania",
+        coordinates: [55.1694, 23.8813],
+        tradition: "Lithuanians pull blades of straw from under their Christmas tablecloth to predict the coming year! 🌾🔮 Each family member pulls one straw - if it's long and thick, you'll have good health and prosperity! Short or thin means you might face challenges! The ritual brings families together in hope and anticipation! ✨❤️"
+    },
+    {
+        country: "🇱🇻 Latvia",
+        coordinates: [56.8796, 24.6032],
+        tradition: "Latvians believe the Christmas tree was invented in their capital, Riga, in 1510! 🎄🏛️ They celebrate by creating massive community trees decorated by local artisans! The whole neighborhood comes together to sing, dance, and share traditional gingerbread cookies shaped like little people! 🍪👫 It's like a giant outdoor Christmas party! 🎉"
+    },
+    {
+        country: "🇪🇪 Estonia",
+        coordinates: [58.5953, 25.0136],
+        tradition: "Estonian families enjoy multiple Christmas dinners! 🍽️✨ They believe you should eat 7, 9, or 12 times on Christmas Day to ensure abundance in the new year! Each meal can be small, but the more times you eat, the more prosperous your year will be! It's the most delicious way to guarantee good fortune! 🍖🥧"
+    },
+    {
+        country: "🇮🇸 Iceland",
+        coordinates: [64.9631, -19.0208],
+        tradition: "Icelandic children fear the Yule Lads - 13 mischievous trolls who visit one by one before Christmas! 👹🎄 Each has a different prank: Sheep-Cote-Clod harasses sheep, Gully-Gawk hides in gullies to steal milk! Kids leave shoes in windows, and good children get treats while bad ones get rotten potatoes! 👞🥔"
+    },
+    {
+        country: "🇮🇪 Ireland",
+        coordinates: [53.1424, -7.6921],
+        tradition: "Irish families place a single candle in their window on Christmas Eve to guide Mary and Joseph! 🕯️✨ The eldest daughter in each house lights the candle, which burns all night as a symbol of welcome for the Holy Family! It's said that any traveler seeking shelter will be welcomed like Mary and Joseph! 🏠❤️"
+    },
+    {
+        country: "🇬🇧 United Kingdom",
+        coordinates: [55.3781, -3.4360],
+        tradition: "In the United Kingdom, people of all ages get festive and silly with Christmas crackers at the dinner table. These colorful tubes have pull tabs at each end—when you pull, they explode with a loud pop! 💥 Inside, you'll find paper crowns 👑, tiny toys 🧸, cheesy jokes 😆, and little prizes 🎁 that turn Christmas night into a whirlwind of laughs and holiday magic!"
+    },
+    {
+        country: "🇪🇸 Catalonia, Spain",
+        coordinates: [41.5868, 1.9897],
+        tradition: "Catalans have a Christmas log called 'Caganer' that literally poops out presents! 💩🎁 Families 'feed' the log treats for weeks, then on Christmas Eve, they beat it with sticks while singing songs until it 'poops' out candy and small gifts! Kids absolutely LOVE this hilariously weird tradition! 😂🪵"
+    },
+    {
+        country: "🇵🇹 Portugal",
+        coordinates: [39.3999, -8.2245],
+        tradition: "Portuguese families set extra places at their Christmas dinner table for deceased relatives! 🍽️👻 They believe the spirits of loved ones return on Christmas Eve to share the meal! It's called 'consoda' and it's the most touching way to keep family together across life and death! ❤️✨ The empty chairs are filled with love!"
+    },
+    {
+        country: "🇨🇭 Switzerland",
+        coordinates: [46.8182, 8.2275],
+        tradition: "Swiss children receive gifts from Christkind (Christ Child) who rings a tiny silver bell! 🔔👶✨ Families listen carefully for the magical tinkling sound that means presents have been delivered! The Christkind is said to be an angelic figure with golden hair and white robes who floats from house to house! 👼"
+    },
+    {
+        country: "🇦🇹 Austria",
+        coordinates: [47.5162, 14.5501],
+        tradition: "Austrian families reenact the first performance of 'Silent Night' on Christmas Eve! 🎵⭐ The song was written in Oberndorf in 1818, and now families gather around their Christmas trees to sing it softly by candlelight, just like that first magical night! It gives everyone goosebumps! ✨🕯️"
+    },
+    {
+        country: "🇧🇪 Belgium",
+        coordinates: [50.5039, 4.4699],
+        tradition: "Belgian children leave their shoes out with hay and carrots for Saint Nicholas's horse! 🐴🥕 But here's the twist - they also leave out a drawing or letter for Saint Nick himself! In the morning, the horse treats are gone, the letter is taken, and the shoes are filled with chocolates and small toys! 👞🍫"
+    },
+    {
+        country: "🇱🇺 Luxembourg",
+        coordinates: [49.8153, 6.1296],
+        tradition: "Luxembourg families light the Liichtmëssdag candle on February 2nd to officially end their Christmas season! 🕯️✨ But during Christmas, they create elaborate light displays in their windows using special star-shaped candles that burn all night long! The whole country twinkles like a winter fairyland! ⭐🏠"
+    },
+    {
+        country: "🇲🇹 Malta",
+        coordinates: [35.9375, 14.3754],
+        tradition: "Maltese families create stunning Nativity scenes called 'Presepju' in every room of their house! 👶🏠 These aren't just simple displays - they're elaborate miniature worlds with running water, tiny lights, and moving figurines! Some take up entire rooms and are works of art! ✨🎨 Neighbors tour each other's displays!"
+    },
+    {
+        country: "🇨🇾 Cyprus",
+        coordinates: [35.1264, 33.4299],
+        tradition: "Cypriot children go door-to-door singing Christmas carols while holding model ships instead of carrying baskets! 🚢🎵 The ships represent Saint Nicholas's role as protector of sailors! Families welcome the young carolers and reward them with sweets, coins, and warm wishes for the new year! ⚓🍭"
+    },
+    {
+        country: "🇲🇰 North Macedonia",
+        coordinates: [41.6086, 21.7453],
+        tradition: "Macedonian families practice 'Koleduvanje' - groups of young men visit houses singing ancient songs and performing traditional dances! 🕺🎵 They carry bags to collect nuts, dried fruits, and coins! The performances are said to bring good luck and prosperity to the households they visit! It's like Christmas theater! 🎭✨"
+    },
+    {
+        country: "🇧🇦 Bosnia and Herzegovina",
+        coordinates: [43.9159, 17.6791],
+        tradition: "Bosnian families burn a Yule log called 'badnjak' that must be cut before dawn on Christmas Eve! 🪵🌅 The man of the house brings it inside with great ceremony, and it burns all night while families share stories and sing songs! The ashes are later scattered in the garden for good luck! ✨🌱"
+    },
+    {
+        country: "🇷🇸 Serbia",
+        coordinates: [44.0165, 21.0059],
+        tradition: "Serbian families throw wheat at each other on Christmas morning while shouting 'Christ is born!' 🌾🎉 This joyful tradition is called 'Položajnik' and the first person to enter your home gets showered with wheat for prosperity! It's like the world's messiest but most meaningful food fight! 😂✨"
+    },
+    {
+        country: "🇲🇪 Montenegro",
+        coordinates: [42.7087, 19.3744],
+        tradition: "Montenegrin families invite their godfather to be the 'Božićnjak' (Christmas guest) who brings good luck! 🎅✨ This special person enters the house first on Christmas morning, throws coins in the corners, and stirs the fire! Everyone believes this ensures health, wealth, and happiness for the year! 🪙🔥"
+    },
+    {
+        country: "🇦🇱 Albania",
+        coordinates: [41.1533, 20.1683],
+        tradition: "Albanian families light 'drita' (lights) in every window of their home on Christmas Eve! 💡✨ These aren't just any lights - they're special candles blessed by the family patriarch! The lights guide the spirits of ancestors home for Christmas and create the most magical glowing neighborhoods! 👻🕯️"
+    },
+    {
+        country: "🇭🇷 Croatia",
+        coordinates: [45.1000, 15.2000],
+        tradition: "Croatian families plant wheat in small dishes on Saint Barbara's Day (December 4th) and let it grow until Christmas! 🌾🎄 On Christmas morning, they tie the green shoots with red, white, and blue ribbons representing the Croatian flag! The wheat symbolizes prosperity and new life! 🇭🇷✨"
+    },
+    {
+        country: "🇸🇮 Slovenia",
+        coordinates: [46.1512, 14.9955],
+        tradition: "Slovenian children receive gifts from multiple Christmas figures! 🎁✨ Saint Nicholas comes on December 6th, the Christmas Child (Božiček) on Christmas Eve, and the Three Kings on January 6th! It's like having three different Christmases, and kids get spoiled with love and presents all season long! 👑🎅👶"
+    },
+    {
+        country: "🇸🇰 Slovakia",
+        coordinates: [48.6690, 19.6990],
+        tradition: "Slovak families practice the beautiful tradition of 'Štedrý večer' (Generous Evening) where they fast all day until the first star appears! ⭐🍽️ Only then can they begin their Christmas feast! Children press their faces to windows watching for that magical first star - it's like waiting for Christmas to officially begin! ✨👶"
+    },
+    {
+        country: "🇭🇺 Hungary",
+        coordinates: [47.1625, 19.5033],
+        tradition: "Hungarian families hang advent calendars with 24 tiny gifts for children! 🎁📅 But here's the twist - each gift is hidden somewhere in the house, and kids get cryptic clues to find them! Christmas becomes a month-long treasure hunt that builds excitement every single day until Christmas Eve! 🔍✨"
+    },
+    {
+        country: "🇲🇩 Moldova",
+        coordinates: [47.4116, 28.3699],
+        tradition: "Moldovan families practice 'Colinde' where groups of children dress as characters from the Nativity and visit every house in the village! 👫👶🐑 They perform elaborate plays telling the Christmas story and receive traditional sweets called 'cozonac' (sweet bread with nuts) and hot tea! 🍞☕ It's like Christmas theater coming to your door!"
+    },
+    {
+        country: "🇧🇾 Belarus",
+        coordinates: [53.7098, 27.9534],
+        tradition: "Belarusian families celebrate with 'Kaliady' - a festival where young people dress up in costumes and go house to house performing folk songs and dances! 🎭🎵 The performers wear masks representing animals, mythical creatures, and traditional characters! It's like Halloween meets Christmas with traditional Slavic magic! ✨🎪"
+    },
+    {
+        country: "🇹🇷 Turkey",
+        coordinates: [38.9637, 35.2433],
+        tradition: "Turkish families celebrate Saint Nicholas's birthday in his birthplace of Demre! 🎅⛪ They visit the ancient church where the real Saint Nicholas served as bishop and leave gifts for children! It's amazing to celebrate Santa in the actual place where the legend began centuries ago! 🏛️✨"
+    },
+    {
+        country: "🇮🇱 Israel",
+        coordinates: [31.0461, 34.8516],
+        tradition: "Christian families in Bethlehem, the birthplace of Jesus, light candles in the Church of the Nativity! 🕯️⭐ Pilgrims from around the world come to touch the silver star marking the exact spot where Jesus was born! It's the most sacred Christmas celebration on Earth! 👶✨"
+    },
+    {
+        country: "🇱🇧 Lebanon",
+        coordinates: [33.8547, 35.8623],
+        tradition: "Lebanese Christian families plant lentils, chickpeas, and wheat in cotton during Advent! 🌱✨ By Christmas, they have beautiful green sprouts that represent new life and hope! They place these 'Christmas gardens' around their Nativity scenes, creating the most living, breathing Christmas displays! 👶🌿"
+    },
+    {
+        country: "🇪🇬 Egypt",
+        coordinates: [26.0975, 30.0444],
+        tradition: "Egyptian Coptic Christians fast for 43 days before Christmas! 🙏✨ On Christmas Eve (January 7th), they break their fast with a feast called 'Fatta' - a delicious meal of rice, garlic, and meat! The fasting makes the celebration even more meaningful and the food taste absolutely incredible! 🍛❤️"
+    },
+    {
+        country: "🇪🇹 Ethiopia",
+        coordinates: [9.1450, 40.4897],
+        tradition: "Ethiopian Orthodox Christians celebrate 'Genna' (Christmas) with a hockey-like game called 'yegena chewata'! 🏑⚽ Legend says shepherds played this game with their staffs when they heard about Jesus's birth! Communities gather in fields to play while wearing traditional white robes! It's Christmas sports with 2000 years of history! 🏃‍♂️✨"
+    },
+    {
+        country: "🇰🇪 Kenya",
+        coordinates: [-0.0236, 37.9062],
+        tradition: "Kenyan families decorate with 'mti wa Krismasi' (Christmas trees) made from local cypress branches! 🌲🦒 They hang handmade ornaments created from bottle caps, paper, and colorful fabric! Children perform Christmas plays in Swahili and English, bringing the Nativity story to life with African drums and traditional songs! 🥁🎭"
+    },
+    {
+        country: "🇿🇦 South Africa",
+        coordinates: [-30.5595, 22.9375],
+        tradition: "South African families enjoy 'Christmas braai' (barbecue) on the beach! 🏖️🔥 They grill boerewors (traditional sausages) and sosaties (kebabs) while swimming in the ocean and building sand angels instead of snow angels! Carol singing happens under palm trees with the sound of waves! 🌊🎵"
+    },
+    {
+        country: "🇳🇬 Nigeria",
+        coordinates: [9.0820, 8.6753],
+        tradition: "Nigerian families perform traditional 'Christmas Plays' in their local languages! 🎭✨ Each community creates elaborate productions with colorful costumes, live animals, and traditional music! The plays travel from village to village, and everyone contributes by playing angels, shepherds, or wise men! 👼🐑"
+    },
+    {
+        country: "🇬🇭 Ghana",
+        coordinates: [7.9465, -1.0232],
+        tradition: "Ghanaian families celebrate with 'Bronya' - a massive community feast where everyone contributes a dish! 🍛🎉 Tables stretch across entire streets loaded with jollof rice, kelewele (spiced plantains), and palm nut soup! The whole neighborhood becomes one giant family sharing food, stories, and laughter! 🥘❤️"
+    },
+    {
+        country: "🇺🇬 Uganda",
+        coordinates: [1.3733, 32.2903],
+        tradition: "Ugandan children perform 'Christmas concerts' where they dance traditional tribal dances while singing Christmas carols! 💃🎵 They wear colorful traditional costumes and use local instruments like drums and xylophones! Each region adds its own cultural flavor to the Christmas story! 🥁✨"
+    },
+    {
+        country: "🇹🇿 Tanzania",
+        coordinates: [-6.3690, 34.8888],
+        tradition: "Tanzanian families climb Mount Kilimanjaro on Christmas morning to watch the sunrise! 🏔️🌅 They believe starting Christmas at the 'Roof of Africa' brings blessings for the year! Groups sing Christmas carols in Swahili while watching the sun rise over the continent! It's literally the highest Christmas celebration! ⛰️✨"
+    },
+    {
+        country: "🇲🇦 Morocco",
+        coordinates: [31.7917, -7.0926],
+        tradition: "Moroccan Christian families celebrate in the beautiful blue city of Chefchaouen! 🏘️💙 They hang lanterns in the narrow blue-washed streets and share 'Chebakia' (honey-soaked pastries) with neighbors of all faiths! The entire blue city twinkles with warm light and interfaith friendship! ✨🕌"
+    },
+    {
+        country: "🇮🇳 India",
+        coordinates: [20.5937, 78.9629],
+        tradition: "Indian Christians decorate banana and mango trees as Christmas trees! 🌴🎄 They hang oil lamps called 'diyas' instead of electric lights, creating the most magical golden glow! Families sing Christmas carols in Hindi, Tamil, and other local languages while sharing spiced chai and Christmas cake! ☕🍰"
+    },
+    {
+        country: "🇵🇭 Philippines",
+        coordinates: [12.8797, 121.7740],
+        tradition: "Filipino families create giant 'parol' (star-shaped lanterns) that can be as big as houses! ⭐🏠 These bamboo and paper stars represent the Star of Bethlehem and light up entire neighborhoods! Some communities have parol-making contests where families spend months creating these glowing masterpieces! ✨🎨"
+    },
+    {
+        country: "🇰🇷 South Korea",
+        coordinates: [35.9078, 127.7669],
+        tradition: "Korean couples celebrate Christmas as a romantic holiday like Valentine's Day! 💕🎄 They exchange gifts, go on dates to see Christmas lights, and share Christmas cake (which is actually sponge cake with strawberries)! Young people dress up and take photos with elaborate Christmas displays! 📸✨"
+    },
+    {
+        country: "🇨🇳 China",
+        coordinates: [35.8617, 104.1954],
+        tradition: "Chinese families give 'ping'an'guo (peace apples) on Christmas Eve! 🍎✨ They wrap beautiful red apples in colorful paper because 'ping'an' sounds like 'peaceful evening' in Chinese! It's a brilliant way to blend Christmas tradition with Chinese language and create something uniquely beautiful! 🎁❤️"
+    },
+    {
+        country: "🇹🇭 Thailand",
+        coordinates: [15.8700, 100.9925],
+        tradition: "Thai Christians create intricate sand sculptures of the Nativity scene on beaches! 🏖️👶 Artists spend weeks crafting detailed Biblical scenes from sand, complete with palm frond roofs and seashell decorations! Beach Christmas concerts happen with the sound of waves as background music! 🌊🎵"
+    },
+    {
+        country: "🇻🇳 Vietnam",
+        coordinates: [14.0583, 108.2772],
+        tradition: "Vietnamese families attend midnight Mass followed by 'Pho Ga' (chicken noodle soup) feasts! 🍜⛪ The warm, aromatic soup shared with extended family after church creates the coziest Christmas tradition! Street vendors sell special Christmas pho with star anise and cinnamon - Christmas comfort food at its finest! ✨🥄"
+    },
+    {
+        country: "🇸🇬 Singapore",
+        coordinates: [1.3521, 103.8198],
+        tradition: "Singaporean families visit the famous Christmas light displays on Orchard Road! ✨🏙️ The entire shopping district transforms into a winter wonderland with millions of lights, artificial snow, and themed decorations! Families stroll down the illuminated street eating Christmas ice cream and snapping festive selfies 📸🍦, while the air fills with holiday tunes 🎶🎄—it’s basically a magical, glittery parade that makes even the hottest Singaporean nights feel like a cozy winter dream ❄️💖✨."
+    },
+    {
+    country: "🇨🇦 Canada",
+    coordinates: [56.1304, -106.3468],
+    tradition: "Canadians go hardcore with Christmas parades, ice skating, and decorating everything in sight! 🎄❄️ Maple syrup cookies are mandatory, and kids leave carrots for the reindeer along with Nana's homemade butter tarts! 🥕🦌🍪"
+},
+{
+    country: "🇧🇷 Brazil",
+    coordinates: [-14.2350, -51.9253],
+    tradition: "Brazilians celebrate Christmas with beach parties and huge family feasts! 🏖️🎅✨ At midnight, fireworks light up the sky, and kids get gifts from Papai Noel, who sometimes rides a surfboard instead of a sleigh! 🎆🛷"
+},
+{
+    country: "🇦🇷 Argentina",
+    coordinates: [-38.4161, -63.6167],
+    tradition: "Argentinian families throw massive BBQs called 'asados' for Christmas Eve! 🍖🔥 Kids stay up late for fireworks and exchange gifts at midnight! 🎇🎁 It's summer vibes meets festive chaos! 😎"
+},
+{
+    country: "🇨🇱 Chile",
+    coordinates: [-35.6751, -71.5430],
+    tradition: "Chilean kids write letters to Baby Jesus instead of Santa! 👶✉️ Families enjoy traditional dances, fireworks, and sweet treats like 'pan de pascua' (fruitcake) while celebrating under the summer sun! 🌞🎉"
+},
+{
+    country: "🇵🇪 Peru",
+    coordinates: [-9.189967, -75.015152],
+    tradition: "Peruvians celebrate 'Nochebuena' with a giant family dinner at midnight! 🕛🍗 Fireworks and Christmas lights fill the streets, and children get presents from Santa Claus or the Three Wise Men! 🎆🎁"
+},
+{
+    country: "🇳🇿 New Zealand",
+    coordinates: [-40.9006, 174.8860],
+    tradition: "Kiwis celebrate Christmas in summer with beach BBQs, carols in the sun, and Santa arriving on a jet ski! 🏖️🎅✨ Pavlova is the dessert superstar, and families spend the day surfing, swimming, and eating outdoors! 🍰🏄‍♂️"
+},
+{
+    country: "🇲🇾 Malaysia",
+    coordinates: [4.2105, 101.9758],
+    tradition: "Malaysian Christians decorate malls and homes with colorful lights, attend midnight Mass, and exchange gifts! 🎄✨ Special treats include 'Christmas logs' and festive kuih (cakes)! 🍰🎁 It's tropical Christmas magic! 🌴🎶"
+},
+{
+    country: "🇮🇩 Indonesia",
+    coordinates: [-0.7893, 113.9213],
+    tradition: "Indonesian Christians hold midnight Mass in candlelit churches 🕯️⛪ and enjoy festive parades with music, dances, and local delicacies like 'kue nastar' (pineapple tarts)! 🎵🍍 Families gather for feasts that mix tradition and tropical vibes! 🍗✨"
+},
+{
+    country: "🇲🇲 Myanmar",
+    coordinates: [21.9162, 95.9560],
+    tradition: "Myanmar celebrates Christmas with church services, lantern festivals, and festive performances by local children! 🎄🎭 Families decorate their homes with colorful lights and nativity scenes, and everyone enjoys seasonal sweets! 🕯️🍬"
+},
+{
+    country: "🇱🇰 Sri Lanka",
+    coordinates: [7.8731, 80.7718],
+    tradition: "Sri Lankan Christians go all out with Christmas lights, midnight Mass, and traditional food like breudher (Dutch-style cake)! 🎄🕯️ Kids get gifts and families celebrate with music, dancing, and huge feasts! 🎶🍰"
+},
+{
+    country: "🇵🇰 Pakistan",
+    coordinates: [30.3753, 69.3451],
+    tradition: "Pakistani Christians decorate churches and homes with lights 🌟⛪, attend midnight Mass, and share festive treats like plum cakes and samosas! 🎄🍰 Everyone joins together for songs and community celebrations! 🎶✨"
+},
+{
+    country: "🇧🇩 Bangladesh",
+    coordinates: [23.6850, 90.3563],
+    tradition: "Bangladeshi Christians celebrate Christmas with midnight Mass, decorated churches, and exchanging gifts! 🎄🎁 Traditional sweets and festive meals make it extra special, with families gathering for song, prayer, and joy! 🍰🕯️"
+},
+{
+    country: "🇱🇦 Laos",
+    coordinates: [19.8563, 102.4955],
+    tradition: "Laotian Christians celebrate with church services, nativity plays, and gift-giving! 🎁⛪ They decorate homes and streets with candles and paper lanterns, creating glowing Christmas nights! 🕯️✨"
+},
+{
+    country: "🇰🇭 Cambodia",
+    coordinates: [12.5657, 104.9910],
+    tradition: "Cambodian Christians attend Mass, sing carols, and decorate homes with Christmas lights! 🌟🎶 Traditional foods and community gatherings make the celebration extra warm in the tropical weather! 🏡🍲"
+},
+{
+    country: "🇱🇺 Luxembourg",
+    coordinates: [49.8153, 6.1296],
+    tradition: "Luxembourgers light candles on windows and visit Christmas markets full of mulled wine, gingerbread, and festive crafts! 🕯️🎄 It’s cozy, magical, and perfect for family strolls under twinkling lights! ✨🍷"
+}
+    ];
+    
+
+
+
+        // Initialize the map
+        const map = L.map('map').setView([20, 0], 3);
+
+        // Add the tile layer (you can change the style)
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        map.attributionControl.setPrefix('')
+
+        // Custom icon
+        const treeIcon = L.icon({
+            iconUrl: '../assets/trees.png',
+            iconSize: [32, 32],
+            iconAnchor: [16, 32],
+            popupAnchor: [0, -32]
+        });
+
+        // Add markers for each tradition
+        holidayTraditions.forEach(tradition => {
+            const marker = L.marker(tradition.coordinates, { icon: treeIcon })
+                .bindTooltip(tradition.country, { 
+                    permanent: false, 
+                    direction: 'top',
+                    offset: [0, -20], // This moves it higher above the marker
+                    className: 'custom-tooltip'
+                })
+                .bindPopup(
+                    `<div class="custom-popup">
+                        <div class="country-title">${tradition.country}</div>
+                        <div class="tradition-text">${tradition.tradition}</div>
+                    </div>`,
+                    {
+                        className: 'custom-popup'
+                    }
+                )
+                .addTo(map);
+        });
+
+        // Background music handling
+document.addEventListener('DOMContentLoaded', function() {
+    const bgMusic = document.getElementById('bgMusic');
+    
+    // Try to play automatically
+    bgMusic.play().catch(function(error) {
+        console.log("Autoplay prevented, waiting for user interaction");
+    });
+
+    // Add click listener to document to start music on first interaction
+    document.addEventListener('click', function startMusic() {
+        bgMusic.play().then(function() {
+            // Remove the click listener once music starts
+            document.removeEventListener('click', startMusic);
+        }).catch(function(error) {
+            console.log("Playback failed:", error);
+        });
+    }, { once: true });
+
+    // Keep trying to play music when tab becomes visible
+    document.addEventListener('visibilitychange', function() {
+        if (!document.hidden) {
+            bgMusic.play().catch(function(error) {
+                console.log("Playback failed on visibility change");
+            });
+        }
+    });
+});
+    </script>
+</body>
+</html>

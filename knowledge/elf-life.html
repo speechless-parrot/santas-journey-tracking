@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Day in the Life of an Elf 🧝‍♂️</title>
+    <link rel="icon" type="image/png" href="../assets/santa-chimney-waving.png">
+    <link href="https://fonts.googleapis.com/css?family=Google+Sans:100,300,400,500,700,900,100i,300i,400i,500i,700i,900i" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,400,1,0">
+    <style>
+        :root {
+            --christmas-red: #d42426;
+            --christmas-green: #165b33;
+            --snow-white: #ffffff;
+            --gold: #ffd700;
+            --paper: #f8f9fa;
+            --text: #2c3e50;
+            --dawn: #ff9a9e;
+            --noon: #4facfe;
+            --sunset: #ff6b6b;
+            --night: #30336b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Google Sans', sans-serif;
+        }
+
+        body {
+            background-color: var(--paper);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .top-bar {
+            background: linear-gradient(135deg, var(--christmas-red), var(--christmas-green));
+            padding: 1rem;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .page-title {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 500;
+        }
+
+        .home-button {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .home-button:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.1);
+        }
+
+        .content {
+            max-width: 800px;
+            margin: 80px auto 40px;
+            padding: 2rem;
+        }
+
+        .time-card {
+            background: white;
+            border-radius: 24px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .time-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+        }
+
+        .morning::before { background: linear-gradient(90deg, var(--dawn), var(--gold)); }
+        .midmorning::before { background: linear-gradient(90deg, var(--gold), var(--noon)); }
+        .noon::before { background: linear-gradient(90deg, var(--noon), var(--sunset)); }
+        .afternoon::before { background: linear-gradient(90deg, var(--sunset), var(--christmas-red)); }
+        .evening::before { background: linear-gradient(90deg, var(--christmas-red), var(--night)); }
+        .night::before { background: linear-gradient(90deg, var(--night), var(--dawn)); }
+
+        .time-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .time-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .time-badge {
+            background: var(--christmas-red);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-title {
+            color: var(--christmas-red);
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .highlight {
+            color: var(--christmas-green);
+            font-weight: 500;
+        }
+
+        .activity-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .activity-card {
+            background: linear-gradient(135deg, #fff, var(--paper));
+            padding: 1.5rem;
+            border-radius: 16px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .activity-card .material-symbols-rounded {
+            font-size: 32px;
+            color: var(--christmas-red);
+        }
+
+        ul {
+            list-style: none;
+            padding-left: 1.5rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+            position: relative;
+        }
+
+        li::before {
+            content: "✨";
+            position: absolute;
+            left: -1.5rem;
+        }
+
+        .fun-fact {
+            background: linear-gradient(135deg, #fff5f5, #f0f8ff);
+            padding: 1rem;
+            border-radius: 12px;
+            margin-top: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .fun-fact .material-symbols-rounded {
+            color: var(--gold);
+        }
+
+        @media (max-width: 600px) {
+            .content {
+                padding: 1rem;
+            }
+
+            .time-card {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <h1 class="page-title">24 Hours as a North Pole Elf 🧝‍♂️</h1>
+        <button class="home-button" onclick="window.location.href='../index.html'">
+            <span class="material-symbols-rounded">home</span>
+        </button>
+    </div>
+
+    <div class="content">
+        <div class="time-card morning">
+            <div class="time-header">
+                <div class="time-badge">
+                    <span class="material-symbols-rounded">wb_sunny</span>
+                    6:00 AM
+                </div>
+                <h2 class="section-title">
+                    <span class="material-symbols-rounded">sunny_snowing</span>
+                    Rise & Shine at the North Pole
+                </h2>
+            </div>
+            <ul>
+                <li>Wake up in a <span class="highlight">cozy cabin</span> under sparkling icicles 🏡</li>
+                <li>Enjoy magical <span class="highlight">gingerbread pancakes</span> and peppermint cocoa ☕</li>
+                <li>Morning stretch and snow-jog to wake up that reindeer energy! 🏃‍♂️</li>
+            </ul>
+            <div class="activity-grid">
+                <div class="activity-card">
+                    <span class="material-symbols-rounded">cottage</span>
+                    <strong>Cozy Cabin</strong>
+                    <span>Magical wake-up ✨</span>
+                </div>
+                <div class="activity-card">
+                    <span class="material-symbols-rounded">breakfast_dining</span>
+                    <strong>Magic Breakfast</strong>
+                    <span>Energy boost! 🍪</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="time-card midmorning">
+            <div class="time-header">
+                <div class="time-badge">
+                    <span class="material-symbols-rounded">schedule</span>
+                    9:00 AM
+                </div>
+                <h2 class="section-title">
+                    <span class="material-symbols-rounded">toys</span>
+                    Toy Making Magic
+                </h2>
+            </div>
+            <ul>
+                <li>Work with <span class="highlight">magical Toy-O-Matics</span> creating singing dolls 🎶</li>
+                <li>Assemble dancing robots and floating plushies 🤖</li>
+                <li>Compete in mini toy-making challenges! 🏆</li>
+            </ul>
+            <div class="fun-fact">
+                <span class="material-symbols-rounded">tips_and_updates</span>
+                <span>The fastest elf can wrap 100 presents in just 3 minutes! 🎁⚡</span>
+            </div>
+        </div>
+
+        <div class="time-card noon">
+            <div class="time-header">
+                <div class="time-badge">
+                    <span class="material-symbols-rounded">wb_twilight</span>
+                    12:00 PM
+                </div>
+                <h2 class="section-title">
+                    <span class="material-symbols-rounded">magic_button</span>
+                    Creative Chaos & Magic Class
+                </h2>
+            </div>
+            <ul>
+                <li>Experiment with <span class="highlight">new enchantments</span> for toys ✨</li>
+                <li>Learn advanced <span class="highlight">sparkle trails</span> and gift-wrapping spells 🎁</li>
+                <li>Practice stealth delivery techniques 🤫</li>
+            </ul>
+            <div class="activity-grid">
+                <div class="activity-card">
+                    <span class="material-symbols-rounded">school</span>
+                    <strong>Magic School</strong>
+                    <span>Learning spells 📚</span>
+                </div>
+                <div class="activity-card">
+                    <span class="material-symbols-rounded">psychology</span>
+                    <strong>Experiments</strong>
+                    <span>New magic! 🪄</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="time-card afternoon">
+            <div class="time-header">
+                <div class="time-badge">
+                    <span class="material-symbols-rounded">partly_cloudy_day</span>
+                    3:00 PM
+                </div>
+                <h2 class="section-title">
+                    <span class="material-symbols-rounded">pets</span>
+                    Reindeer & Sleigh Time
+                </h2>
+            </div>
+            <ul>
+                <li>Help groom and train the <span class="highlight">magical reindeer</span> 🦌</li>
+                <li>Polish sleigh parts and test <span class="highlight">hover engines</span> 🛷</li>
+                <li>Practice emergency mid-flight gift restocking ⚡</li>
+            </ul>
+            <div class="fun-fact">
+                <span class="material-symbols-rounded">tips_and_updates</span>
+                <span>Rudolph's nose can light up an entire mountain! 🔴✨</span>
+            </div>
+        </div>
+
+        <div class="time-card evening">
+            <div class="time-header">
+                <div class="time-badge">
+                    <span class="material-symbols-rounded">nights_stay</span>
+                    6:00 PM
+                </div>
+                <h2 class="section-title">
+                    <span class="material-symbols-rounded">celebration</span>
+                    Sweet Break & Elf Fun
+                </h2>
+            </div>
+            <div class="activity-grid">
+                <div class="activity-card">
+                    <span class="material-symbols-rounded">cookie</span>
+                    <strong>Candy Lab</strong>
+                    <span>Magical treats 🍬</span>
+                </div>
+                <div class="activity-card">
+                    <span class="material-symbols-rounded">sledding</span>
+                    <strong>Snow Games</strong>
+                    <span>Sled races! 🛷</span>
+                </div>
+                <div class="activity-card">
+                    <span class="material-symbols-rounded">music_note</span>
+                    <strong>Elf Choir</strong>
+                    <span>Magic songs 🎶</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="time-card night">
+            <div class="time-header">
+                <div class="time-badge">
+                    <span class="material-symbols-rounded">bedtime</span>
+                    9:00 PM
+                </div>
+                <h2 class="section-title">
+                    <span class="material-symbols-rounded">auto_stories</span>
+                    Cozy Night Wind-Down
+                </h2>
+            </div>
+            <ul>
+                <li>Sip <span class="highlight">floating marshmallow</span> hot cocoa ☕</li>
+                <li>Listen to magical stories from senior elves 📖</li>
+                <li>Final workshop check before bedtime 🏭</li>
+                <li>Dream sweet dreams in sparkly elf beds ✨</li>
+            </ul>
+            <div class="fun-fact">
+                <span class="material-symbols-rounded">tips_and_updates</span>
+                <span>Elf beds are actually made from cloud fluff and starlight! 🌟</span>
+            </div>
+        </div>
+
+        <div class="time-card">
+            <div class="section-title">
+                <span class="material-symbols-rounded">stars</span>
+                Living the Elf Life
+            </div>
+            <p>
+                Every day as an elf is filled with <span class="highlight">magic, joy, and a sprinkle of chaos</span>! 
+                From dawn till dusk, we're creating Christmas magic, one toy and spell at a time. It's exhausting, 
+                exhilarating, and absolutely magical - and we wouldn't have it any other way! 🎄✨
+            </p>
+        </div>
+    </div>
+</body>
+</html>

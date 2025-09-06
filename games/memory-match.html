@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Christmas Memory Match 🧠</title>
+    <link rel="icon" type="image/png" href="../assets/santa-chimney-waving.png">
+    <link href="https://fonts.googleapis.com/css?family=Google+Sans:100,300,400,500,700,900,100i,300i,400i,500i,700i,900i" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,400,1,0">
+    <style>
+        :root {
+            --christmas-red: #d42426;
+            --christmas-green: #165b33;
+            --snow-white: #ffffff;
+            --gold: #ffd700;
+            --paper: #f8f9fa;
+            --text: #2c3e50;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Google Sans', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #fff5f5 0%, #f0f8ff 100%);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .top-bar {
+            background: linear-gradient(135deg, var(--christmas-red), var(--christmas-green));
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .game-info {
+            display: flex;
+            gap: 2rem;
+            color: white;
+            align-items: center;
+            flex-grow: 1;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .home-button {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 1rem;
+        }
+
+        .home-button:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.1);
+        }
+
+        .timer {
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: var(--gold);
+        }
+
+        .game-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 1rem;
+            flex-grow: 1;
+        }
+
+        .game-grid {
+            display: grid;
+            gap: 1rem;
+            margin: 2rem 0;
+            justify-content: center;
+        }
+
+        .card {
+            width: 100px;
+            height: 100px;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            cursor: pointer;
+        }
+
+        .card.flipped .card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .card-front {
+            background: linear-gradient(135deg, var(--christmas-red), var(--christmas-green));
+            color: var(--gold);
+        }
+
+        .card-back {
+            background: white;
+            transform: rotateY(180deg);
+        }
+
+        .level-progress {
+            background: rgba(255,255,255,0.2);
+            height: 4px;
+            border-radius: 2px;
+            margin-top: 0.5rem;
+            overflow: hidden;
+        }
+
+        .level-fill {
+            height: 100%;
+            background: var(--gold);
+            transition: width 0.3s ease;
+        }
+
+        .time-bar {
+            height: 8px;
+            background: rgba(255,255,255,0.2);
+            margin-top: 1rem;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .time-fill {
+            height: 100%;
+            background: var(--gold);
+            transition: width 0.1s linear;
+        }
+
+        .start-screen {
+            background: white;
+            border-radius: 24px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .start-screen h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--christmas-red), var(--christmas-green));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .tutorial {
+            max-width: 600px;
+            margin: 2rem auto;
+            text-align: left;
+        }
+
+        .tutorial h3 {
+            color: var(--christmas-red);
+            margin: 1.5rem 0 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .badge {
+            background: linear-gradient(135deg, var(--christmas-red), var(--christmas-green));
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            display: inline-block;
+            margin-top: 1rem;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .shake {
+            animation: shake 0.5s;
+        }
+
+        @keyframes celebrate {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .celebrate {
+            animation: celebrate 0.5s;
+        }
+
+        .modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 2rem;
+            border-radius: 24px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+            text-align: center;
+            z-index: 100;
+        }
+
+        .modal h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--christmas-red), var(--gold));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 99;
+        }
+
+        .game-button {
+            background: linear-gradient(135deg, var(--christmas-red), var(--christmas-green));
+            color: white;
+            border: none;
+            padding: 1.2rem 2.4rem;
+            border-radius: 16px;
+            font-size: 1.2rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .game-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        @media (max-width: 768px) {
+            .card {
+                width: 80px;
+                height: 80px;
+            }
+
+            .game-info {
+                gap: 1rem;
+                font-size: 0.9rem;
+            }
+
+            .start-screen {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
+
+            .start-screen h1 {
+                font-size: 2rem;
+            }
+
+            .game-button {
+                padding: 1rem 2rem;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <audio id="bgMusic" loop>
+        <source src="../assets/music.mp3" type="audio/mp3">
+    </audio>
+    <div class="top-bar">
+        <div class="game-info">
+            <div class="info-item">
+                <span class="material-symbols-rounded">stars</span>
+                Level <p id="level">1</p>/ 8
+            </div>
+            <div class="info-item">
+                <span class="material-symbols-rounded">timer</span>
+                <span id="timer" class="timer">00:00</span>
+            </div>
+            <div class="info-item">
+                <span class="material-symbols-rounded">psychology</span>
+                Moves: <span id="moves">0</span>
+            </div>
+        </div>
+        <button class="home-button" onclick="window.location.href='../index.html'">
+            <span class="material-symbols-rounded">home</span>
+        </button>
+        <div class="level-progress">
+            <div class="level-fill" id="level-progress"></div>
+        </div>
+        <div class="time-bar">
+            <div class="time-fill" id="time-progress"></div>
+        </div>
+    </div>
+
+    <div class="game-container">
+        <div class="game-grid" id="game-grid"></div>
+    </div>
+
+    <script>
+        class MemoryGame {
+            constructor() {
+                this.level = 1;
+                this.moves = 0;
+                this.matches = 0;
+                this.flippedCards = [];
+                this.locked = false;
+                this.timeLeft = 0;
+                this.timerInterval = null;
+                this.emojis = ['🎅', '🎄', '🎁', '⛄', '🦌', '🔔', '🎶', '❄️', '🍪', '🎭', '🌟', '🕯️', 
+                             '🧦', '🛷', '🏰', '🍬', '🧝‍♂️', '🤶', '🦅', '🍫'];
+                this.showStartScreen();
+            }
+
+            showStartScreen() {
+                const grid = document.getElementById('game-grid');
+                grid.innerHTML = `
+                    <div class="start-screen">
+                        <h1>Christmas Memory Match! 🎄</h1>
+                        <p>Test your memory with this festive card matching game!</p>
+                        
+                        <div class="tutorial">
+                            <h3><span class="material-symbols-rounded">school</span>How to Play</h3>
+                            <p>• Match pairs of Christmas cards</p>
+                            <p>• Complete 8 challenging levels</p>
+                            <p>• Each level adds more cards</p>
+                            
+                            <h3><span class="material-symbols-rounded">timer</span>Time Challenge</h3>
+                            <p>• Beat the timer in each level</p>
+                            <p>• Time gets shorter as you progress</p>
+                            <p>• Make your moves count!</p>
+                            
+                            <h3><span class="material-symbols-rounded">psychology</span>Strategy Tips</h3>
+                            <p>• Remember card positions</p>
+                            <p>• Work quickly but carefully</p>
+                            <p>• Plan your moves ahead</p>
+
+                            <div class="badge">Ready to test your memory?</div>
+                        </div>
+                        <br>
+                        <button class="game-button" onclick="game.startGame()">
+                            <span class="material-symbols-rounded">play_arrow</span>
+                            Start Game
+                        </button>
+                    </div>
+                `;
+            }
+
+            startGame() {
+                this.setupLevel();
+            }
+
+            setupLevel() {
+                const cardCount = Math.min(8 + (this.level - 1) * 4, 40);
+                this.timeLeft = Math.max(60 - (this.level - 1) * 3, 30);
+                
+                const levelEmojis = this.shuffleArray(this.emojis).slice(0, cardCount/2);
+                const cards = [...levelEmojis, ...levelEmojis];
+                this.shuffleArray(cards);
+
+                const grid = document.getElementById('game-grid');
+                const columns = Math.min(Math.ceil(Math.sqrt(cardCount)), 8);
+                grid.style.gridTemplateColumns = `repeat(${columns}, 100px)`;
+                
+                grid.innerHTML = cards.map((emoji, index) => `
+                    <div class="card" data-card="${emoji}" onclick="game.flipCard(this)">
+                        <div class="card-inner">
+                            <div class="card-front">
+                                <span class="material-symbols-rounded">playing_cards</span>
+                            </div>
+                            <div class="card-back">${emoji}</div>
+                        </div>
+                    </div>
+                `).join('');
+
+                document.getElementById('level').textContent = this.level;
+                document.getElementById('moves').textContent = this.moves;
+                document.getElementById('level-progress').style.width = `${((this.level-1)/8)*100}%`;
+                
+                this.startTimer();
+            }
+
+            startTimer() {
+                clearInterval(this.timerInterval);
+                this.updateTimer();
+                this.timerInterval = setInterval(() => {
+                    this.timeLeft--;
+                    this.updateTimer();
+                    if (this.timeLeft <= 0) {
+                        this.gameOver(`Time's up!`);
+                    }
+                }, 1000);
+            }
+
+            updateTimer() {
+                const minutes = Math.floor(this.timeLeft / 60);
+                const seconds = this.timeLeft % 60;
+                document.getElementById('timer').textContent = 
+                    `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                document.getElementById('time-progress').style.width = `${(this.timeLeft/60)*100}%`;
+            }
+
+            flipCard(card) {
+                if (this.locked || card.classList.contains('flipped')) return;
+                
+                card.classList.add('flipped');
+                this.flippedCards.push(card);
+
+                if (this.flippedCards.length === 2) {
+                    this.moves++;
+                    document.getElementById('moves').textContent = this.moves;
+                    this.checkMatch();
+                }
+            }
+
+            checkMatch() {
+                this.locked = true;
+                const [card1, card2] = this.flippedCards;
+                const match = card1.dataset.card === card2.dataset.card;
+
+                if (match) {
+                    this.matches++;
+                    card1.classList.add('celebrate');
+                    card2.classList.add('celebrate');
+                    this.flippedCards = [];
+                    this.locked = false;
+                    this.checkLevelComplete();
+                } else {
+                    card1.classList.add('shake');
+                    card2.classList.add('shake');
+                    setTimeout(() => {
+                        card1.classList.remove('flipped', 'shake');
+                        card2.classList.remove('flipped', 'shake');
+                        this.flippedCards = [];
+                        this.locked = false;
+                    }, 1000);
+                }
+            }
+
+            checkLevelComplete() {
+                const totalPairs = document.querySelectorAll('.card').length / 2;
+                if (this.matches === totalPairs) {
+                    clearInterval(this.timerInterval);
+                    if (this.level === 8) {
+                        this.gameOver('You Won! 🎉');
+                    } else {
+                        setTimeout(() => {
+                            this.level++;
+                            this.matches = 0;
+                            this.setupLevel();
+                        }, 1000);
+                    }
+                }
+            }
+
+            gameOver(message) {
+                clearInterval(this.timerInterval);
+                const overlay = document.createElement('div');
+                overlay.className = 'modal-overlay';
+                document.body.appendChild(overlay);
+
+                const modal = document.createElement('div');
+                modal.className = 'modal';
+                modal.innerHTML = `
+                    <h2>${message}</h2>
+                    <p>Level: ${this.level}</p>
+                    <p>Moves: ${this.moves}</p>
+                    <br>
+                    <button class="game-button" onclick="location.reload()">
+                        <span class="material-symbols-rounded">replay</span>
+                        Play Again
+                    </button>
+                `;
+                document.body.appendChild(modal);
+            }
+
+            shuffleArray(array) {
+                return array.sort(() => Math.random() - 0.5);
+            }
+        }
+
+        const game = new MemoryGame();
+
+                // Background music handling
+document.addEventListener('DOMContentLoaded', function() {
+    const bgMusic = document.getElementById('bgMusic');
+    
+    // Try to play automatically
+    bgMusic.play().catch(function(error) {
+        console.log("Autoplay prevented, waiting for user interaction");
+    });
+
+    // Add click listener to document to start music on first interaction
+    document.addEventListener('click', function startMusic() {
+        bgMusic.play().then(function() {
+            // Remove the click listener once music starts
+            document.removeEventListener('click', startMusic);
+        }).catch(function(error) {
+            console.log("Playback failed:", error);
+        });
+    }, { once: true });
+
+    // Keep trying to play music when tab becomes visible
+    document.addEventListener('visibilitychange', function() {
+        if (!document.hidden) {
+            bgMusic.play().catch(function(error) {
+                console.log("Playback failed on visibility change");
+            });
+        }
+    });
+});
+    </script>
+</body>
+</html>

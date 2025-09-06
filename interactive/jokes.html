@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Christmas Jokes 😂</title>
+    <link rel="icon" type="image/png" href="../assets/santa-chimney-waving.png">
+    <link href="https://fonts.googleapis.com/css?family=Google+Sans:100,300,400,500,700,900,100i,300i,400i,500i,700i,900i" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,400,1,0">
+    <style>
+        :root {
+            --christmas-red: #d42426;
+            --christmas-green: #165b33;
+            --snow-white: #ffffff;
+            --gold: #ffd700;
+            --paper: #f8f9fa;
+            --text: #2c3e50;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Google Sans', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #fff5f5 0%, #f0f8ff 100%);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .top-bar {
+            background: linear-gradient(135deg, var(--christmas-red), var(--christmas-green));
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .page-title {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 500;
+            flex-grow: 1;
+        }
+
+        .home-button {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .home-button:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.1);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 1rem;
+            flex-grow: 1;
+        }
+
+        .joke-card {
+            background: white;
+            border-radius: 24px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .joke-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--christmas-red), var(--gold), var(--christmas-green));
+        }
+
+        .date {
+            color: var(--christmas-red);
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .joke-setup {
+            font-size: 1.8rem;
+            margin-bottom: 2rem;
+            color: var(--text);
+            font-weight: 500;
+        }
+
+        .punchline {
+            font-size: 1.5rem;
+            color: var(--christmas-green);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+
+        .punchline.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal-button {
+            background: linear-gradient(135deg, var(--christmas-red), var(--christmas-green));
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 16px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 2rem 0;
+        }
+
+        .reveal-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .next-joke {
+            text-align: center;
+            color: var(--text);
+            opacity: 0.7;
+            margin-top: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 1rem;
+                margin: 1rem;
+            }
+
+            .joke-setup {
+                font-size: 1.5rem;
+            }
+
+            .punchline {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <audio id="bgMusic" loop>
+        <source src="../assets/music.mp3" type="audio/mp3">
+    </audio>
+    <div class="top-bar">
+        <h1 class="page-title">Christmas Jokes 😂</h1>
+        <button class="home-button" onclick="window.location.href='../index.html'">
+            <span class="material-symbols-rounded">home</span>
+        </button>
+    </div>
+
+    <div class="container">
+        <div class="joke-card">
+            <div class="date">
+                <span class="material-symbols-rounded">calendar_month</span>
+                <span id="current-date"></span>
+            </div>
+            <div id="joke-content"></div>
+            <button class="reveal-button" onclick="revealPunchline()">
+                <span class="material-symbols-rounded">celebration</span>
+                Reveal Punchline
+            </button>
+            <div class="next-joke">
+                <span class="material-symbols-rounded">update</span>
+                Next joke arrives tomorrow!
+            </div>
+        </div>
+    </div>
+
+    <script>
+const christmasJokes = [
+    {
+        setup: "What does Santa suffer from if he gets stuck in a chimney?",
+        punchline: "Claustrophobia! 🎅"
+    },
+    {
+        setup: "What do you call an elf who sings?",
+        punchline: "A wrapper! 🎵"
+    },
+    {
+        setup: "Why did Rudolph get a bad grade in school?",
+        punchline: "Because he went down in history! 🦌"
+    },
+    {
+        setup: "What do snowmen eat for breakfast?",
+        punchline: "Frosted Flakes! ❄️"
+    },
+    {
+        setup: "What does Santa do when his elves misbehave?",
+        punchline: "He gives them the sack! 🎁"
+    },
+    {
+        setup: "What do you call Santa when he takes a break?",
+        punchline: "Santa Pause! ⏸️"
+    },
+    {
+        setup: "Why don't penguins like online shopping?",
+        punchline: "They're afraid of the phishing sites! 🐧"
+    },
+    {
+        setup: "What do you call a reindeer who tells jokes?",
+        punchline: "COmedeer! 🦌"
+    },
+    {
+        setup: "What kind of photos do elves take?",
+        punchline: "Elfies! 🧝‍♂️"
+    },
+    {
+        setup: "What do you call a scared snowman?",
+        punchline: "A snow-flake! ❄️"
+    },
+    {
+        setup: "Why was the Christmas tree bad at knitting?",
+        punchline: "It kept dropping its needles! 🌲"
+    },
+    {
+        setup: "What do you call a cat on the beach at Christmas?",
+        punchline: "Sandy Claws! 🐱"
+    },
+    {
+        setup: "Why did the gingerbread man go to the doctor?",
+        punchline: "Because he felt crumbly! 🍪"
+    },
+    {
+        setup: "What's a Christmas tree's favorite candy?",
+        punchline: "Orna-mints! 🎄"
+    },
+    {
+        setup: "Why don't crabs celebrate Christmas?",
+        punchline: "Because they're shell-fish! 🦀"
+    },
+    {
+        setup: "What do you call a sleeping bull at Christmas?",
+        punchline: "A bulldozer! 🐂"
+    },
+    {
+        setup: "Why did the turkey join the Christmas band?",
+        punchline: "Because it had the drumsticks! 🦃"
+    },
+    {
+        setup: "What's Santa's favorite type of music?",
+        punchline: "Wrap music! 🎵"
+    },
+    {
+        setup: "Why did the ornament go to therapy?",
+        punchline: "It had too many hang-ups! 🎄"
+    },
+    {
+        setup: "What do you call a dinosaur that crashes his sleigh?",
+        punchline: "Tyrannosaurus Wrecks! 🦕"
+    },
+    {
+        setup: "Why don't Christmas trees ever get haircuts?",
+        punchline: "They're always perfectly trimmed! ✂️"
+    },
+    {
+        setup: "What do you call Santa's little helpers?",
+        punchline: "Subordinate clauses! 🧝‍♂️"
+    },
+    {
+        setup: "Why was the Christmas cookie sad?",
+        punchline: "Its mom was a wafer so long! 🍪"
+    },
+    {
+        setup: "What do you call a reindeer with no eyes?",
+        punchline: "No-eye-deer! 🦌"
+    },
+    {
+        setup: "Why did Santa's helper see the doctor?",
+        punchline: "Because he had low elf esteem! 🧝‍♂️"
+    },
+    {
+        setup: "What goes 'Oh, oh, oh'?",
+        punchline: "Santa walking backwards! 🎅"
+    },
+    {
+        setup: "Why don't eggs tell Christmas jokes?",
+        punchline: "They'd crack each other up! 🥚"
+    },
+    {
+        setup: "What's every parent's favorite Christmas carol?",
+        punchline: "Silent Night! 🤫"
+    },
+    {
+        setup: "What do you call a broke Santa?",
+        punchline: "Saint Nick-el and dime! 💰"
+    },
+    {
+        setup: "Why did the Christmas light go to school?",
+        punchline: "To get brighter! 💡"
+    },
+    {
+        setup: "What do you call a reindeer who loves to dance?",
+        punchline: "Dancer! Oh wait... 💃"
+    },
+    {
+        setup: "Why was the math book sad at Christmas?",
+        punchline: "It had too many problems! 📚"
+    },
+    {
+        setup: "What do you call Santa when he's broke?",
+        punchline: "Saint Nickel-less! 🎅"
+    },
+    {
+        setup: "Why did the Christmas pudding go to the gym?",
+        punchline: "Because it was feeling a little dense! 🍮"
+    },
+    {
+        setup: "What's the best thing about Switzerland at Christmas?",
+        punchline: "I don't know, but the flag is a big plus! 🇨🇭"
+    },
+    {
+        setup: "What do you call a fish wearing a crown at Christmas?",
+        punchline: "A king fish! 👑"
+    },
+    {
+        setup: "Why don't Christmas trees like needles?",
+        punchline: "They make them feel all prickly! 🌲"
+    },
+    {
+        setup: "What did one Christmas tree say to another?",
+        punchline: "Lighten up! ✨"
+    },
+    {
+        setup: "Why was the Christmas stocking nervous?",
+        punchline: "It was hung up about everything! 🧦"
+    },
+    {
+        setup: "What do you call a greedy elf?",
+        punchline: "Elfish! 🧝‍♂️"
+    },
+    {
+        setup: "Why did Santa go to music school?",
+        punchline: "To improve his wrapping! 🎵"
+    },
+    {
+        setup: "What's a snowman's favorite breakfast?",
+        punchline: "Ice Krispies! ⛄"
+    },
+    {
+        setup: "Why don't you ever see Santa in the hospital?",
+        punchline: "Because he has private elf care! 🏥"
+    },
+    {
+        setup: "What do you call a Christmas tree that knows karate?",
+        punchline: "Spruce Lee! 🥋"
+    },
+    {
+        setup: "Why was the snowman looking through the carrots?",
+        punchline: "He was picking his nose! 🥕"
+    },
+    {
+        setup: "What's red and white and gives presents to good little fish?",
+        punchline: "Sandy Claws! 🦞"
+    },
+    {
+        setup: "Why did the Christmas angel go to the doctor?",
+        punchline: "She had harp problems! 👼"
+    },
+    {
+        setup: "What do you call a kid who doesn't believe in Santa?",
+        punchline: "A rebel without a Claus! 😎"
+    },
+    {
+        setup: "Why did the Christmas tree go to the barber?",
+        punchline: "It needed a trim! ✂️"
+    },
+    {
+        setup: "What's Santa's favorite pizza?",
+        punchline: "One that's deep pan, crisp and even! 🍕"
+    },
+    {
+        setup: "Why don't reindeer make good comedians?",
+        punchline: "Their jokes are always deer-ivative! 🦌"
+    },
+    {
+        setup: "What do you call an elf wearing earmuffs?",
+        punchline: "Anything you want - he can't hear you! 🧝‍♂️"
+    },
+    {
+        setup: "Why was the Christmas wreath afraid?",
+        punchline: "It was a wreck! 🎄"
+    },
+    {
+        setup: "What do you call Santa's dog?",
+        punchline: "Santa Paws! 🐕"
+    },
+    {
+        setup: "Why did the Christmas star go to school?",
+        punchline: "To get brighter! ⭐"
+    },
+    {
+        setup: "What's a Christmas tree's least favorite candy?",
+        punchline: "Root beer barrels! 🌲"
+    },
+    {
+        setup: "Why don't Christmas stockings ever get cold?",
+        punchline: "They're always by the fireplace! 🔥"
+    },
+    {
+        setup: "What do you call a snowman with abs?",
+        punchline: "An abdominal snowman! ⛄"
+    },
+    {
+        setup: "Why was Santa's little helper depressed?",
+        punchline: "He had low elf-esteem! 😔"
+    },
+    {
+        setup: "What do you call a Christmas tree in your backyard?",
+        punchline: "Deck-orative! 🏠"
+    },
+    {
+        setup: "Why did the Christmas cake go to the doctor?",
+        punchline: "It was feeling crumbly! 🍰"
+    },
+    {
+        setup: "What's Santa's favorite state?",
+        punchline: "Idaho-ho-ho! 🎅"
+    },
+    {
+        setup: "Why don't Christmas lights ever get tired?",
+        punchline: "They're always lit! 💡"
+    },
+    {
+        setup: "What do you call a reindeer that can't see?",
+        punchline: "I have no-eye-deer! 🦌"
+    },
+    {
+        setup: "Why was the Christmas present excited?",
+        punchline: "It was wrapped up in the moment! 🎁"
+    },
+    {
+        setup: "What do you call Santa when he stops moving?",
+        punchline: "Santa Pause! ⏯️"
+    },
+    {
+        setup: "Why did the Christmas bell go to therapy?",
+        punchline: "It had too many dings! 🔔"
+    },
+    {
+        setup: "What's a zombie's favorite Christmas carol?",
+        punchline: "Deck the Halls with parts of bodies! 🧟‍♂️"
+    },
+    {
+        setup: "Why don't Christmas elves ever win races?",
+        punchline: "Because they're always a little behind! 🧝‍♂️"
+    },
+    {
+        setup: "What do you call a frozen elf?",
+        punchline: "A chelf! 🥶"
+    },
+    {
+        setup: "Why was the Christmas tree excited?",
+        punchline: "It was pine-ing for the holidays! 🌲"
+    },
+    {
+        setup: "What do you call Santa's most impatient reindeer?",
+        punchline: "Rude-olph! 🦌"
+    },
+    {
+        setup: "Why did the Christmas cookie break up with the milk?",
+        punchline: "It felt dunked on! 🍪"
+    },
+    {
+        setup: "What's a sheep's favorite Christmas song?",
+        punchline: "Fleece Navidad! 🐑"
+    },
+    {
+        setup: "Why don't Christmas trees ever get speeding tickets?",
+        punchline: "They stick to the spruce limit! 🌲"
+    },
+    {
+        setup: "What do you call a Christmas tree that's good at math?",
+        punchline: "A geometree! 📐"
+    },
+    {
+        setup: "Why was the Christmas garland upset?",
+        punchline: "It was all strung out! 🎄"
+    },
+    {
+        setup: "What do you call a reindeer with three eyes?",
+        punchline: "Reiiindeer! 👁️"
+    },
+    {
+        setup: "Why did the Christmas candle go to school?",
+        punchline: "To get brighter! 🕯️"
+    },
+    {
+        setup: "What's Santa's favorite type of potato chip?",
+        punchline: "Crisp Pringles! 🥔"
+    },
+    {
+        setup: "Why don't Christmas ornaments ever feel lonely?",
+        punchline: "They always hang together! 🎄"
+    },
+    {
+        setup: "What do you call a Christmas tree that knows martial arts?",
+        punchline: "Spruce Willis! 🥋"
+    },
+    {
+        setup: "Why was the Christmas bow tie nervous?",
+        punchline: "It was all wound up! 🎀"
+    },
+    {
+        setup: "What do you call Santa's backup singers?",
+        punchline: "The Ho-Ho-Harmonettes! 🎵"
+    },
+    {
+        setup: "Why did the Christmas stocking go to college?",
+        punchline: "To get more stuffing! 🧦"
+    },
+    {
+        setup: "What's a Christmas tree's favorite drink?",
+        punchline: "Root beer! 🌲"
+    },
+    {
+        setup: "Why don't snowflakes ever get stressed?",
+        punchline: "They just go with the floe! ❄️"
+    },
+    {
+        setup: "What do you call a Christmas tree with a cold?",
+        punchline: "A sneeze tree! 🤧"
+    },
+    {
+        setup: "Why was the Christmas card embarrassed?",
+        punchline: "It was envelope-ing! 💌"
+    },
+    {
+        setup: "What do you call a reindeer who loves coffee?",
+        punchline: "Star-bucks! ☕"
+    },
+    {
+        setup: "Why don't Christmas lights ever argue?",
+        punchline: "They're always in harmony! ✨"
+    },
+    {
+        setup: "What's Santa's favorite cereal?",
+        punchline: "Lucky Charms! 🍀"
+    },
+    {
+        setup: "Why did the Christmas elf break up with his girlfriend?",
+        punchline: "She was a little elfish with her feelings! 💔"
+    },
+    {
+        setup: "What do you call a Christmas tree that can carry a tune?",
+        punchline: "A spruce-ano! 🎵"
+    },
+    {
+        setup: "Why was the Christmas ribbon so popular?",
+        punchline: "It really knew how to tie things together! 🎀"
+    },
+    {
+        setup: "What do you call Santa when he's gardening?",
+        punchline: "Hoe-hoe-hoe! 🌱"
+    },
+    {
+        setup: "Why don't Christmas wreaths ever get dizzy?",
+        punchline: "They're used to going in circles! 🎄"
+    },
+    {
+        setup: "What's a Christmas tree's favorite social media?",
+        punchline: "Pine-terest! 📱"
+    },
+    {
+        setup: "Why did the Christmas turkey join Instagram?",
+        punchline: "It wanted more followers! 🦃"
+    },
+    {
+        setup: "What do you call a Christmas tree that loves to dance?",
+        punchline: "A boogie pine! 💃"
+    },
+    {
+        setup: "Why was the Christmas star so confident?",
+        punchline: "It knew it was the top! ⭐"
+    }
+];
+
+        function getDailyJoke() {
+            const today = new Date();
+            const dateString = today.toISOString().split('T')[0];
+            document.getElementById('current-date').textContent = new Date().toLocaleDateString('en-US', {
+                month: 'long',
+                day: 'numeric',
+                year: 'numeric'
+            });
+
+            // Use the date to select a joke (will be the same joke all day)
+            const jokeIndex = Math.abs(dateString.split('').reduce((acc, char) => {
+                return acc + char.charCodeAt(0);
+            }, 0)) % christmasJokes.length;
+
+            const joke = christmasJokes[jokeIndex];
+            document.getElementById('joke-content').innerHTML = `
+                <div class="joke-setup">${joke.setup}</div>
+                <div class="punchline" id="punchline">${joke.punchline}</div>
+            `;
+        }
+
+        function revealPunchline() {
+            document.getElementById('punchline').classList.add('show');
+            document.querySelector('.reveal-button').style.display = 'none';
+        }
+
+        // Initialize the joke
+        getDailyJoke();
+
+        // Background music handling
+document.addEventListener('DOMContentLoaded', function() {
+    const bgMusic = document.getElementById('bgMusic');
+    
+    // Try to play automatically
+    bgMusic.play().catch(function(error) {
+        console.log("Autoplay prevented, waiting for user interaction");
+    });
+
+    // Add click listener to document to start music on first interaction
+    document.addEventListener('click', function startMusic() {
+        bgMusic.play().then(function() {
+            // Remove the click listener once music starts
+            document.removeEventListener('click', startMusic);
+        }).catch(function(error) {
+            console.log("Playback failed:", error);
+        });
+    }, { once: true });
+
+    // Keep trying to play music when tab becomes visible
+    document.addEventListener('visibilitychange', function() {
+        if (!document.hidden) {
+            bgMusic.play().catch(function(error) {
+                console.log("Playback failed on visibility change");
+            });
+        }
+    });
+});
+    </script>
+</body>
+</html>

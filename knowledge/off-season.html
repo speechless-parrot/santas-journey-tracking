@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Santa's Off-Season Adventures ☀️</title>
+    <link rel="icon" type="image/png" href="../assets/santa-chimney-waving.png">
+    <link href="https://fonts.googleapis.com/css?family=Google+Sans:100,300,400,500,700,900,100i,300i,400i,500i,700i,900i" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,400,1,0">
+    <style>
+        :root {
+            --summer-blue: #4ba3e3;
+            --christmas-red: #d42426;
+            --christmas-green: #165b33;
+            --snow-white: #ffffff;
+            --gold: #ffd700;
+            --paper: #f8f9fa;
+            --text: #2c3e50;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Google Sans', sans-serif;
+        }
+
+        body {
+            background-color: var(--paper);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .top-bar {
+            background: linear-gradient(135deg, var(--summer-blue), var(--christmas-green));
+            padding: 1rem;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .page-title {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 500;
+        }
+
+        .home-button {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .home-button:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.1);
+        }
+
+        .content {
+            max-width: 800px;
+            margin: 80px auto 40px;
+            padding: 2rem;
+        }
+
+        .story-card {
+            background: white;
+            border-radius: 24px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .story-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--summer-blue), var(--gold), var(--christmas-green));
+        }
+
+        .story-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--summer-blue);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .highlight {
+            color: var(--christmas-green);
+            font-weight: 500;
+        }
+
+        ul {
+            list-style: none;
+            padding-left: 1.5rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+            position: relative;
+        }
+
+        li::before {
+            content: "☀️";
+            position: absolute;
+            left: -1.5rem;
+        }
+
+        .activity-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .activity-card {
+            background: linear-gradient(135deg, #fff, var(--paper));
+            padding: 1.5rem;
+            border-radius: 16px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .activity-card .material-symbols-rounded {
+            font-size: 32px;
+            color: var(--summer-blue);
+        }
+
+        .fun-fact {
+            background: linear-gradient(135deg, #e3f2fd, #f0f8ff);
+            padding: 1rem;
+            border-radius: 12px;
+            margin-top: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .fun-fact .material-symbols-rounded {
+            color: var(--gold);
+        }
+
+        @media (max-width: 600px) {
+            .content {
+                padding: 1rem;
+            }
+
+            .story-card {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <h1 class="page-title">Santa's Summer Adventures ☀️</h1>
+        <button class="home-button" onclick="window.location.href='../index.html'">
+            <span class="material-symbols-rounded">home</span>
+        </button>
+    </div>
+
+    <div class="content">
+        <div class="story-card">
+            <div class="section-title">
+                <span class="material-symbols-rounded">landscape</span>
+                Chillin' at the North Pole
+            </div>
+            <ul>
+                <li>Relaxing in his <span class="highlight">cozy cabin</span> with hot (or iced!) cocoa 🏡</li>
+                <li>Reviewing last year's Nice List with a summer twist 📜</li>
+                <li>Watching elves test their wacky inventions 🛠️</li>
+            </ul>
+        </div>
+
+        <div class="story-card">
+            <div class="section-title">
+                <span class="material-symbols-rounded">sledding</span>
+                Sleigh Spa & Reindeer Training
+            </div>
+            <ul>
+                <li>Annual magical sleigh tune-up and polish ⚡</li>
+                <li>Reindeer <span class="highlight">boot camp</span> with aerial exercises 🦌</li>
+                <li>Rudolph's motivational glow sessions 🔴</li>
+            </ul>
+            <div class="fun-fact">
+                <span class="material-symbols-rounded">tips_and_updates</span>
+                <span>The reindeer sometimes take Santa on joyrides past sparkling glaciers! 🦌✨</span>
+            </div>
+        </div>
+
+        <div class="story-card">
+            <div class="section-title">
+                <span class="material-symbols-rounded">group</span>
+                Elves' Summer Shenanigans
+            </div>
+            <ul>
+                <li><span class="highlight">Toy design experiments</span> for next Christmas 🧸</li>
+                <li>Advanced magic lessons with Santa himself 📚</li>
+                <li>North Pole Summer Olympics with candy cane limbo! 🏃‍♂️</li>
+            </ul>
+        </div>
+
+        <div class="story-card">
+            <div class="section-title">
+                <span class="material-symbols-rounded">travel_explore</span>
+                Santa's Travel Plans
+            </div>
+            <ul>
+                <li>Mostly stays at his beloved North Pole HQ 🏔️</li>
+                <li>Occasional <span class="highlight">magical research trips</span> around the globe 🌍</li>
+                <li>Always home before the elves miss him too much! 💖</li>
+            </ul>
+        </div>
+
+        <div class="story-card">
+            <div class="section-title">
+                <span class="material-symbols-rounded">interests</span>
+                Santa's Secret Hobbies
+            </div>
+            <div class="activity-grid">
+                <div class="activity-card">
+                    <span class="material-symbols-rounded">yard</span>
+                    <strong>Magical Gardening</strong>
+                    <span>Growing enchanted treats 🌱</span>
+                </div>
+                <div class="activity-card">
+                    <span class="material-symbols-rounded">magic_button</span>
+                    <strong>Spellcraft</strong>
+                    <span>Creating new magic ✨</span>
+                </div>
+                <div class="activity-card">
+                    <span class="material-symbols-rounded">music_note</span>
+                    <strong>Music & Stories</strong>
+                    <span>Composing jingles 🎵</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="story-card">
+            <div class="section-title">
+                <span class="material-symbols-rounded">stars</span>
+                Summer Magic Lives On
+            </div>
+            <p>
+                Even in summer, Santa keeps the <span class="highlight">magic alive</span>! From training reindeer and mentoring elves 
+                to practicing spells and growing magical gardens, he's always preparing for the next magical Christmas while having 
+                a blast in the process! 🌟❄️
+            </p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,1240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Santa's Journey Tracking 🗺️</title>
+    <meta name="description" content="Follow Santa on his magical journey around the world 🌍🎄! Live updates, festive cheer, and holiday fun for the whole family.">
+
+    <!-- Theme Color -->
+    <meta name="theme-color" content="#d42426">
+  
+    <!-- Open Graph (Facebook, Discord, etc.) -->
+    <meta property="og:title" content="🎅 Santa's Journey Tracking 🎄">
+    <meta property="og:description" content="Experience the magic of Christmas all December long ✨">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://speechless-parrot.github.io/santas-journey-tracking">
+    <meta property="og:image" content="assets/santa-chimney-waving.png">
+  
+    <!-- Twitter Card (X, lol) -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="🎅 Santa's Journey Tracking 🎄">
+    <meta name="twitter:description" content="Follow Santa’s sleigh in real-time 🎄✨. Don’t miss the magic!">
+    <meta name="twitter:image" content="assets/santa-chimney-waving.png">
+    <link rel="icon" type="image/png" href="assets/santa-chimney-waving.png">
+    <link href="https://fonts.googleapis.com/css?family=Google+Sans:100,300,400,500,700,900,100i,300i,400i,500i,700i,900i" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,400,1,0">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+:root {
+    --christmas-red: #d42426;
+    --christmas-green: #165b33;
+    --snow-white: #ffffff;
+    --gold: #ffd700;
+    --stats-height: 120px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Google Sans', sans-serif;
+}
+
+body {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.top-bar {
+    background: linear-gradient(135deg, var(--christmas-red), var(--christmas-green));
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    z-index: 1000;
+}
+
+.title {
+    font-size: 1.5rem;
+    font-weight: 500;
+}
+
+.controls {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.control-button {
+    background: rgba(255,255,255,0.2);
+    color: white;
+    border: none;
+    padding: 0.5rem;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.control-button:hover {
+    background: rgba(255,255,255,0.3);
+    transform: scale(1.1);
+}
+
+#map {
+    flex-grow: 1;
+    width: 100%;
+    z-index: 1;
+}
+
+.stats-bar {
+    background: linear-gradient(135deg, var(--christmas-red), var(--christmas-green));
+    padding: 1rem;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    gap: 0.8rem;
+    height: auto;
+    box-shadow: 0 -2px 8px rgba(0,0,0,0.2);
+    flex-wrap: wrap;
+}
+
+.stat-box {
+    flex: 1;
+    text-align: center;
+    background: rgba(255,255,255,0.1);
+    padding: 0.8rem;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+    transition: all 0.3s ease;
+    min-width: 150px;
+}
+
+.stat-box:hover {
+    background: rgba(255,255,255,0.2);
+    transform: translateY(-2px);
+}
+
+.stat-icon {
+    font-size: 20px;
+    color: var(--gold);
+    margin-bottom: 0.2rem;
+}
+
+.stat-value {
+    font-size: 1.2rem;
+    font-weight: 500;
+    margin-bottom: 0.2rem;
+    line-height: 1.2;
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    opacity: 0.9;
+    font-weight: 400;
+}
+
+/* Leaflet Customization */
+.leaflet-control-zoom {
+    border: none !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+}
+
+.leaflet-control-zoom a {
+    background: white !important;
+    color: var(--text) !important;
+    border: none !important;
+    width: 40px !important;
+    height: 40px !important;
+    line-height: 40px !important;
+    font-size: 18px !important;
+}
+
+.leaflet-control-zoom a:first-child {
+    border-radius: 12px 12px 0 0 !important;
+}
+
+.leaflet-control-zoom a:last-child {
+    border-radius: 0 0 12px 12px !important;
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 1200px) {
+    .stats-bar {
+        padding: 0.8rem;
+        gap: 0.6rem;
+    }
+    
+    .stat-box {
+        flex: 1 1 calc(33.333% - 0.6rem);
+        min-width: 140px;
+        padding: 0.6rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .title {
+        font-size: 1.2rem;
+    }
+
+    .stats-bar {
+        padding: 0.6rem;
+        gap: 0.5rem;
+    }
+    
+    .stat-box {
+        flex: 0 1 calc(50% - 0.4rem); /* Always 2 per row! */
+        min-width: 0;
+        padding: 0.5rem;
+    }
+    
+    .stat-value {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .stats-bar {
+        padding: 0.4rem;
+        gap: 0.4rem;
+        flex-wrap: wrap; /* Make sure boxes wrap properly */
+    }
+    
+    .stat-box {
+        flex: 0 1 calc(50% - 0.2rem); /* 2 per row */
+        padding: 0.4rem;
+        min-width: 0; /* Prevent min-width from messing up 2 per row */
+    }
+
+    .stat-box:last-child {
+        flex: 0 1 100% !important; /* Force full width */
+        margin-top: 0.2rem; /* Add a tiny gap above */
+    }
+    
+    .stat-icon {
+        font-size: 18px;
+    }
+    
+    .stat-value {
+        font-size: 0.9rem;
+        margin-bottom: 0.1rem;
+    }
+    
+    .stat-label {
+        font-size: 0.7rem;
+    }
+}
+.loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, var(--christmas-red), var(--christmas-green));
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    transition: opacity 0.5s ease-out;
+}
+
+.loading-content {
+    text-align: center;
+    color: white;
+}
+
+.loading-title {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    font-weight: 500;
+}
+
+.loading-spinner {
+    width: 120px;
+    height: 120px;
+    margin-bottom: 2rem;
+    animation: spin 2s linear infinite;
+}
+
+.loading-message {
+    font-size: 1.2rem;
+    opacity: 0.9;
+}
+
+.loading-messages {
+    margin-top: 1rem;
+    font-size: 1rem;
+    opacity: 0.8;
+}
+
+.fade-out {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.santa-update-bar {
+    background: linear-gradient(135deg, rgba(212, 36, 38, 0.95), rgba(22, 91, 51, 0.95));
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 0.8rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    animation: slideDown 0.5s ease-out;
+    position: relative;
+    z-index: 900;
+}
+
+.update-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex: 1;
+}
+
+.update-icon {
+    color: var(--gold);
+    font-size: 24px;
+    animation: bounce 2s infinite;
+}
+
+.update-text {
+    flex: 1;
+}
+
+.update-message {
+    color: white;
+    font-size: 0.95rem;
+    margin-bottom: 0.2rem;
+    line-height: 1.4;
+}
+
+.update-message .didyouknow {
+    font-weight: 500;
+    color: var(--gold);
+    margin-right: 0.5rem;
+}
+
+
+.next-update {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.8rem;
+}
+
+.update-countdown {
+    color: var(--gold);
+    font-weight: 500;
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-3px);
+    }
+}
+
+/* Make it responsive */
+@media (max-width: 600px) {
+    .santa-update-bar {
+        padding: 0.6rem;
+    }
+    
+    .update-icon {
+        font-size: 20px;
+    }
+    
+    .update-message {
+        font-size: 0.85rem;
+    }
+    
+    .next-update {
+        font-size: 0.75rem;
+    }
+}
+    </style>
+</head>
+<body>
+    <audio id="bgMusic" loop>
+        <source src="assets/music.mp3" type="audio/mp3">
+    </audio>
+
+   <div class="loading-screen">
+    <div class="loading-content">
+        <img src="../assets/santa-chimney-waving.png" alt="Santa" class="loading-spinner">
+        <h1 class="loading-title">Connecting to the North Pole ❄️</h1>
+        <p class="loading-message">Establishing secure connection to Santa's Workshop...</p>
+        <div class="loading-messages"></div>
+    </div>
+</div>
+
+
+    <div class="top-bar">
+        <h1 class="title">🎅 Santa's Journey Tracking 🗺️</h1>
+        <div class="controls">
+            <button class="control-button" onclick="window.location.href='index.html'">
+                <span class="material-symbols-rounded">home</span>
+            </button>
+            <button class="control-button">
+                <span class="material-symbols-rounded">fullscreen</span>
+            </button>
+            <button class="control-button">
+                <span class="material-symbols-rounded">lock</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Add this right after the top-bar div -->
+<div class="santa-update-bar">
+    <div class="update-content">
+        <span class="material-symbols-rounded update-icon">chat</span>
+        <div class="update-text">
+            <p class="update-message">Ho ho ho! Just delivered presents to all the good children in Tokyo! The reindeer loved the carrots! 🥕</p>
+            <p class="next-update">Next update in: <span class="update-countdown">05:00</span></p>
+        </div>
+    </div>
+</div>
+
+    <div id="map"></div>
+
+    <div class="stats-bar">
+        <div class="stat-box">
+            <span class="material-symbols-rounded stat-icon">location_on</span>
+            <div class="stat-value">Santa's Village, North Pole</div>
+            <div class="stat-label">Current stop</div>
+        </div>
+        <div class="stat-box">
+            <span class="material-symbols-rounded stat-icon">flight_takeoff</span>
+            <div class="stat-value">00:00</div>
+            <div class="stat-label">Until departure</div>
+        </div>
+        <div class="stat-box">
+            <span class="material-symbols-rounded stat-icon">featured_seasonal_and_gifts</span>
+            <div class="stat-value">0</div>
+            <div class="stat-label">Presents delivered</div>
+        </div>
+        <div class="stat-box">
+            <span class="material-symbols-rounded stat-icon">timer</span>
+            <div class="stat-value">-</div>
+            <div class="stat-label">Santa's ETA</div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize map variables
+        let isFullscreen = false;
+        let isLocked = true;
+        let destinations = [];
+        let santaPosition = [84.6, 168]; // North Pole default
+        
+        // Custom Santa icon - now bigger and more festive! 🎅
+const santaSleighIcon = L.icon({
+    iconUrl: 'assets/santa-sleigh.png',
+    iconSize: [72, 72],
+    iconAnchor: [36, 36],
+    popupAnchor: [0, -36]
+});
+
+const santaChimneyIcon = L.icon({
+    iconUrl: 'assets/santa-chimney-waving.png',
+    iconSize: [72, 72],
+    iconAnchor: [36, 36],
+    popupAnchor: [0, -36]
+});
+    
+// Initialize the map centered on Santa with custom options
+const map = L.map('map', {
+    center: santaPosition,
+    zoom: 10,
+    dragging: !isLocked,
+    keyboard: !isLocked,
+    zoomControl: true,
+    scrollWheelZoom: !isLocked,
+    touchZoom: !isLocked,
+    doubleClickZoom: true,
+    // Preload tiles around the visible area
+    preferCanvas: true,
+    renderer: L.canvas({
+        padding: 0.5,
+        tolerance: 10
+    })
+});
+
+// Add the tile layer with preloading
+const tileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors',
+    updateWhenIdle: false,
+    updateWhenZooming: false,
+    keepBuffer: 4, // Increase tile buffer for smoother panning
+    maxZoom: 19,
+    crossOrigin: true
+}).addTo(map);
+    
+        map.attributionControl.setPrefix('');
+    
+        // Add Santa marker
+        const santaMarker = L.marker(santaPosition, {
+            icon: santaSleighIcon,
+            zIndexOffset: 1000
+        }).addTo(map);
+    
+        // Helper function to update destination dates to current year
+        function updateDestinationDates(destinations) {
+            const currentYear = new Date().getUTCFullYear();
+            return destinations.map(dest => {
+                // Get the original date parts
+                const arrivalDate = new Date(dest.arrival);
+                const departureDate = new Date(dest.departure);
+                
+                // Create new dates with current year
+                const newArrival = new Date(Date.UTC(
+                    currentYear,
+                    arrivalDate.getUTCMonth(),
+                    arrivalDate.getUTCDate(),
+                    arrivalDate.getUTCHours(),
+                    arrivalDate.getUTCMinutes(),
+                    arrivalDate.getUTCSeconds()
+                ));
+                
+                const newDeparture = new Date(Date.UTC(
+                    currentYear,
+                    departureDate.getUTCMonth(),
+                    departureDate.getUTCDate(),
+                    departureDate.getUTCHours(),
+                    departureDate.getUTCMinutes(),
+                    departureDate.getUTCSeconds()
+                ));
+    
+                return {
+                    ...dest,
+                    arrival: newArrival.getTime(),
+                    departure: newDeparture.getTime(),
+                    presentsDelivered: Math.ceil(dest.presentsDelivered * 1.5)
+                };
+            });
+        }
+    
+        // Function to find Santa's current location
+        function findSantaLocation() {
+            const now = Date.now();
+            
+            // Create Date objects for comparison
+            const currentYear = new Date().getUTCFullYear();
+            const startTime = new Date(Date.UTC(currentYear, 11, 24, 10, 0, 0)).getTime(); // Dec 24 10:00 AM UTC
+            const endTime = new Date(Date.UTC(currentYear, 11, 25, 11, 0, 0)).getTime();   // Dec 25 11:00 AM UTC
+            
+            // Check if we're outside the tracking window
+            if (now < startTime || now > endTime) {
+                return [84.6, 168]; // North Pole
+            }
+    
+            // Find if Santa is at a stop
+            const currentStop = destinations.find(stop => 
+                now >= stop.arrival && now <= stop.departure
+            );
+    
+            if (currentStop) {
+                return [currentStop.location.lat, currentStop.location.lng];
+            }
+    
+            // Find where Santa is between stops
+            for (let i = 0; i < destinations.length - 1; i++) {
+                const currentDest = destinations[i];
+                const nextDest = destinations[i + 1];
+    
+                if (now > currentDest.departure && now < nextDest.arrival) {
+                    const timeProgress = (now - currentDest.departure) / 
+                                       (nextDest.arrival - currentDest.departure);
+                    
+                    const lat = currentDest.location.lat + 
+                               (timeProgress * (nextDest.location.lat - currentDest.location.lat));
+                    const lng = currentDest.location.lng + 
+                               (timeProgress * (nextDest.location.lng - currentDest.location.lng));
+                    
+                    return [lat, lng];
+                }
+            }
+    
+            return [84.6, 168]; // Fallback to North Pole
+        }
+    
+        // Function to update Santa's position
+// Function to update Santa's position and visibility
+function updateSantaPosition() {
+    const now = Date.now();
+    const currentYear = new Date().getUTCFullYear();
+    const takeoffTime = new Date(Date.UTC(currentYear, 11, 24, 10, 0, 0)).getTime();
+    const endTime = new Date(Date.UTC(currentYear, 11, 25, 11, 0, 0)).getTime();
+
+    const newPosition = findSantaLocation();
+    
+    // Determine if Santa should be visible and which icon to use
+    if (now < takeoffTime || now > endTime) {
+        // Hide Santa before takeoff or after landing
+        santaMarker.setOpacity(1);
+    } else {
+        // Show Santa during the journey
+        santaMarker.setOpacity(1);
+        
+        // Check if Santa is at a stop
+        const currentStop = destinations.find(stop => 
+            now >= stop.arrival && now <= stop.departure
+        );
+        
+        // Use chimney icon at stops, sleigh icon while traveling
+        const icon = currentStop ? santaChimneyIcon : santaSleighIcon;
+        santaMarker.setIcon(icon);
+    }
+    
+    // Update marker position
+    santaMarker.setLatLng(newPosition);
+    
+    // Update map view if locked
+    if (isLocked) {
+        map.setView(newPosition, map.getZoom(), {
+            animate: false
+        });
+    }
+}
+    // Add these new functions
+    function formatCountdown(milliseconds) {
+    // Make sure we're dealing with positive numbers
+    milliseconds = Math.max(0, milliseconds);
+    
+    const seconds = Math.floor(milliseconds / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+
+    if (days >= 1) {
+        return `${days}d`;
+    }
+
+    const padZero = num => num.toString().padStart(2, '0');
+
+    if (hours > 0) {
+        return `${padZero(hours)}:${padZero(minutes % 60)}:${padZero(seconds % 60)}`;
+    } else {
+        // Always show MM:SS format, even for small numbers
+        return `${padZero(minutes)}:${padZero(seconds % 60)}`;
+    }
+}
+
+function formatSantaETA(arrivalTime) {
+    const now = Date.now();
+    const timeUntil = arrivalTime - now;
+    const hours = Math.floor(timeUntil / (1000 * 60 * 60));
+    const minutes = Math.floor((timeUntil % (1000 * 60 * 60)) / (1000 * 60));
+    
+    // Santa has already visited - show distance traveled
+    if (timeUntil < 0) {
+        const distance = calculateTotalDistance();
+        return `${distance.toLocaleString()} km`;
+    }
+    
+    // Less than 30 minutes
+    if (hours === 0 && minutes < 30) {
+        return "🚨 Quick, get to bed! Santa's arriving soon! 🛏️";
+    }
+    
+    // Less than an hour
+    if (hours === 0) {
+        if (minutes >= 45) {
+            return "About 45 minutes until Santa! 🎅";
+        } else if (minutes >= 30) {
+            return "About 30 minutes until Santa! ⏰";
+        }
+    }
+    
+    // Less than 24 hours
+    if (hours < 24) {
+        let hourText = 'hours';
+        
+        // Handle half-hour text
+        if (minutes >= 30) {
+            if (hours === 1) {
+                hourText = 'hour'; // 1½ hour
+            }
+            return `About ${hours}½ ${hourText} until Santa! 🎅`;
+        } else {
+            if (hours === 1) {
+                hourText = 'hour'; // 1 hour
+            }
+            return `About ${hours} ${hourText} until Santa! 🎄`;
+        }
+    }
+    
+    // More than 24 hours
+    return "Santa is getting ready! 🎅";
+}
+
+// Add this helper function to calculate total distance traveled
+function calculateTotalDistance() {
+    const now = Date.now();
+    const currentYear = new Date().getUTCFullYear();
+    const takeoffTime = new Date(Date.UTC(currentYear, 11, 24, 10, 0, 0)).getTime();
+    
+    // If before takeoff, return 0
+    if (now < takeoffTime) {
+        return 0;
+    }
+    
+    let totalDistance = 0;
+    let lastLocation = [84.6, 168]; // Start at North Pole
+    
+    for (let i = 0; i < destinations.length; i++) {
+        const stop = destinations[i];
+        
+        // Calculate distance to this stop
+        const distance = calculateDistance(
+            lastLocation[0],
+            lastLocation[1],
+            stop.location.lat,
+            stop.location.lng
+        );
+        
+        // If we haven't reached this stop yet, break
+        if (now < stop.arrival) {
+            // Calculate partial distance to current position
+            const currentPos = findSantaLocation();
+            const partialDistance = calculateDistance(
+                lastLocation[0],
+                lastLocation[1],
+                currentPos[0],
+                currentPos[1]
+            );
+            totalDistance += partialDistance;
+            break;
+        }
+        
+        // Add distance to total
+        totalDistance += distance;
+        
+        // Update last location
+        lastLocation = [stop.location.lat, stop.location.lng];
+        
+        // If we're still at this stop, break
+        if (now >= stop.arrival && now <= stop.departure) {
+            break;
+        }
+    }
+    
+    return Math.round(totalDistance);
+}
+
+
+function calculateDistance(lat1, lon1, lat2, lon2) {
+    const R = 6371; // Earth's radius in km
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a = 
+        Math.sin(dLat/2) * Math.sin(dLat/2) +
+        Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
+        Math.sin(dLon/2) * Math.sin(dLon/2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    return R * c;
+}
+
+let userLocation = null;
+let closestStop = null;
+
+function findClosestStop(userLat, userLng) {
+    let minDistance = Infinity;
+    let closest = null;
+
+    destinations.forEach(stop => {
+        const distance = calculateDistance(
+            userLat, 
+            userLng, 
+            stop.location.lat, 
+            stop.location.lng
+        );
+        
+        if (distance < minDistance) {
+            minDistance = distance;
+            closest = stop;
+        }
+    });
+
+    return closest;
+}
+
+function calculatePresentsDelivered() {
+    const now = Date.now();
+    const currentYear = new Date().getUTCFullYear();
+    const takeoffTime = new Date(Date.UTC(currentYear, 11, 24, 10, 0, 0)).getTime();
+    const endTime = new Date(Date.UTC(currentYear, 11, 25, 11, 0, 0)).getTime();
+
+    // Get the presents counter element
+    const presentsValue = document.querySelector('.stat-box:nth-child(3) .stat-value');
+
+    // Format large numbers nicely with commas
+    const formatNumber = num => num.toLocaleString('en-US');
+
+    if (now < takeoffTime) {
+        // Before takeoff - no presents delivered
+        presentsValue.textContent = '0';
+        return;
+    }
+
+    if (now > endTime) {
+        // Journey completed - all presents delivered!
+        presentsValue.textContent = '11,550,000,000';
+        return;
+    }
+
+    // Find current or next stop
+    let totalPresents = 0;
+    let currentStop = null;
+    let nextStop = null;
+
+    for (let i = 0; i < destinations.length; i++) {
+        const stop = destinations[i];
+        
+        if (now >= stop.departure) {
+            // Past this stop - add all presents
+            totalPresents = stop.presentsDelivered;
+        } else if (now >= stop.arrival && now <= stop.departure) {
+            // At this stop - calculate presents being delivered
+            currentStop = stop;
+            const stopDuration = stop.departure - stop.arrival;
+            const timeAtStop = now - stop.arrival;
+            const stopProgress = timeAtStop / stopDuration;
+            
+            // Calculate presents delivered at this stop
+            const previousPresents = i > 0 ? destinations[i - 1].presentsDelivered : 0;
+            const presentsToDeliver = stop.presentsDelivered - previousPresents;
+            totalPresents = previousPresents + Math.floor(presentsToDeliver * stopProgress);
+            break;
+        } else if (!nextStop && now < stop.arrival) {
+            // Found next stop
+            nextStop = stop;
+            if (i > 0) {
+                // Calculate presents being delivered while traveling
+                const prevStop = destinations[i - 1];
+                const travelDuration = stop.arrival - prevStop.departure;
+                const timeInTravel = now - prevStop.departure;
+                const travelProgress = timeInTravel / travelDuration;
+                
+                // Linear interpolation of presents between stops
+                const presentsDifference = stop.presentsDelivered - prevStop.presentsDelivered;
+                const presentsInTransit = Math.floor(presentsDifference * travelProgress);
+                totalPresents = prevStop.presentsDelivered + presentsInTransit;
+            }
+            break;
+        }
+    }
+
+    presentsValue.textContent = formatNumber(totalPresents);
+}
+
+
+function updateStats() {
+    const now = Date.now();
+    const currentYear = new Date().getUTCFullYear();
+    const takeoffTime = new Date(Date.UTC(currentYear, 11, 24, 10, 0, 0)).getTime();
+    const endTime = new Date(Date.UTC(currentYear, 11, 25, 11, 0, 0)).getTime();
+
+    // Get references to stat elements
+    const locationIcon = document.querySelector('.stat-box:nth-child(1) .stat-icon');
+    const locationValue = document.querySelector('.stat-box:nth-child(1) .stat-value');
+    const locationLabel = document.querySelector('.stat-box:nth-child(1) .stat-label');
+    
+    const timeIcon = document.querySelector('.stat-box:nth-child(2) .stat-icon');
+    const timeValue = document.querySelector('.stat-box:nth-child(2) .stat-value');
+    const timeLabel = document.querySelector('.stat-box:nth-child(2) .stat-label');
+
+    if (now < takeoffTime) {
+        // Before takeoff
+        locationIcon.textContent = 'location_on';
+        locationValue.textContent = "Santa's Village, North Pole";
+        locationLabel.textContent = 'Current stop';
+
+        timeIcon.textContent = 'flight_takeoff';
+        timeValue.textContent = formatCountdown(takeoffTime - now);
+        timeLabel.textContent = 'Until takeoff';
+    } else if (now > endTime) {
+        // After journey completed
+        locationIcon.textContent = 'location_on';
+        locationValue.textContent = "Santa's Village, North Pole";
+        locationLabel.textContent = 'Current stop';
+
+        const nextYearTakeoff = new Date(Date.UTC(currentYear + 1, 11, 24, 10, 0, 0)).getTime();
+        timeIcon.textContent = 'flight_takeoff';
+        timeValue.textContent = formatCountdown(nextYearTakeoff - now);
+        timeLabel.textContent = 'Until next takeoff';
+    } else {
+        // During journey
+        const currentStop = destinations.find(stop => 
+            now >= stop.arrival && now <= stop.departure
+        );
+
+        if (currentStop) {
+            // At a stop
+            locationIcon.textContent = 'location_on';
+            locationValue.textContent = `${currentStop.city}, ${currentStop.region}`;
+            locationLabel.textContent = 'Current stop';
+
+            timeIcon.textContent = 'flight_takeoff';
+            timeValue.textContent = formatCountdown(currentStop.departure - now);
+            timeLabel.textContent = 'Until departure';
+        } else {
+            // Between stops
+            const nextStop = destinations.find(stop => now < stop.arrival);
+            if (nextStop) {
+                locationIcon.textContent = 'directions';
+                locationValue.textContent = `${nextStop.city}, ${nextStop.region}`;
+                locationLabel.textContent = 'Next stop';
+
+                timeIcon.textContent = 'flight_land';
+                timeValue.textContent = formatCountdown(nextStop.arrival - now);
+                timeLabel.textContent = 'Until arrival';
+            }
+        }
+    }
+}
+
+// Fun loading messages
+const loadingMessages = [
+    "Warming up the reindeer... 🦌",
+    "Checking Santa's naughty and nice list... 📜",
+    "Polishing Rudolph's nose... ✨",
+    "Counting Christmas cookies... 🍪",
+    "Untangling Christmas lights... 💡",
+    "Wrapping presents... 🎁",
+    "Training new elves... 🧝‍♂️",
+    "Feeding the reindeer... 🥕",
+    "Loading Christmas magic... ⭐",
+    "Syncing with Santa's sleigh GPS... 🛷"
+];
+
+let messageIndex = 0;
+const loadingMessagesElement = document.querySelector('.loading-messages');
+const loadingScreen = document.querySelector('.loading-screen');
+
+// Show loading messages one by one
+const messageInterval = setInterval(() => {
+    if (messageIndex < loadingMessages.length) {
+        loadingMessagesElement.textContent = loadingMessages[messageIndex];
+        messageIndex++;
+    }
+}, 1500);
+
+        // Fetch destinations and start tracking
+        fetch('https://api.npoint.io/e6183754bfe98ad1a4f0')
+            .then(response => response.json())
+            .then(data => {
+                        // Clear the message interval
+        clearInterval(messageInterval);
+        
+        // Hide loading screen
+        loadingScreen.classList.add('fade-out');
+        
+        // Remove it from DOM after animation
+        setTimeout(() => {
+            loadingScreen.remove();
+        }, 500);
+
+    destinations = updateDestinationDates(data.destinations);
+
+    // After destinations are fetched, request user location
+// Grab arrival stat elements once
+const arrivalValue = document.querySelector('.stat-box:nth-child(4) .stat-value');
+const arrivalLabel = document.querySelector('.stat-box:nth-child(4) .stat-label');
+const arrivalIcon = document.querySelector('.stat-box:nth-child(4) .stat-icon');
+
+// Default icon
+arrivalIcon.textContent = 'schedule';
+
+let userLocation = null;
+let closestStop = null;
+
+// Function to update ETA or distance fallback
+function updateETA() {
+    try {
+        if (userLocation && closestStop && closestStop.arrival) {
+            const now = Date.now();
+            
+            if (now < closestStop.arrival) {
+                // Santa is still coming
+                arrivalIcon.textContent = 'schedule';
+                arrivalLabel.textContent = `Santa's ETA`;
+                arrivalValue.textContent = formatSantaETA(closestStop.arrival);
+            } else {
+                // Santa already passed, show distance
+                arrivalIcon.textContent = 'route';
+                arrivalLabel.textContent = 'Distance travelled';
+                arrivalValue.textContent = `${calculateTotalDistance().toLocaleString()} km`;
+            }
+        } else {
+            // Fallback: no location/closestStop info
+            arrivalIcon.textContent = 'route';
+            arrivalLabel.textContent = 'Distance travelled';
+            arrivalValue.textContent = `${calculateTotalDistance().toLocaleString()} km`;
+        }
+    } catch (error) {
+        console.log("Error updating ETA, showing distance instead:", error);
+        arrivalIcon.textContent = 'route';
+        arrivalLabel.textContent = 'Distance travelled';
+        arrivalValue.textContent = `${calculateTotalDistance().toLocaleString()} km`;
+    }
+}
+
+// Check for geolocation support
+if ("geolocation" in navigator) {
+    navigator.geolocation.getCurrentPosition(
+        position => {
+            userLocation = {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude
+            };
+
+            // Find the closest stop
+            closestStop = findClosestStop(userLocation.lat, userLocation.lng);
+
+            // Initial update and interval
+            updateETA();
+            setInterval(updateETA, 1000);
+        },
+        error => {
+            console.log("Location access denied or error occurred:", error);
+            // Still update ETA using distance fallback
+            updateETA();
+            setInterval(updateETA, 1000);
+        }
+    );
+} else {
+    // No geolocation support, fallback to distance
+    updateETA();
+    setInterval(updateETA, 1000);
+}
+
+
+
+
+
+    // Start updating Santa's position AND stats every second
+    setInterval(() => {
+        updateSantaPosition();
+        updateStats();
+        calculatePresentsDelivered();
+    }, 1000);
+})
+
+            .catch(error => console.error('Error fetching destinations:', error));
+    
+        // Fullscreen control
+        const fullscreenBtn = document.querySelector('.control-button:nth-child(2)');
+        const fullscreenIcon = fullscreenBtn.querySelector('.material-symbols-rounded');
+    
+        fullscreenBtn.addEventListener('click', () => {
+            if (!isFullscreen) {
+                if (document.documentElement.requestFullscreen) {
+                    document.documentElement.requestFullscreen();
+                }
+                fullscreenIcon.textContent = 'fullscreen_exit';
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+                fullscreenIcon.textContent = 'fullscreen';
+            }
+            isFullscreen = !isFullscreen;
+        });
+    
+        // Handle fullscreen change from other sources
+        document.addEventListener('fullscreenchange', () => {
+            isFullscreen = !!document.fullscreenElement;
+            fullscreenIcon.textContent = isFullscreen ? 'fullscreen_exit' : 'fullscreen';
+        });
+    
+        // Lock/Unlock control
+        const lockBtn = document.querySelector('.control-button:nth-child(3)');
+        const lockIcon = lockBtn.querySelector('.material-symbols-rounded');
+    
+        lockBtn.addEventListener('click', () => {
+    isLocked = !isLocked;
+    lockIcon.textContent = isLocked ? 'lock' : 'lock_open';
+    
+    // Update map controls
+    map.dragging[isLocked ? 'disable' : 'enable']();
+    map.keyboard[isLocked ? 'disable' : 'enable']();
+    map.touchZoom[isLocked ? 'disable' : 'enable']();
+    map.scrollWheelZoom[isLocked ? 'disable' : 'enable']();
+    
+    // Keep zoom control enabled
+    if (!map.zoomControl) {
+        map.addControl(L.control.zoom());
+    }
+    
+    if (isLocked) {
+        map.setView(santaMarker.getLatLng(), map.getZoom(), {
+            animate: true
+        });
+    }
+});
+
+// Background music handling
+document.addEventListener('DOMContentLoaded', function() {
+    const bgMusic = document.getElementById('bgMusic');
+    
+    // Try to play automatically
+    bgMusic.play().catch(function(error) {
+        console.log("Autoplay prevented, waiting for user interaction");
+    });
+
+    // Add click listener to document to start music on first interaction
+    document.addEventListener('click', function startMusic() {
+        bgMusic.play().then(function() {
+            // Remove the click listener once music starts
+            document.removeEventListener('click', startMusic);
+        }).catch(function(error) {
+            console.log("Playback failed:", error);
+        });
+    }, { once: true });
+
+    // Keep trying to play music when tab becomes visible
+    document.addEventListener('visibilitychange', function() {
+        if (!document.hidden) {
+            bgMusic.play().catch(function(error) {
+                console.log("Playback failed on visibility change");
+            });
+        }
+    });
+});
+
+// Function to update timestamps to current year
+function updateUpdateTimestamps(updates) {
+    const currentYear = new Date().getUTCFullYear();
+    return updates.map(update => {
+        const originalDate = new Date(update.timestamp);
+        const newDate = new Date(Date.UTC(
+            currentYear,
+            originalDate.getUTCMonth(),
+            originalDate.getUTCDate(),
+            originalDate.getUTCHours(),
+            originalDate.getUTCMinutes(),
+            originalDate.getUTCSeconds()
+        ));
+        return {
+            ...update,
+            timestamp: newDate.getTime()
+        };
+    });
+}
+
+// Function to check if we're in the tracking window
+function isInTrackingWindow() {
+    const now = Date.now();
+    const currentYear = new Date().getUTCFullYear();
+    const startTime = new Date(Date.UTC(currentYear, 11, 24, 8, 30, 0)).getTime(); // Dec 24 8:30 AM UTC
+    const endTime = new Date(Date.UTC(currentYear, 11, 25, 11, 0, 0)).getTime();   // Dec 25 11:00 AM UTC
+    return now >= startTime && now <= endTime;
+}
+
+// Function to find current update and next update
+function findUpdates(updates) {
+    const now = Date.now();
+    
+    // Filter valid updates
+    const validUpdates = updates
+        .filter(update => update.status || update.didyouknow)
+        .sort((a, b) => a.timestamp - b.timestamp);
+    
+    // Find the most recent past update
+    const currentUpdate = validUpdates
+        .filter(update => update.timestamp <= now)
+        .pop();
+    
+    // Find the next update
+    const nextUpdate = validUpdates
+        .find(update => update.timestamp > now);
+    
+    return { currentUpdate, nextUpdate };
+}
+
+// Function to update the status bar
+function updateStatusBar(updates) {
+    const updateBar = document.querySelector('.santa-update-bar');
+    const updateMessage = document.querySelector('.update-message');
+    const nextUpdateP = document.querySelector('.next-update');
+    const updateCountdown = document.querySelector('.update-countdown');
+    const updateIcon = document.querySelector('.update-icon');
+    
+    // Check if we should show updates
+    if (!isInTrackingWindow()) {
+        updateBar.style.display = 'none';
+        return;
+    }
+    
+    const { currentUpdate, nextUpdate } = findUpdates(updates);
+    
+    if (currentUpdate) {
+        updateBar.style.display = 'block';
+        
+        if (currentUpdate.didyouknow) {
+            // Switch icon to question mark
+            updateIcon.textContent = 'help';
+            // Add bold Did you know?
+            updateMessage.innerHTML = `<span class="didyouknow">Did you know?</span> ${currentUpdate.didyouknow}`;
+        } else {
+            // Default status with chat icon
+            updateIcon.textContent = 'chat';
+            updateMessage.textContent = currentUpdate.status;
+        }
+        
+        if (nextUpdate) {
+            nextUpdateP.style.display = 'block';
+            const timeToNext = nextUpdate.timestamp - Date.now();
+            updateCountdown.textContent = formatCountdown(timeToNext);
+        } else {
+            nextUpdateP.style.display = 'none';
+        }
+    } else {
+        updateBar.style.display = 'none';
+    }
+}
+
+
+// Fetch and initialize updates
+let santaUpdates = [];
+fetch('https://api.npoint.io/c3db6f018ac08b9c8e2d')
+    .then(response => response.json())
+    .then(data => {
+        santaUpdates = updateUpdateTimestamps(data.tracking_updates);
+        // Initial update
+        updateStatusBar(santaUpdates);
+        // Add to the existing setInterval that updates other stats
+        setInterval(() => {
+            updateStatusBar(santaUpdates);
+        }, 1000);
+    })
+    .catch(error => console.error('Error fetching Santa updates:', error));
+    </script>
+</body>
+</html>
