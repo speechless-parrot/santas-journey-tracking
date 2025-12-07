@@ -22,6 +22,84 @@
     <meta name="twitter:description" content="Follow Santa’s sleigh in real-time 🎄✨. Don’t miss the magic!">
     <meta name="twitter:image" content="assets/santa-chimney-waving.png">
     <link rel="icon" type="image/png" href="assets/santa-chimney-waving.png">
+
+        <!-- ⭐ PRIMARY SEO META TAGS ⭐ -->
+        <meta name="keywords" content="Santa tracker, Christmas tracker, Santa's journey, real-time Santa tracking, Christmas activities, holiday fun, Santa games, Christmas stories, festive tracker, where is Santa, Christmas games online, holiday activities for kids, Christmas entertainment, live Santa updates, Christmas countdown, Rudolph tracker, North Pole tracker, Santa tracker 2025, Christmas tracker 2025, Santa's journey 2025, live Santa updates 2025, Christmas countdown 2025, North Pole tracker 2025, holiday fun 2025, festive tracker 2025, Santa location 2025, track Santa live 2025, Santa Claus 2025, Christmas Eve tracker 2025, Santa map 2025, Christmas magic 2025">
+        <meta name="author" content="">
+        <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+        <meta name="language" content="English">
+        
+        <!-- 🌍 STRUCTURED DATA - RICH SNIPPETS FOR GOOGLE ⭐ -->
+        <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "name": "Santa Tracker & Christmas Games",
+            "url": "https://speechless-parrot.github.io",
+            "potentialAction": {
+                "@type": "SearchAction",
+                "target": {
+                    "@type": "EntryPoint",
+                    "urlTemplate": "https://speechless-parrot.github.io/santas-journey-tracking"
+                },
+                "query-input": "required name=search_term_string"
+            }
+        }
+        </script>
+    
+        <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "CreativeWork",
+            "name": "Santa's Journey Tracker",
+            "description": "Follow Santa on his real-time magical journey around the world with live updates, festive games, and holiday entertainment for the whole family.",
+            "url": "https://speechless-parrot.github.io/santas-journey-tracking",
+            "inLanguage": "en",
+            "isAccessibleForFree": true,
+            "image": {
+                "@type": "ImageObject",
+                "url": "assets/santa-chimney-waving.png",
+                "width": 512,
+                "height": 512
+            }
+        }
+        </script>
+    
+        <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+                {
+                    "@type": "ListItem",
+                    "position": 1,
+                    "name": "Home",
+                    "item": "https://speechless-parrot.github. io"
+                },
+                {
+                    "@type": "ListItem",
+                    "position": 2,
+                    "name": "Santa Tracker",
+                    "item": "https://speechless-parrot. github.io/santas-journey-tracking"
+                }
+            ]
+        }
+        </script>
+    
+        <!-- 📱 ADDITIONAL SEO OPTIMIZATION -->
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+        <meta name="apple-mobile-web-app-title" content="Santa Tracker">
+        <link rel="canonical" href="https://speechless-parrot.github. io/santas-journey-tracking">
+        <link rel="alternate" hreflang="en" href="https://speechless-parrot.github.io/santas-journey-tracking">
+        
+        <!-- 🔗 PRECONNECT FOR PERFORMANCE (Helps Google see your site loads fast!) -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="dns-prefetch" href="https://unpkg.com">
+        <link rel="dns-prefetch" href="https://api.npoint.io">
+
+
     <link href="https://fonts.googleapis.com/css?family=Google+Sans:100,300,400,500,700,900,100i,300i,400i,500i,700i,900i" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,400,1,0">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
@@ -559,6 +637,66 @@ body {
         font-size: 0.75rem;
     }
 }
+
+/* 🍪 Cookie Toggle Animation */
+.stat-box.clickable {
+    cursor: pointer;
+}
+
+.stat-box.clickable:active {
+    transform: scale(0.95);
+}
+
+.stat-icon.flip-animation {
+    animation: flipIcon 0.6s ease-in-out;
+}
+
+@keyframes flipIcon {
+    0% {
+        transform: rotateY(0deg) scale(1);
+    }
+    50% {
+        transform: rotateY(90deg) scale(1.1);
+    }
+    100% {
+        transform: rotateY(0deg) scale(1);
+    }
+}
+
+.stat-value.flip-animation {
+    animation: slideSwitch 0.6s ease-in-out;
+}
+
+@keyframes slideSwitch {
+    0% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    50% {
+        opacity: 0;
+        transform: translateX(10px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.stat-label.flip-animation {
+    animation: labelFlip 0.6s ease-in-out;
+}
+
+@keyframes labelFlip {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
     </style>
 </head>
 <body>
@@ -615,11 +753,11 @@ body {
             <div class="stat-value">00:00</div>
             <div class="stat-label">Until departure</div>
         </div>
-        <div class="stat-box">
-            <span class="material-symbols-rounded stat-icon">featured_seasonal_and_gifts</span>
-            <div class="stat-value">0</div>
-            <div class="stat-label">Presents delivered</div>
-        </div>
+<div class="stat-box clickable" id="presentsStatBox">
+    <span class="material-symbols-rounded stat-icon">featured_seasonal_and_gifts</span>
+    <div class="stat-value">0</div>
+    <div class="stat-label">Presents delivered</div>
+</div>
         <div class="stat-box">
             <span class="material-symbols-rounded stat-icon">timer</span>
             <div class="stat-value">-</div>
@@ -969,6 +1107,9 @@ function findClosestStop(userLat, userLng) {
     return closest;
 }
 
+// Track which mode we're in (true = presents, false = cookies)
+let showPresents = true;
+
 function calculatePresentsDelivered() {
     const now = Date.now();
     const currentYear = new Date().getUTCFullYear();
@@ -983,13 +1124,13 @@ function calculatePresentsDelivered() {
 
     if (now < takeoffTime) {
         // Before takeoff - no presents delivered
-        presentsValue.textContent = '0';
+        updatePresentsDisplay(0);
         return;
     }
 
     if (now > endTime) {
-        // Journey completed - all presents delivered!
-        presentsValue.textContent = '11,550,000,000';
+        // Journey completed - all presents delivered! 
+        updatePresentsDisplay(11550000000);
         return;
     }
 
@@ -1016,14 +1157,14 @@ function calculatePresentsDelivered() {
             const presentsToDeliver = stop.presentsDelivered - previousPresents;
             totalPresents = previousPresents + Math.floor(presentsToDeliver * stopProgress);
             break;
-        } else if (!nextStop && now < stop.arrival) {
+        } else if (! nextStop && now < stop.arrival) {
             // Found next stop
             nextStop = stop;
             if (i > 0) {
                 // Calculate presents being delivered while traveling
                 const prevStop = destinations[i - 1];
                 const travelDuration = stop.arrival - prevStop.departure;
-                const timeInTravel = now - prevStop.departure;
+                const timeInTravel = now - prevStop. departure;
                 const travelProgress = timeInTravel / travelDuration;
                 
                 // Linear interpolation of presents between stops
@@ -1035,7 +1176,62 @@ function calculatePresentsDelivered() {
         }
     }
 
-    presentsValue.textContent = formatNumber(totalPresents);
+    updatePresentsDisplay(totalPresents);
+}
+
+// 🍪 NEW FUNCTION: Update the display based on mode
+function updatePresentsDisplay(totalPresents) {
+    const presentsValue = document.querySelector('.stat-box:nth-child(3) .stat-value');
+    const presentsLabel = document.querySelector('.stat-box:nth-child(3) .stat-label');
+    const presentsIcon = document.querySelector('.stat-box:nth-child(3) .stat-icon');
+    
+    const formatNumber = num => num.toLocaleString('en-US');
+    
+    if (showPresents) {
+        presentsValue.textContent = formatNumber(totalPresents);
+        presentsLabel.textContent = 'Presents delivered';
+        presentsIcon.textContent = 'featured_seasonal_and_gifts';
+    } else {
+        // Calculate cookies: presents × 0.375, rounded
+        const totalCookies = Math.round(totalPresents * 0.375);
+        presentsValue.textContent = formatNumber(totalCookies);
+        presentsLabel.textContent = 'Cookies eaten';
+        presentsIcon.textContent = 'cookie';
+    }
+}
+
+// 🍪 NEW FUNCTION: Handle click toggle with animation
+function setupPresentsToggle() {
+    const statBox = document.getElementById('presentsStatBox');
+    
+    statBox.addEventListener('click', () => {
+        // Toggle the mode
+        showPresents = !showPresents;
+        
+        // Add animation classes
+        const icon = statBox.querySelector('.stat-icon');
+        const value = statBox.querySelector('.stat-value');
+        const label = statBox.querySelector('.stat-label');
+        
+        icon.classList.add('flip-animation');
+        value.classList.add('flip-animation');
+        label.classList.add('flip-animation');
+        
+        // Recalculate and update display
+        const currentValue = parseInt(
+            document.querySelector('.stat-box:nth-child(3) .stat-value')
+                .textContent. replace(/,/g, '')
+        );
+        
+        updatePresentsDisplay(showPresents ? currentValue : Math.round(currentValue / 0.375));
+        
+        // Remove animation classes after animation completes
+        setTimeout(() => {
+            icon.classList.remove('flip-animation');
+            value.classList.remove('flip-animation');
+            label.classList.remove('flip-animation');
+        }, 600);
+    });
 }
 
 
@@ -1131,7 +1327,7 @@ const messageInterval = setInterval(() => {
 }, 1500);
 
         // Fetch destinations and start tracking
-        fetch('https://api.npoint.io/e6183754bfe98ad1a4f0')
+        fetch('https://api.npoint.io/6773861bf0f0db6d3189')
             .then(response => response.json())
             .then(data => {
                         // Clear the message interval
@@ -1146,6 +1342,9 @@ const messageInterval = setInterval(() => {
         }, 500);
 
     destinations = updateDestinationDates(data.destinations);
+
+// 🍪 Setup cookie toggle
+setupPresentsToggle();
 
     // Create a marker cluster group with custom options
 const markers = L.markerClusterGroup({
@@ -1202,13 +1401,79 @@ function createPopupContent(dest, index) {
     const localArrival = formatNiceDate(dest.arrival);
     const destArrival = formatNiceDate(dest.arrival, dest.details.timezone * 1000);
     
+    // ✨ NEW: Create 1-HOUR time range estimate for unvisited stops
+    let arrivalTimeDisplay = '';
+    if (isVisited) {
+        // Show exact time for visited stops
+        arrivalTimeDisplay = `
+            <div class="time-info">
+                <span class="material-symbols-rounded info-icon">schedule</span>
+                <div class="info-text">
+                    <div class="info-label">Arrival</div>
+                    <div class="info-value">
+                        Your time: ${localArrival}<br>
+                        ${dest. city} time: ${destArrival}
+                    </div>
+                </div>
+            </div>`;
+    } else {
+        // ✨ NEW: Create 1-HOUR time range estimate for unvisited stops
+        // Calculate the hour bracket (round DOWN to nearest hour)
+        const arrivalDate = new Date(dest.arrival);
+        const hourStart = new Date(arrivalDate);
+        hourStart.setMinutes(0, 0, 0); // Set to :00 of current hour
+        
+        const hourEnd = new Date(hourStart);
+        hourEnd.setHours(hourEnd.getHours() + 1); // Add 1 hour for end of range
+        
+        // Create versions for both user's timezone and destination's timezone
+        const formatTimeRange = (date) => {
+            return date.toLocaleTimeString('en-US', {
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: true
+            });
+        };
+        
+        // For user's local time
+        const userStartTime = formatTimeRange(hourStart);
+        const userEndTime = formatTimeRange(hourEnd);
+        const userEstimateDate = hourStart.toLocaleDateString('en-US', {
+            month: 'short',
+            day: 'numeric'
+        });
+        
+        // For destination's local time (with timezone offset applied)
+        const destHourStart = new Date(hourStart. getTime() + (dest.details.timezone * 1000));
+        const destHourEnd = new Date(hourEnd.getTime() + (dest.details.timezone * 1000));
+        
+        const destStartTime = formatTimeRange(destHourStart);
+        const destEndTime = formatTimeRange(destHourEnd);
+        const destEstimateDate = destHourStart.toLocaleDateString('en-US', {
+            month: 'short',
+            day: 'numeric'
+        });
+        
+        arrivalTimeDisplay = `
+            <div class="time-info">
+                <span class="material-symbols-rounded info-icon">schedule</span>
+                <div class="info-text">
+                    <div class="info-label">Estimated Arrival Window</div>
+                    <div class="info-value">
+                        Your time: ${userEstimateDate}, ${userStartTime} – ${userEndTime}<br>
+                        ${dest. city} time: ${destEstimateDate}, ${destStartTime} – ${destEndTime}
+                    </div>
+                </div>
+            </div>`;
+    }
+    
     // Select one random photo if available
     let photoSection = '';
-    if (dest.details.photos && dest.details.photos.length > 0) {
+    if (dest. details.photos && dest.details.photos.length > 0) {
         const randomPhoto = dest.details.photos[Math.floor(Math.random() * dest.details.photos.length)];
         photoSection = `
             <div class="photo-carousel">
-                <img src="${randomPhoto.url}" 
+                <img src="${randomPhoto. url}" 
                      class="carousel-image active" 
                      alt="${dest.city} photo">
                 <div class="carousel-attribution">
@@ -1228,21 +1493,12 @@ function createPopupContent(dest, index) {
                         <div class="region-text">${dest.region}</div>
                     </div>
                 </div>
-                <div class="time-info">
-                    <span class="material-symbols-rounded info-icon">schedule</span>
-                    <div class="info-text">
-                        <div class="info-label">Arrival</div>
-                        <div class="info-value">
-                            Your time: ${localArrival}<br>
-                            ${dest.city} time: ${destArrival}
-                        </div>
-                    </div>
-                </div>
+                ${arrivalTimeDisplay}
                 <div class="presents-info">
                     <span class="material-symbols-rounded info-icon">featured_seasonal_and_gifts</span>
                     <div class="info-text">
                         <div class="info-label">Presents ${isVisited ? 'delivered' : 'to deliver'}</div>
-                        <div class="info-value">${presentsAtStop.toLocaleString()}</div>
+                        <div class="info-value">${presentsAtStop. toLocaleString()}</div>
                     </div>
                 </div>
             </div>
