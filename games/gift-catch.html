@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Santa's Gift Catch 🎁</title>
+    <link rel="icon" type="image/png" href="../assets/santa-chimney-waving.png">
+    <link href="https://fonts.googleapis.com/css?family=Google+Sans:100,300,400,500,700,900,100i,300i,400i,500i,700i,900i" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,400,1,0">
+    <style>
+        :root {
+            --christmas-red: #d42426;
+            --christmas-green: #165b33;
+            --snow-white: #ffffff;
+            --gold: #ffd700;
+            --paper: #f8f9fa;
+            --text: #2c3e50;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Google Sans', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #fff5f5 0%, #f0f8ff 100%);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .top-bar {
+            background: linear-gradient(135deg, var(--christmas-red), var(--christmas-green));
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            z-index: 10;
+        }
+
+        .game-info {
+            display: flex;
+            gap: 2rem;
+            color: white;
+            align-items: center;
+            flex-grow: 1;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+        }
+
+        .hearts {
+            display: flex;
+            gap: 0.3rem;
+            align-items: center;
+        }
+
+        .heart {
+            font-size: 1.5rem;
+            transition: transform 0.2s;
+        }
+
+        .home-button {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 1rem;
+        }
+
+        .home-button:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.1);
+        }
+
+        /* BACKGROUND */
+        .game-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, #e0f4ff 0%, #fff8f0 50%, #f0e6ff 100%);
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .sparkle-layer {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .sparkle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--gold);
+            border-radius: 50%;
+            opacity: 0.8;
+            animation: twinkle 1.5s ease-in-out infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 1; }
+        }
+
+        .trees-container {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    background: linear-gradient(180deg, 
+    #1a2b47 0%,
+    #315a7a 20%,
+    #4d81a8 40%,
+    #72a9d4 60%,
+    #a9cceb 80%,
+    #f5fbff 100%);
+
+    pointer-events: none;
+}
+
+
+        /* GAME AREA */
+        .game-area {
+            flex-grow: 1;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            z-index: 2;
+            cursor: grab;
+        }
+
+        .game-area.dragging {
+            cursor: grabbing;
+        }
+
+        .falling-objects-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 3;
+            pointer-events: none;
+        }
+
+        .falling-object {
+            position: absolute;
+            width: 65px;
+            height: 65px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            pointer-events: auto;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+        }
+
+        .falling-object.red-glow {
+            filter: drop-shadow(0 0 15px rgba(212, 36, 38, 0.8)) drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+        }
+
+        .falling-object.green-glow {
+            filter: drop-shadow(0 0 15px rgba(22, 91, 51, 0.8)) drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+        }
+
+        .falling-gift {
+            animation: fall-gift linear forwards;
+        }
+
+        @keyframes fall-gift {
+            0% {
+                transform: translateY(-60px) rotateZ(var(--rotation));
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotateZ(var(--rotation));
+                opacity: 0.9;
+            }
+        }
+
+        @keyframes collect-pop {
+            0% {
+                transform: scale(1) translateY(0);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(0) translateY(-20px);
+                opacity: 0;
+            }
+        }
+
+        .falling-object.collected {
+            display: none;
+        }
+
+        /* SANTA CONTAINER */
+        .santa-container {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 8vw;  /* Smaller on desktop */
+    height: 12vh;
+    min-width: 80px;  /* Minimum size */
+    min-height: 100px;
+    max-width: 150px;  /* Maximum size */
+    max-height: 180px;
+    z-index: 4;
+    background-image: url('../assets/santa-in-gift.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center bottom;
+    transition: left 0.1s ease-out;
+}
+
+        /* START SCREEN */
+        .start-screen {
+    position: fixed;
+    top: 53%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    border-radius: 24px;
+    padding: 2rem;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    max-width: 520px;
+    max-height: 85vh;
+    z-index: 50;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: none;
+}
+
+.start-screen::-webkit-scrollbar {
+    display: none;  /* Hide scrollbar Chrome/Safari */
+}
+
+        .start-screen h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--christmas-red), var(--christmas-green));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .story-section {
+            background: linear-gradient(135deg, #fff5f5 0%, #f0f8ff 100%);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            text-align: left;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: var(--text);
+        }
+
+        .story-section p {
+            margin: 0.8rem 0;
+        }
+
+        .how-to-play {
+            max-width: 100%;
+            margin: 1rem 0;
+            text-align: left;
+            font-size: 0.95rem;
+        }
+
+        .how-to-play h3 {
+            color: var(--christmas-red);
+            margin: 1rem 0 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .how-to-play p {
+            margin: 0.4rem 0;
+            margin-left: 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        .game-button {
+            background: linear-gradient(135deg, var(--christmas-red), var(--christmas-green));
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 16px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-top: 1rem;
+        }
+
+        .game-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        /* GAME OVER MODAL */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.6);
+            z-index: 99;
+            display: none;
+        }
+
+        .modal-overlay.active {
+            display: block;
+        }
+
+        .modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 2.5rem;
+            border-radius: 24px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            text-align: center;
+            z-index: 100;
+            max-width: 400px;
+            display: none;
+        }
+
+        .modal.active {
+            display: block;
+        }
+
+        .modal h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--christmas-red), var(--gold));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .modal p {
+            font-size: 1.2rem;
+            margin: 0.5rem 0;
+            color: var(--text);
+        }
+
+        .score-display {
+            font-size: 1.5rem;
+            color: var(--christmas-green);
+            font-weight: 600;
+            margin: 1rem 0;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .modal-buttons button {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .btn-restart {
+            background: linear-gradient(135deg, var(--christmas-red), var(--christmas-green));
+            color: white;
+        }
+
+        .btn-restart:hover {
+            transform: scale(1.05);
+        }
+
+        .btn-home {
+            background: var(--paper);
+            color: var(--text);
+            border: 2px solid var(--christmas-red);
+        }
+
+        .btn-home:hover {
+            background: var(--christmas-red);
+            color: white;
+        }
+
+        .floating-points {
+    position: fixed;
+    font-weight: 900;
+    font-size: 3rem;
+    pointer-events: none;
+    z-index: 100;
+    filter: drop-shadow(0 0 20px rgba(0, 0, 0, 0.8));
+    letter-spacing: 0.1em;
+    white-space: nowrap;
+    margin: 0;
+    padding: 0;
+    transform-origin: center center;
+}
+
+.floating-points.animate {
+    animation: float-points 1.2s ease-out forwards;
+}
+
+@keyframes float-points {
+    0% {
+        opacity: 1;
+        transform: scale(0.5) translateY(0);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.2) translateY(-30px);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(1.4) translateY(-80px);
+    }
+}
+
+.points-positive {
+    color: var(--christmas-green);
+    text-shadow: 
+        0 0 10px rgba(22, 91, 51, 0.8),
+        0 0 20px rgba(22, 91, 51, 0.6),
+        0 0 30px rgba(22, 91, 51, 0.4),
+        0 0 40px rgba(22, 91, 51, 0.2);
+}
+
+.points-negative {
+    color: var(--christmas-red);
+    text-shadow: 
+        0 0 10px rgba(212, 36, 38, 0.8),
+        0 0 20px rgba(212, 36, 38, 0.6),
+        0 0 30px rgba(212, 36, 38, 0.4),
+        0 0 40px rgba(212, 36, 38, 0.2);
+}
+
+        @media (max-width: 768px) {
+    .game-info {
+        gap: 1rem;
+        font-size: 0.9rem;
+    }
+
+    .santa-container {
+        width: 15vw;  /* Make it bigger on mobile!  */
+        height: 20vh;
+        max-width: none;  /* Remove the cap on mobile */
+        max-height: none;
+    }
+
+    .falling-object {
+        width: 10vw;  /* Scale gifts too! */
+        height: 10vw;
+    }
+
+    .game-background {
+        position: fixed;  /* Use fixed instead of absolute */
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+    }
+
+    .trees-container {
+        position: fixed;  /* Fixed positioning */
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+    }
+
+    .start-screen {
+    margin: 0;
+    padding: 1. 5rem;
+    max-width: 95vw;
+    width: 95vw;
+    max-height: 85vh;
+    height: auto;
+    top: 53%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+    .start-screen h1 {
+        font-size: 1.8rem;
+    }
+
+    .game-button {
+        padding: 0.8rem 1.5rem;
+        font-size: 1rem;
+    }
+
+    .modal {
+        max-width: 85%;
+        padding: 1.5rem;
+    }
+
+    .modal h2 {
+        font-size: 2rem;
+    }
+}
+    </style>
+</head>
+<body>
+    <audio id="bgMusic" loop>
+        <source src="../assets/game-music.mp3" type="audio/mp3">
+    </audio>
+
+    <div class="top-bar">
+        <div class="game-info">
+            <div class="info-item">
+                <div class="hearts" id="hearts-display">
+                    <span class="heart">❤️</span>
+                    <span class="heart">❤️</span>
+                    <span class="heart">❤️</span>
+                </div>
+            </div>
+            <div class="info-item">
+                <span class="material-symbols-rounded">star</span>
+                Score: <span id="score">0</span>
+            </div>
+        </div>
+        <button class="home-button" onclick="window.location.href='../index.html'">
+            <span class="material-symbols-rounded">home</span>
+        </button>
+    </div>
+
+    <div class="game-area" id="game-area">
+        <div class="game-background">
+            <div class="sparkle-layer" id="sparkle-layer"></div>
+        </div>
+        
+        <div class="falling-objects-container" id="falling-container"></div>
+        <div class="santa-container" id="santa"></div>
+
+        <div class="start-screen" id="start-screen">
+            <h1>Santa's Gift Catch 🎁</h1>
+            
+            <div class="story-section">
+                <p>🌟 <strong>The Legend of Christmas Morning</strong></p>
+                <p>Oh no! The Christmas presents are falling from the sky faster than Santa can say "Ho Ho Ho!"</p>
+                <p>Santa's sleigh hit a magical turbulence, and now gifts are tumbling down everywhere. You're Santa's helper—grab those falling presents before they hit the ground!</p>
+                <p>But watch out! Some sneaky snowflakes are mixed in too... catch those and you'll lose a heart! 💔</p>
+                <p>Can you help Santa save Christmas? The longer you play, the faster things get—this is an <strong>endless adventure</strong>!  🎄</p>
+            </div>
+
+            <div class="how-to-play">
+                <h3><span class="material-symbols-rounded">touch_app</span>How to Play</h3>
+                <p>🎮 Use arrow keys OR drag anywhere on screen to move Santa</p>
+                <p>🎁 Catch falling gifts to earn points</p>
+                <p>❄️ Avoid snowflakes or lose points and a heart</p>
+                <p>💪 Keep catching gifts in a row to earn hearts back</p>
+                <p>⚡ The game gets harder the longer you play—can you handle it? Tap below to start. ⬇️</p>
+            </div>
+
+            <button class="game-button" onclick="game.startGame()">
+                <span class="material-symbols-rounded">play_arrow</span>
+                Start Game
+            </button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modal-overlay"></div>
+    <div class="modal" id="game-over-modal"></div>
+
+    <script>
+        class SantasGiftCatch {
+            constructor() {
+                this.isPlaying = false;
+                this.score = 0;
+                this.lives = 3;
+                this.maxLives = 3;
+                this.santaX = 0;
+                this.santaSpeed = 0;
+                this.isDragging = false;
+                this.dragStartX = 0;
+                this.fallingSpeed = 1.5;
+                this.maxFallingSpeed = 5;
+                this.snowflakeChance = 0.15;
+                this.spawnRate = 2.5;
+                this.nextSpawnTime = 0;
+                this.giftImages = [
+                    '../assets/camera.png',
+                    '../assets/car-toy.png',
+                    '../assets/console.png',
+                    '../assets/football.png',
+                    '../assets/gift.png',
+                    '../assets/headphones.png',
+                    '../assets/robot.png',
+                    '../assets/teddy-bear.png'
+                ];
+                this.snowflakeImage = '../assets/snowflakes.png';
+                this.fallingObjects = [];
+                this.lastTime = Date.now();
+                this.giftsInARow = 0;
+                this.setupControls();
+                this.createBackgroundDecor();
+                this.animationId = null;
+            }
+
+            createBackgroundDecor() {
+                const sparkleLayer = document.getElementById('sparkle-layer');
+                for (let i = 0; i < 20; i++) {
+                    const sparkle = document.createElement('div');
+                    sparkle.className = 'sparkle';
+                    sparkle.style.left = Math.random() * 100 + '%';
+                    sparkle.style.top = Math.random() * 100 + '%';
+                    sparkle.style.animationDelay = Math.random() * 2 + 's';
+                    sparkleLayer.appendChild(sparkle);
+                }
+            }
+
+            setupControls() {
+    const gameArea = document.getElementById('game-area');
+    
+    // ===== KEYBOARD CONTROLS =====
+    document.addEventListener('keydown', (e) => {
+        if (!  this.isPlaying) return;
+        if (e.key === 'ArrowLeft') this.santaSpeed = -15;
+        if (e.key === 'ArrowRight') this.santaSpeed = 15;
+    });
+
+    document.addEventListener('keyup', (e) => {
+        if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') this.santaSpeed = 0;
+    });
+
+    // ===== UNIVERSAL DRAG SYSTEM (Store position, update in gameLoop) =====
+    let dragTargetX = null;  // Where we WANT Santa to go
+    
+    const handleDragStart = (clientX) => {
+        if (!this.isPlaying) return;
+        this.isDragging = true;
+        gameArea.classList.add('dragging');
+        dragTargetX = clientX;
+    };
+
+    const handleDragMove = (clientX) => {
+        if (! this.isDragging || !this.isPlaying) return;
+        dragTargetX = clientX;  // Just store it, don't move yet! 
+    };
+
+    const handleDragEnd = () => {
+        this.isDragging = false;
+        this.santaSpeed = 0;
+        dragTargetX = null;
+        gameArea.classList.remove('dragging');
+    };
+
+    // MOUSE EVENTS
+    gameArea.addEventListener('mousedown', (e) => {
+        handleDragStart(e.clientX);
+    });
+
+    document.addEventListener('mousemove', (e) => {
+        handleDragMove(e.clientX);
+    });
+
+    document.addEventListener('mouseup', () => {
+        handleDragEnd();
+    });
+
+    // TOUCH EVENTS
+    gameArea.addEventListener('touchstart', (e) => {
+        if (e.touches.length > 0) {
+            handleDragStart(e.touches[0].clientX);
+        }
+    });
+
+    document.addEventListener('touchmove', (e) => {
+        if (! this.isDragging) return;
+        e.preventDefault();
+        if (e.touches.length > 0) {
+            handleDragMove(e.touches[0].clientX);
+        }
+    }, { passive: false });
+
+    document.addEventListener('touchend', () => {
+        handleDragEnd();
+    });
+
+    // Store dragTargetX so gameLoop can access it
+    this.dragTargetX = dragTargetX;
+    this.getDragTarget = () => dragTargetX;
+}
+
+            updateSantaPosition() {
+                const santa = document.getElementById('santa');
+                santa.style.left = this.santaX + 'px';
+            }
+
+            clampSantaPosition() {
+    const gameArea = document.getElementById('game-area');
+    const santa = document.getElementById('santa');
+    const santaWidth = santa.offsetWidth;
+    const maxX = gameArea.offsetWidth - santaWidth;
+    this.santaX = Math.max(0, Math.min(this.santaX, maxX));
+}
+
+            startGame() {
+                document.getElementById('start-screen').style.display = 'none';
+                document.getElementById('modal-overlay').classList.remove('active');
+                document.getElementById('game-over-modal').classList.remove('active');
+                
+                this.isPlaying = true;
+                this.score = 0;
+                this.lives = 3;
+                this.giftsInARow = 0;
+                this.fallingSpeed = 1.5;
+                this.snowflakeChance = 0.15;
+                this.spawnRate = 2.5;
+                this.updateUI();
+
+                const gameArea = document.getElementById('game-area');
+const santa = document.getElementById('santa');
+this.santaX = (gameArea.offsetWidth - santa.offsetWidth) / 2;
+this.updateSantaPosition();
+
+                this.lastTime = Date.now();
+                this.gameLoop();
+
+                const bgMusic = document.getElementById('bgMusic');
+                bgMusic.play().catch(() => {});
+            }
+
+            gameLoop = () => {
+    const gameArea = document.getElementById('game-area');
+    const now = Date.now();
+    const deltaTime = (now - this.lastTime) / 1000;
+    this.lastTime = now;
+
+    if (! this.isPlaying) return;
+
+    // ===== MOVEMENT LOGIC =====
+    if (this.isDragging) {
+        // Use drag position if dragging
+        const dragTargetX = this.getDragTarget ?  this.getDragTarget() : null;
+        
+        if (dragTargetX !== null) {
+            const gameRect = gameArea.getBoundingClientRect();
+            const mouseInGame = dragTargetX - gameRect.left;
+            const santa = document.getElementById('santa');
+            const santaWidth = santa.offsetWidth;
+            
+            // Smoothly move towards drag position
+            const targetX = mouseInGame - (santaWidth / 2);
+            
+            // Lerp (smooth interpolation) instead of instant jump
+            const lerpSpeed = 0.25;  // Lower = smoother, Higher = snappier (0.1 to 0.5)
+            this.santaX = this.santaX + (targetX - this.santaX) * lerpSpeed;
+        }
+    } else if (this.santaSpeed !== 0) {
+        // Use keyboard speed if not dragging
+        this.santaX += this.santaSpeed;
+    }
+    
+    this.clampSantaPosition();
+    this.updateSantaPosition();
+
+// Spawn new objects
+this.nextSpawnTime -= deltaTime;
+if (this.nextSpawnTime <= 0) {
+    // Check if mobile
+    const isMobile = window.innerWidth <= 768;
+    let spawnCount;
+    
+    if (isMobile) {
+        // Mobile:   max 2 items at once
+        spawnCount = Math. random() < 0.5 ? 2 : 1;
+    } else {
+        // Desktop: up to 4 items
+        spawnCount = Math. random() < 0.2 ? 4 : (Math. random() < 0.4 ? 3 : (Math. random() < 0.6 ? 2 : 1));
+    }
+    
+    // Stagger the spawning so they appear at different heights
+    for (let i = 0; i < spawnCount; i++) {
+        setTimeout(() => {
+            this.spawnObject();
+        }, i * 100);  // 100ms delay between each spawn
+    }
+    this.nextSpawnTime = this.spawnRate;
+}
+
+    // Update falling objects
+    this.updateFallingObjects();
+
+    // Increase difficulty
+    this.increaseDifficulty();
+
+    this.animationId = requestAnimationFrame(this.gameLoop);
+}
+spawnObject() {
+    const gameArea = document.getElementById('game-area');
+    const container = document.getElementById('falling-container');
+    const isSnowflake = Math.random() < this.snowflakeChance;
+    
+    const obj = document.createElement('div');
+    obj.className = 'falling-object falling-gift';
+    
+    // SMARTER X POSITIONING - avoid overlaps! 
+    let x;
+    const objectWidth = 65;
+    const minSpacing = 80; // Minimum space between objects
+    let attempts = 0;
+    let validPosition = false;
+    
+    while (!validPosition && attempts < 10) {
+        x = Math. random() * (gameArea.offsetWidth - objectWidth);
+        
+        // Check if this position is far enough from existing objects
+        validPosition = true;
+        for (let fallingObj of this.fallingObjects) {
+            const existingX = parseFloat(fallingObj.element.style.left);
+            if (Math.abs(x - existingX) < minSpacing) {
+                validPosition = false;
+                break;
+            }
+        }
+        attempts++;
+    }
+    
+    // If we couldn't find a valid spot, just use random
+    if (!validPosition) {
+        x = Math.random() * (gameArea.offsetWidth - objectWidth);
+    }
+    
+    obj.style.left = x + 'px';
+    const startOffset = Math.random() * 100 - 60;
+    obj.style.top = startOffset + 'px';
+    obj.dataset.y = startOffset;
+    
+    // Random tilt
+    const tilt = (Math.random() - 0.5) * 15;
+    obj.style.setProperty('--rotation', tilt + 'deg');
+
+    // Random glow
+    const glowColor = Math.random() < 0.5 ? 'red-glow' : 'green-glow';
+    obj. classList.add(glowColor);
+
+    let duration = Math.max(1.5, (gameArea.offsetHeight / 100) / this.fallingSpeed);
+    obj.style.animationDuration = duration + 's';
+
+    if (isSnowflake) {
+        obj.style.backgroundImage = `url('${this.snowflakeImage}')`;
+        obj.dataset.type = 'snowflake';
+    } else {
+        const randomGift = this.giftImages[Math.floor(Math.random() * this.giftImages.length)];
+        obj.style.backgroundImage = `url('${randomGift}')`;
+        obj.dataset.type = 'gift';
+    }
+
+    obj.dataset.x = x;
+    obj.dataset.y = -60;
+    obj.dataset.speed = this.fallingSpeed;
+    obj.dataset.duration = duration;
+    obj.dataset.startTime = Date.now();
+
+    container.appendChild(obj);
+    this.fallingObjects.push({
+        element: obj,
+        x: x,
+        y:  -60,
+        type: isSnowflake ? 'snowflake' : 'gift'
+    });
+}
+
+            updateFallingObjects() {
+                const gameArea = document.getElementById('game-area');
+                const container = document.getElementById('falling-container');
+                const santa = document.getElementById('santa');
+                const santaRect = santa.getBoundingClientRect();
+                const gameRect = gameArea.getBoundingClientRect();
+
+                this.fallingObjects = this.fallingObjects.filter(obj => {
+                    const elapsed = (Date.now() - obj.element.dataset.startTime) / 1000;
+                    const progress = elapsed / obj.element.dataset.duration;
+
+                    if (progress >= 1) {
+                        obj.element.remove();
+                        return false;
+                    }
+
+                    const y = -60 + (gameArea.offsetHeight + 60) * progress;
+                    obj.element.style.top = y + 'px';
+                    obj.y = y;
+// Collision detection
+const objRect = obj.element.getBoundingClientRect();
+if (this.isColliding(santaRect, objRect)) {
+    // COPY the rect values BEFORE element is removed
+    const collisionRect = {
+        left: objRect.left,
+        top: objRect.top,
+        width: objRect.width,
+        height: objRect.height
+    };
+    
+    obj.element.classList.add('collected');
+    setTimeout(() => obj.element.remove(), 400);
+    this.handleCollision(obj.type, collisionRect);
+    return false;
+}
+
+                    return true;
+                });
+            }
+
+            isColliding(rect1, rect2) {
+                return !(rect1.right < rect2.left || 
+                         rect1.left > rect2.right || 
+                         rect1.bottom < rect2.top || 
+                         rect1.top > rect2.bottom);
+            }
+
+                handleCollision(type, rect) {
+    const pointAmount = Math.floor(Math.random() * (30 - 5 + 1)) + 5;
+    const floatingPoints = document.createElement('div');
+    floatingPoints.className = 'floating-points';
+    
+    if (type === 'gift') {
+        this.score += pointAmount;
+        this. giftsInARow++;
+        floatingPoints.classList.add('points-positive');
+        floatingPoints.textContent = '+' + pointAmount;
+
+        if (this.giftsInARow >= 8 && this.lives < this.maxLives) {
+            this.lives++;
+            this. giftsInARow = 0;
+        }
+    } else {
+        const lossAmount = Math.floor(Math.random() * (15 - 5 + 1)) + 5;
+        this.score = Math.max(0, this. score - lossAmount);
+        this.lives--;
+        this. giftsInARow = 0;
+        floatingPoints.classList.add('points-negative');
+        floatingPoints.textContent = '-' + lossAmount;
+    }
+
+    const centerX = rect.left + (rect.width / 2);
+    const centerY = rect.top + (rect.height / 2);
+    
+    floatingPoints.style.left = centerX + 'px';
+    floatingPoints.style.top = centerY + 'px';
+    floatingPoints.style.translate = '-50% -50%';
+    
+    document.body.appendChild(floatingPoints);
+
+    requestAnimationFrame(() => {
+        floatingPoints.classList.add('animate');
+    });
+
+    setTimeout(() => floatingPoints.remove(), 1200);
+
+    this.updateUI();  // Update BEFORE gameOver check! 
+
+    // Check game over AFTER updating UI
+    if (this.lives <= 0) {
+        this.gameOver();
+        floatingPoints.remove();
+        return;
+    }
+}
+
+increaseDifficulty() {
+    // Gradually increase falling speed (slower now!)
+    this.fallingSpeed = Math.min(1.5 + (this.score / 400), this.maxFallingSpeed);
+    
+    // Gradually increase snowflake chance
+    this.snowflakeChance = Math.min(0.15 + (this.score / 2000), 0.35);
+    
+    // Gradually decrease spawn rate (spawn more often, but slower)
+    this.spawnRate = Math.max(1.2, 2.5 - (this.score / 600));
+}
+
+            updateUI() {
+                document.getElementById('score').textContent = this.score;
+                
+                const heartsDisplay = document.getElementById('hearts-display');
+                heartsDisplay.innerHTML = '';
+                for (let i = 0; i < this.lives; i++) {
+                    const heart = document.createElement('span');
+                    heart.className = 'heart';
+                    heart.textContent = '❤️';
+                    heartsDisplay.appendChild(heart);
+                }
+            }
+
+            gameOver() {
+                this.isPlaying = false;
+                cancelAnimationFrame(this.animationId);
+
+                const overlay = document.getElementById('modal-overlay');
+                const modal = document.getElementById('game-over-modal');
+                
+                overlay.classList.add('active');
+                modal.classList.add('active');
+                modal.innerHTML = `
+                    <h2>Game Over!  🎄</h2>
+                    <p>Great effort, Santa!</p>
+                    <div class="score-display">Final Score: ${this.score}</div>
+                    <div class="modal-buttons">
+                        <button class="btn-restart" onclick="game.startGame()">
+                            <span class="material-symbols-rounded">replay</span>
+                        </button>
+                        <button class="btn-home" onclick="window.location.href='../index.html'">
+                            <span class="material-symbols-rounded">home</span>
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        const game = new SantasGiftCatch();
+
+        // Background music handling
+        document.addEventListener('DOMContentLoaded', function() {
+            const bgMusic = document.getElementById('bgMusic');
+            
+            bgMusic.play().catch(function(error) {
+                console.log("Autoplay prevented");
+            });
+
+            document.addEventListener('click', function startMusic() {
+                bgMusic.play().catch(function(error) {
+                    console.log("Playback failed");
+                });
+                document.removeEventListener('click', startMusic);
+            }, { once: true });
+
+            document.addEventListener('visibilitychange', function() {
+                if (! document.hidden) {
+                    bgMusic.play().catch(function(error) {});
+                }
+            });
+        });
+    </script>
+</body>
+</html>
