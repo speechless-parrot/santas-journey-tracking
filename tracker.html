@@ -133,10 +133,14 @@ body {
 }
 
 #map {
-    flex:  1 1 auto;
+    flex: 1 1 auto;
     min-height: 200px;
     width: 100%;
     z-index: 1;
+}
+
+.leaflet-container {
+    background: #0b1026 !important; /* Deep dark blue instead of grey */
 }
 
 .santa-glow-icon {
@@ -200,6 +204,7 @@ body {
     box-shadow: 0 -2px 8px rgba(0,0,0,0.2);
     flex-shrink: 0;
     width: 100%;
+    height: auto; /* override any inherited shrink */
 }
 
 .stat-box {
@@ -266,21 +271,28 @@ body {
 
 /* Responsive Breakpoints */
 @media (max-width: 768px) {
+    #map {
+    max-height: calc(100vh - var(--stats-height) - 64px);
+    }
+
     .stats-bar {
         padding: 0.8rem;
         gap: 0.6rem;
-        grid-template-columns: repeat(2, 1fr);
+        display: grid;
+        grid-template-columns: repeat(2, 1fr); /* 2 per row */
+        grid-auto-rows: 1fr;                   /* make all rows equal height */
+    }
+
+    .stat-box {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;  /* fill row height properly */
+        padding: 0.8rem;
     }
 
     .stat-box:nth-child(3) {
         grid-column: 1 / -1;  /* NEW:  Make 3rd box span full width */
     }
-    
-    
-    .stat-box {
-        padding: 0.8rem;
-    }
-    
     .stat-value {
         font-size: 0.95rem;
     }
@@ -291,15 +303,23 @@ body {
 }
 
 @media (max-width:  480px) {
-    .stats-bar {
-        padding:  0.6rem;
-        gap: 0.5rem;
-        grid-template-columns:  repeat(2, 1fr);
+    #map {
+    max-height: calc(100vh - var(--stats-height) - 64px);
     }
-    
-    
+
+    .stats-bar {
+        padding: 0.6rem;
+        gap: 0.5rem;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-auto-rows: 1fr;
+    }
+
     .stat-box {
-        padding:  0.6rem;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        padding: 0.6rem;
         gap: 0.4rem;
     }
 
@@ -537,6 +557,112 @@ body {
         font-size: 1.2rem;
     }
 }
+
+/* 🌍 Location Privacy Modal */
+.location-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7); /* Darken background */
+    backdrop-filter: blur(5px); /* Blur effect */
+    z-index: 10000; /* On top of EVERYTHING */
+    display: none; /* Hidden by default */
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.3s ease-out;
+}
+
+.location-modal {
+    background: white;
+    padding: 2rem;
+    border-radius: 24px;
+    max-width: 500px;
+    width: 90%;
+    text-align: center;
+    position: relative;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    animation: slideUp 0.3s ease-out;
+}
+
+.modal-close-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #666;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 50%;
+    transition: all 0.2s;
+    line-height: 1;
+}
+
+.modal-close-btn:hover {
+    background: #f0f0f0;
+    color: var(--christmas-red);
+}
+
+.modal-icon {
+    font-size: 48px;
+    color: var(--christmas-red);
+    margin-bottom: 1rem;
+}
+
+.modal-title {
+    font-size: 1.5rem;
+    color: var(--christmas-red);
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
+
+.modal-text {
+    color: #444;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    font-size: 0.95rem;
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.btn-modal {
+    padding: 10px 24px;
+    border-radius: 50px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s;
+    font-size: 1rem;
+}
+
+.btn-modal:active {
+    transform: scale(0.95);
+}
+
+.btn-allow {
+    background: var(--christmas-green);
+    color: white;
+    box-shadow: 0 4px 12px rgba(22, 91, 51, 0.3);
+}
+
+.btn-deny {
+    background: #f0f0f0;
+    color: #666;
+}
+
+.btn-allow:hover { background: #1a6b3c; }
+.btn-deny:hover { background: #e0e0e0; }
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
 
 .loading-screen {
     position: fixed;
@@ -1008,6 +1134,29 @@ body {
         <source src="assets/music.mp3" type="audio/mp3">
     </audio>
 
+    <div class="location-modal-overlay" id="locationModal">
+        <div class="location-modal">
+            <button class="modal-close-btn" id="closeLocationModal">✕</button>
+            
+            <span class="material-symbols-rounded modal-icon">explore</span>
+            <h2 class="modal-title">Enable Santa's Compass? 🧭</h2>
+            
+            <p class="modal-text">
+                We use your location only to help calculate Santa's estimated arrival time at your chimney! 🏠🎁
+                <br><br>
+                <strong>This is completely optional.</strong> All calculations happen on your device, and your location is never sent to our North Pole servers. ✨
+                <br><br>
+                Just a heads-up: if you say “No thanks,” you won’t see Santa’s ETA — you’ll always see how far he’s traveled instead. 🚀
+        
+            </p>
+    
+            <div class="modal-buttons">
+                <button class="btn-modal btn-deny" id="denyLocation">No thanks</button>
+                <button class="btn-modal btn-allow" id="allowLocation">Enable access</button>
+            </div>
+        </div>        
+    </div>
+
     <div class="sidebar" id="sidebar">
         <div class="sidebar-stat">
             <div class="sidebar-stat-icon">
@@ -1101,7 +1250,7 @@ body {
             <button class="control-button" onclick="window.location.href='index.html'">
                 <span class="material-symbols-rounded">home</span>
             </button>
-            <button class="control-button">
+            <button class="control-button" id="fullscreenButton">
                 <span class="material-symbols-rounded">fullscreen</span>
             </button>
             <button class="control-button">
@@ -1176,7 +1325,7 @@ const santaChimneyIcon = L.icon({
 // Initialize the map centered on Santa with custom options
 const map = L.map('map', {
     center: santaPosition,
-    zoom: 11,
+    zoom: 9,
     dragging: ! isLocked,
     keyboard: ! isLocked,
     zoomControl: true,
@@ -1327,8 +1476,13 @@ function updateSantaPosition() {
     
     // Update map view if locked
     if (isLocked) {
-        map.setView(newPosition, map.getZoom(), {
-            animate: false
+// NEW WAY: Smooth Gliding! ✨
+        // We set duration to 1.0s to match your setInterval of 1000ms
+        map.panTo(newPosition, {
+            animate: false,
+            // duration: 1.0, 
+            easeLinearity: 1, // Constant speed (no acceleration/deceleration)
+            noMoveStart: true // Prevents firing extra move events
         });
     }
 }
@@ -1370,15 +1524,15 @@ function formatSantaETA(arrivalTime) {
     
     // Less than 30 minutes
     if (hours === 0 && minutes < 30) {
-        return "🚨 Quick, get to bed! Santa's arriving soon! 🛏️";
+        return "🚨 Quick, get to bed! Santa's arriving very soon! 🛏️";
     }
     
     // Less than an hour
     if (hours === 0) {
         if (minutes >= 45) {
-            return "About 45 minutes until Santa! 🎅";
+            return "About 45 minutes until Santa arrives! 🎅";
         } else if (minutes >= 30) {
-            return "About 30 minutes until Santa! ⏰";
+            return "About 30 minutes until Santa arrives! ⏰";
         }
     }
     
@@ -1391,12 +1545,12 @@ function formatSantaETA(arrivalTime) {
             if (hours === 1) {
                 hourText = 'hour'; // 1½ hour
             }
-            return `About ${hours}½ ${hourText} until Santa! 🎅`;
+            return `About ${hours}½ ${hourText} until Santa arrives! 🎅`;
         } else {
             if (hours === 1) {
                 hourText = 'hour'; // 1 hour
             }
-            return `About ${hours} ${hourText} until Santa! 🎄`;
+            return `About ${hours} ${hourText} until Santa arrives! 🎄`;
         }
     }
     
@@ -1762,22 +1916,71 @@ const messageInterval = setInterval(() => {
 // 🍪 Setup cookie toggle
 setupPresentsToggle();
 
-// Geolocation tracking - NOW destinations exist! 
-if ("geolocation" in navigator) {
-    navigator.geolocation.getCurrentPosition(
-        position => {
-            userLocation = {
-                lat: position.coords.latitude,
-                lng: position.coords.longitude
-            };
-            closestStop = findClosestStop(userLocation.lat, userLocation. lng);
-            console.log("User location set, closest stop:", closestStop);
-        },
-        error => {
-            console.log("Location access denied or error occurred:", error);
-        }
-    );
+// 🌍 SMART GEOLOCATION LOGIC 🌍
+
+// Function to actually start tracking (called only if allowed)
+function startUserTracking() {
+    if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(
+            position => {
+                userLocation = {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
+                };
+                closestStop = findClosestStop(userLocation.lat, userLocation.lng);
+                console.log("📍 User location set, closest stop:", closestStop);
+            },
+            error => {
+                console.log("🚫 Location access denied by browser or error:", error);
+            }
+        );
+    }
 }
+
+// Check if we should show the modal
+const hasSeenLocationModal = localStorage.getItem('santaLocationSeen');
+const locationModal = document.getElementById('locationModal');
+const btnAllow = document.getElementById('allowLocation');
+const btnDeny = document.getElementById('denyLocation');
+const btnClose = document.getElementById('closeLocationModal');
+
+// Helper to close modal
+const closeModal = () => {
+    locationModal.style.display = 'none';
+};
+
+if (!hasSeenLocationModal) {
+    // First time? Show the popup!
+    locationModal.style.display = 'flex';
+} else if (localStorage.getItem('santaLocationAllowed') === 'true') {
+    // Already said yes previously? Start tracking immediately!
+    startUserTracking();
+}
+
+// Event Listeners for the modal
+
+// 1. User clicks "Enable Access"
+btnAllow.addEventListener('click', () => {
+    localStorage.setItem('santaLocationSeen', 'true');
+    localStorage.setItem('santaLocationAllowed', 'true'); // Remember they said YES
+    closeModal();
+    startUserTracking(); // Actually ask the browser now
+});
+
+// 2. User clicks "No thanks"
+btnDeny.addEventListener('click', () => {
+    localStorage.setItem('santaLocationSeen', 'true');
+    localStorage.setItem('santaLocationAllowed', 'false'); // Remember they said NO
+    closeModal();
+    // Do nothing else, magic works without it!
+});
+
+// 3. User clicks "X"
+btnClose.addEventListener('click', () => {
+    localStorage.setItem('santaLocationSeen', 'true');
+    localStorage.setItem('santaLocationAllowed', 'false'); // Treat X like a "No"
+    closeModal();
+});
 
     // Create a marker cluster group with custom options
 const markers = L.markerClusterGroup({
@@ -2292,6 +2495,38 @@ Array.from(historyEl.children).forEach(c => {
         });
 }
 
+// --- Place this in your existing <script> block! ---
+
+// Check for Fullscreen API support and hide the button if not supported
+function checkFullscreenSupport() {
+    const fsButton = document.getElementById('fullscreenButton');
+    if (!fsButton) return; // Safety check in case the ID is missing
+
+    // Check for standard or vendor-prefixed fullscreen methods on the document body
+    // The main properties are 'fullscreenEnabled' and 'requestFullscreen' on an element
+    const isSupported = (
+        document.fullscreenEnabled || // Standard
+        document.webkitFullscreenEnabled || // Chrome/Safari/Edge (old)
+        document.mozFullScreenEnabled || // Firefox
+        document.msFullscreenEnabled // IE/Edge (older)
+    );
+
+    if (!isSupported) {
+        console.log("🥺 Fullscreen API not supported, hiding button.");
+        // Hide the button by setting its CSS display property to 'none'
+        fsButton.style.display = 'none'; 
+    } else {
+        console.log("🤩 Fullscreen API supported! Button is visible.");
+        // You should probably add the event listener for the button here too!
+        // fsButton.addEventListener('click', toggleFullscreen); // You'll need to define toggleFullscreen
+    }
+}
+
+// Call the function once the page is loaded!
+// Best place is right after your map setup, like at the very end of your script.
+checkFullscreenSupport();
+
+// --- End of the new code block ---
 
 
 // Fetch and initialize updates
