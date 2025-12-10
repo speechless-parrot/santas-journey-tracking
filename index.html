@@ -104,309 +104,453 @@
     <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,400,1,0">
     <style>
-        :root {
-            --christmas-red: #d42426;
-            --christmas-green: #165b33;
-            --snow-white: #ffffff;
-            --gold: #ffd700;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Google Sans', sans-serif;
-        }
-
-        body {
-            background-color: #f0f8ff;
-            overflow-x: hidden;
-        }
-
-        .snowflake {
-            color: var(--snow-white);
-            position: fixed;
-            top: -10%;
-            animation: fall linear forwards;
-            z-index: 1000;
-            pointer-events: none;
-        }
-
-        @keyframes fall {
-            to {
-                transform: translateY(100vh);
-            }
-        }
-
-        .banner {
-            background: linear-gradient(135deg, var(--christmas-red), var(--christmas-green));
-            color: white;
-            padding: 1.5rem;
-            text-align: center;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .banner::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: 
-                radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 50%, rgba(255,255,255,0.1) 0%, transparent 50%);
-        }
-
-        .banner h1 {
-            font-family: 'Lobster', cursive;
-            font-size: 3rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-            position: relative;
-        }
-
-        .tracker-section {
-            padding: 2rem;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 400px;
-            background: 
-                linear-gradient(45deg, rgba(255,255,255,0.1) 25%, transparent 25%) -20px 0,
-                linear-gradient(-45deg, rgba(255,255,255,0.1) 25%, transparent 25%) -20px 0,
-                linear-gradient(45deg, transparent 75%, rgba(255,255,255,0.1) 75%),
-                linear-gradient(-45deg, transparent 75%, rgba(255,255,255,0.1) 75%);
-            background-size: 40px 40px;
-        }
-
-        .tracker-card {
-            background: white;
-            border-radius: 24px;
-            padding: 3rem;
-            width: 90%;
-            max-width: 800px;
-            text-align: center;
-            box-shadow: 0 12px 48px rgba(0,0,0,0.1);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .tracker-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, var(--christmas-red), var(--christmas-green));
-        }
-
-        .tracker-card h2 {
-            font-family: 'Lobster', cursive;
-            color: var(--christmas-red);
-            font-size: 2.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .countdown {
-            font-size: 2.5rem;
-            color: var(--christmas-green);
-            margin: 1.5rem 0;
-        }
-
-        .countdown p {
-    font-size: 1.5rem; /* normal paragraph size */
-    margin: 0.5rem 0; /* nice spacing */
-    font-weight: 400; /* normal weight */
+:root {
+    --christmas-red: #d42426;
+    --christmas-green: #165b33;
+    --snow-white: #ffffff;
+    --gold: #ffd700;
+    --cozy-cream: #FFF9E6;
+    --warm-wood: #8B4513;
 }
 
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Google Sans', sans-serif;
+}
 
-        .countdown-boxes {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin-top: 1.5rem; /* space between paragraphs and the boxes */
-            margin-bottom: 1.5rem; /* space between paragraphs and the boxes */
-            flex-wrap: wrap;
-        }
-    
+body {
+    background-color: #f0f8ff;
+    overflow-x: hidden;
+}
 
-        .countdown-box {
-            background: #f8f9fa;
-            padding: 1rem;
-            border-radius: 12px;
-            min-width: 100px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-        }
+.snowflake {
+    color: var(--snow-white);
+    position: fixed;
+    top: -10%;
+    animation: fall linear forwards;
+    z-index: 1000;
+    pointer-events: none;
+}
 
-        .countdown-value {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: var(--christmas-red);
-        }
+@keyframes fall {
+    to {
+        transform: translateY(100vh);
+    }
+}
 
-        .countdown-label {
-            font-size: 0.9rem;
-            color: #666;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
+.banner {
+    background: linear-gradient(135deg, var(--christmas-red), var(--christmas-green));
+    color: white;
+    padding: 1.5rem;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    position: relative;
+    overflow: hidden;
+}
 
-        .track-button {
-            background: var(--christmas-red);
-            color: white;
-            border: none;
-            padding: 1rem 2rem;
-            border-radius: 25px;
-            font-size: 1.2rem;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
+.banner::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 50%, rgba(255,255,255,0.1) 0%, transparent 50%);
+}
 
-        .track-button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
-        }
+.banner h1 {
+    font-family: 'Lobster', cursive;
+    font-size: 3rem;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    position: relative;
+}
 
-        .village-section {
-            padding: 2rem;
-            background: 
+.tracker-section {
+    padding: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 400px;
+    background: 
+        linear-gradient(45deg, rgba(255,255,255,0.1) 25%, transparent 25%) -20px 0,
+        linear-gradient(-45deg, rgba(255,255,255,0.1) 25%, transparent 25%) -20px 0,
+        linear-gradient(45deg, transparent 75%, rgba(255,255,255,0.1) 75%),
+        linear-gradient(-45deg, transparent 75%, rgba(255,255,255,0.1) 75%);
+    background-size: 40px 40px;
+}
+
+.tracker-card {
+    background: white;
+    border-radius: 24px;
+    padding: 3rem;
+    width: 90%;
+    max-width: 800px;
+    text-align: center;
+    box-shadow: 0 12px 48px rgba(0,0,0,0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.tracker-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--christmas-red), var(--christmas-green));
+}
+
+.tracker-card h2 {
+    font-family: 'Lobster', cursive;
+    color: var(--christmas-red);
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.countdown {
+    font-size: 2.5rem;
+    color: var(--christmas-green);
+    margin: 1.5rem 0;
+}
+
+.countdown p {
+    font-size: 1.5rem;
+    margin: 0.5rem 0;
+    font-weight: 400;
+}
+
+.countdown-boxes {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.countdown-box {
+    background: #f8f9fa;
+    padding: 1rem;
+    border-radius: 12px;
+    min-width: 100px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.countdown-value {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--christmas-red);
+}
+
+.countdown-label {
+    font-size: 0.9rem;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.track-button {
+    background: var(--christmas-red);
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 25px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.track-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+}
+
+/* 🎄 VILLAGE SECTION - Clean North Pole vibes! */
+.village-section {
+    padding: 4rem 2rem 6rem;
+    background: 
                 linear-gradient(135deg, 
                     #1e3b70 0%, 
                     #29539b 25%, 
                     #1e3b70 50%, 
                     #29539b 75%, 
-                    #1e3b70 100%);
-            position: relative;
-            color: white;
-        }
-
-        .village-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: 
-                radial-gradient(circle at 20% 20%, rgba(124, 207, 255, 0.3) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(124, 207, 255, 0.3) 0%, transparent 50%);
-            animation: aurora 15s infinite alternate;
-        }
-
-        @keyframes aurora {
-            0% {
-                opacity: 0.5;
-                transform: translateY(0);
-            }
-            100% {
-                opacity: 0.8;
-                transform: translateY(-20px);
-            }
-        }
-
-        .village-section h2 {
-            font-family: 'Lobster', cursive;
-            color: var(--snow-white);
-            text-align: center;
-            font-size: 2.5rem;
-            margin-bottom: 2rem;
-            position: relative;
-        }
-
-        .activities-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-            padding: 1rem;
-            position: relative;
-        }
-
-        .activity-card {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 16px;
-            padding: 2rem;
-            text-align: center;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
-            cursor: pointer;
-            border: 2px solid transparent;
-            backdrop-filter: blur(10px);
-        }
-
-        .activity-card:hover {
-            transform: translateY(-8px);
-            border-color: var(--gold);
-            box-shadow: 0 12px 32px rgba(0,0,0,0.2);
-        }
-
-        .activity-card .material-symbols-rounded {
-            font-size: 48px;
-            color: var(--christmas-red);
-            margin-bottom: 1rem;
-        }
-
-/* Make category headers white */
-.category-section > h3 {
-    color: var(--snow-white); /* 🎨 white for category titles */
+                    #1e3b70 100%);    position: relative;
+    overflow: hidden;
 }
 
-/* Keep card headers red */
-.activity-card h3 {
-    color: var(--christmas-red); /* 🎨 red for cards */
+/* Snowy ground */
+.village-section::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 150px;
+    background: linear-gradient(to top, 
+        rgba(255,255,255,0.9) 0%, 
+        rgba(255,255,255,0.6) 40%, 
+        transparent 100%);
+    pointer-events: none;
+    z-index: 1;
 }
 
-        .activity-card p {
-            color: #666;
-            font-size: 0.9rem;
-        }
+/* Subtle northern lights */
+.village-section::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 250px;
+    background: 
+        radial-gradient(ellipse at 40% 10%, rgba(124, 207, 255, 0.15) 0%, transparent 50%),
+        radial-gradient(ellipse at 70% 20%, rgba(186, 230, 253, 0.1) 0%, transparent 40%);
+    animation: aurora 25s infinite alternate ease-in-out;
+    pointer-events: none;
+}
 
-        .category-section {
+@keyframes aurora {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 0.8; }
+}
+
+.village-section h2 {
+    font-family: 'Lobster', cursive;
+    color: var(--snow-white);
+    text-align: center;
+    font-size: 3rem;
     margin-bottom: 3rem;
     position: relative;
+    z-index: 2;
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.4);
+}
+
+/* Village container */
+.village-decorations {
+    position: relative;
+    max-width: 1400px;
+    margin: 0 auto;
+    z-index: 2;
+}
+
+/* Top decorations row */
+.village-top-decorations {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 3rem;
+    padding: 0 2rem;
+}
+
+.north-pole-sign img {
+    width: 120px;
+    height: auto;
+    filter: drop-shadow(0 4px 12px rgba(0,0,0,0.3));
+}
+
+.santa-sleigh-decoration img {
+    width: 180px;
+    height: auto;
+    filter: drop-shadow(0 4px 12px rgba(0,0,0,0.3));
+    animation: float 4s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+}
+
+/* Side decorations */
+.village-side-decorations {
+    position: absolute;
+    top: 200px;
+    width: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.side-decoration {
+    position: absolute;
+}
+
+.side-decoration img {
+    width: 80px;
+    height: auto;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+}
+
+.decoration-left-1 {
+    left: 3%;
+    top: 0;
+}
+
+.decoration-left-2 {
+    left: 5%;
+    top: 300px;
+}
+
+.decoration-right-1 {
+    right: 3%;
+    top: 100px;
+}
+
+.decoration-right-2 {
+    right: 5%;
+    top: 400px;
+}
+
+/* Category sections */
+.category-section {
+    margin-bottom: 4rem;
+    position: relative;
+    z-index: 2;
 }
 
 .category-section > h3 {
-    color: var(--snow-white) !important; /* force white */
-    font-size: 2.2rem;
-    margin-bottom: 2rem;
+    color: var(--snow-white);
+    font-size: 2rem;
+    margin-bottom: 2.5rem;
     text-align: center;
     font-family: 'Lobster', cursive;
+    text-shadow: 2px 2px 6px rgba(0,0,0,0.3);
 }
 
-
+/* Grid layout */
 .category-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 2rem;
+    padding: 1rem;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
-.activity-card.locked {
-    filter: grayscale(1);
-    opacity: 0.6;
-    cursor: not-allowed;
+.activity-card {
+    background: white;
+    border-radius: 24px;
+    padding: 0;
+    text-align: center;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    cursor: pointer;
     position: relative;
-    pointer-events: auto; /* so JS can detect clicks */
+    overflow: hidden;
+    border: 3px solid transparent;
+}
+
+/* Festive top border */
+.activity-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 8px;
+    background: linear-gradient(90deg, 
+        var(--christmas-red) 0%, 
+        var(--christmas-green) 50%, 
+        var(--christmas-red) 100%);
+    border-radius: 24px 24px 0 0;
+}
+
+.activity-card-content {
+    padding: 2.5rem 2rem 2rem;
+}
+
+/* Icon as the house/door element */
+.activity-card .material-symbols-rounded {
+    font-size: 52px;
+    color: var(--christmas-red);
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    width: 75px;
+    height: 75px;
+    margin: 0 auto 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 20px;
+    box-shadow: 
+        0 4px 12px rgba(0,0,0,0.1),
+        inset 0 1px 3px rgba(255,255,255,0.8);
+    transition: all 0.3s ease;
+}
+
+.activity-card h3 {
+    color: var(--christmas-red);
+    font-size: 1.4rem;
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.activity-card p {
+    color: #666;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+/* Hover effect - card lights up! */
+.activity-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 
+        0 16px 40px rgba(212, 36, 38, 0.2),
+        0 0 0 3px var(--christmas-red);
+    border-color: var(--christmas-red);
+}
+
+.activity-card:hover .material-symbols-rounded {
+    transform: scale(1.1) rotate(-5deg);
+    background: linear-gradient(135deg, var(--christmas-red), #b81e1f);
+    color: white;
+    box-shadow: 0 6px 20px rgba(212, 36, 38, 0.4);
+}
+
+/* Locked houses */
+.activity-card.locked {
+    background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.activity-card.locked::before {
+    background: linear-gradient(90deg, #adb5bd 0%, #6c757d 50%, #adb5bd 100%);
+}
+
+.activity-card.locked .material-symbols-rounded {
+    background: linear-gradient(135deg, #ced4da 0%, #adb5bd 100%);
+    color: #6c757d;
+}
+
+.activity-card.locked:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
 }
 
 .unlock-date {
     font-size: 0.8rem;
-    color: #666;
-    margin-top: 0.5rem;
+    color: #868e96;
+    margin-top: 0.75rem;
+    font-style: italic;
 }
+
+/* Footer */
 .site-footer {
     background: linear-gradient(135deg, var(--christmas-red), var(--christmas-green));
     color: var(--snow-white);
     padding: 2rem 1rem;
-    margin-top: 3rem;
+    margin-top: 0;
     position: relative;
     overflow: hidden;
+    z-index: 10;
 }
 
 .site-footer::before {
@@ -463,7 +607,34 @@
     opacity: 0.9;
 }
 
-@media (max-width: 600px) {
+/* Responsive */
+@media (max-width: 768px) {
+    .village-top-decorations {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+    
+    .north-pole-sign img {
+        width: 100px;
+    }
+    
+    .santa-sleigh-decoration img {
+        width: 140px;
+    }
+    
+    .side-decoration img {
+        width: 60px;
+    }
+    
+    .category-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+    
+    .village-section h2 {
+        font-size: 2.2rem;
+    }
+    
     .footer-links {
         flex-direction: column;
         align-items: center;
@@ -490,124 +661,152 @@
     </section>
 
     <div class="village-section">
-        <h2>❄️ Santa's Village Activities ❄️</h2>
-        <div class="activities-grid">
+        <h2>❄️ Welcome to Santa's Village ❄️</h2>
+        
+            
             <!-- 🎮 Games & Fun Section -->
             <div class="category-section">
-                <h3>🎮 Games & Fun</h3>
+                <h3>🎮 Games & Fun Street</h3>
                 <div class="category-grid">
                     <div class="activity-card locked" data-href="games/gift-catch.html" data-unlock="8">
-                        <span class="material-symbols-rounded">featured_seasonal_and_gifts</span>
-                        <h3>Santa's Gift Catch</h3>
-                        <p>Catch the falling gifts while dodging those sneaky snowflakes! 🎁</p>
-                        <div class="unlock-date">Unlocks December 8th</div>
-                    </div>                    
+                        <div class="activity-card-content">
+                            <span class="material-symbols-rounded">featured_seasonal_and_gifts</span>
+                            <h3>Santa's Gift Catch</h3>
+                            <p>Catch the falling gifts while dodging those sneaky snowflakes! 🎁</p>
+                            <div class="unlock-date">Unlocks December 8th</div>
+                        </div>
+                    </div>
+                    
                     <div class="activity-card" data-href="games/memory-match.html">
-                        <span class="material-symbols-rounded">extension</span>
-                        <h3>Santa's Memory Match</h3>
-                        <p>Match the festive pairs in this jolly memory game! 🃏</p>
+                        <div class="activity-card-content">
+                            <span class="material-symbols-rounded">extension</span>
+                            <h3>Santa's Memory Match</h3>
+                            <p>Match the festive pairs in this jolly memory game! 🃏</p>
+                        </div>
                     </div>
+                    
                     <div class="activity-card locked" data-href="games/quiz.html" data-unlock="12">
-                        <span class="material-symbols-rounded">help</span>
-                        <h3>Christmas Quiz</h3>
-                        <p>Test your holiday knowledge with festive trivia! 🎄
-                        </p>
-                        <div class="unlock-date">Unlocks December 12th</div>
+                        <div class="activity-card-content">
+                            <span class="material-symbols-rounded">help</span>
+                            <h3>Christmas Quiz</h3>
+                            <p>Test your holiday knowledge with festive trivia! 🎄</p>
+                            <div class="unlock-date">Unlocks December 12th</div>
+                        </div>
                     </div>
-    
-        
+                    
                     <div class="activity-card locked" data-href="games/list-maker.html" data-unlock="8">
-                        <span class="material-symbols-rounded">checklist</span>
-                        <h3>Santa's List Maker</h3>
-                        <p>Help Santa check who's naughty or nice! 📜</p>
-                        <div class="unlock-date">Unlocks December 8th</div>
+                        <div class="activity-card-content">
+                            <span class="material-symbols-rounded">checklist</span>
+                            <h3>Santa's List Maker</h3>
+                            <p>Help Santa check who's naughty or nice! 📜</p>
+                            <div class="unlock-date">Unlocks December 8th</div>
+                        </div>
                     </div>
-    
                 </div>
             </div>
-        
+            
             <!-- 📚 North Pole Knowledge Section -->
             <div class="category-section">
-                <h3>📚 North Pole Knowledge</h3>
+                <h3>📚 Knowledge Lane</h3>
                 <div class="category-grid">
                     <div class="activity-card" data-href="knowledge/sleigh.html">
-                        <span class="material-symbols-rounded">rocket</span>
-                        <h3>Santa's Sleigh</h3>
-                        <p>Discover the magic behind Santa's ride! 🛷</p>
+                        <div class="activity-card-content">
+                            <span class="material-symbols-rounded">rocket</span>
+                            <h3>Santa's Sleigh</h3>
+                            <p>Discover the magic behind Santa's ride! 🛷</p>
+                        </div>
                     </div>
-        
+                    
                     <div class="activity-card" data-href="knowledge/route.html">
-                        <span class="material-symbols-rounded">route</span>
-                        <h3>Santa's Route</h3>
-                        <p>Learn how Santa plans his journey! 🗺️</p>
+                        <div class="activity-card-content">
+                            <span class="material-symbols-rounded">route</span>
+                            <h3>Santa's Route</h3>
+                            <p>Learn how Santa plans his journey! 🗺️</p>
+                        </div>
                     </div>
-        
+                    
                     <div class="activity-card" data-href="knowledge/workshop.html">
-                        <span class="material-symbols-rounded">engineering</span>
-                        <h3>Santa's Workshop</h3>
-                        <p>Take a peek inside the magical factory! 🛠️</p>
+                        <div class="activity-card-content">
+                            <span class="material-symbols-rounded">engineering</span>
+                            <h3>Santa's Workshop</h3>
+                            <p>Take a peek inside the magical factory! 🛠️</p>
+                        </div>
                     </div>
-        
+                    
                     <div class="activity-card" data-href="knowledge/elf-life.html">
-                        <span class="material-symbols-rounded">work</span>
-                        <h3>A Day in the Life of an Elf</h3>
-                        <p>Experience 24 hours as a North Pole elf! 🧝</p>
+                        <div class="activity-card-content">
+                            <span class="material-symbols-rounded">work</span>
+                            <h3>A Day in the Life of an Elf</h3>
+                            <p>Experience 24 hours as a North Pole elf! 🧝</p>
+                        </div>
                     </div>
-        
+                    
                     <div class="activity-card" data-href="knowledge/helpers.html">
-                        <span class="material-symbols-rounded">groups</span>
-                        <h3>Santa's Helpers</h3>
-                        <p>Meet the team behind the magic! 🧑‍🎄</p>
+                        <div class="activity-card-content">
+                            <span class="material-symbols-rounded">groups</span>
+                            <h3>Santa's Helpers</h3>
+                            <p>Meet the team behind the magic! 🧑‍🎄</p>
+                        </div>
                     </div>
-        
+                    
                     <div class="activity-card locked" data-href="knowledge/off-season.html" data-unlock="5">
-                        <span class="material-symbols-rounded">beach_access</span>
-                        <h3>Santa's Off-Season</h3>
-                        <p>What does Santa do in summer? 🏖️</p>
-                        <div class="unlock-date">Unlocks December 5th</div>
+                        <div class="activity-card-content">
+                            <span class="material-symbols-rounded">beach_access</span>
+                            <h3>Santa's Off-Season</h3>
+                            <p>What does Santa do in summer? 🏖️</p>
+                            <div class="unlock-date">Unlocks December 5th</div>
+                        </div>
                     </div>
-        
+                    
                     <div class="activity-card" data-href="knowledge/gift-journey.html">
-                        <span class="material-symbols-rounded">featured_seasonal_and_gifts</span>
-                        <h3>The Gift Journey</h3>
-                        <p>Follow a present's magical adventure! 🎁</p>
+                        <div class="activity-card-content">
+                            <span class="material-symbols-rounded">featured_seasonal_and_gifts</span>
+                            <h3>The Gift Journey</h3>
+                            <p>Follow a present's magical adventure! 🎁</p>
+                        </div>
                     </div>
                 </div>
             </div>
-        
+            
             <!-- ❄️ More Festivities Section -->
             <div class="category-section">
-                <h3>❄️ More Festivities</h3>
+                <h3>❄️ Festive Square</h3>
                 <div class="category-grid">
-                            <!-- ⭐ NEW: GST 2017 Revival -->
-        <div class="activity-card" data-href="https://speechless-parrot.github.io/gst-2017">
-            <span class="material-symbols-rounded">celebration</span>
-            <h3>GST 2017</h3>
-            <p>A festive revival of the classic 2017 Google Santa Tracker! 🎅</p>
-        </div>
-
+                    <div class="activity-card" data-href="https://speechless-parrot.github.io/gst-2017">
+                        <div class="activity-card-content">
+                            <span class="material-symbols-rounded">celebration</span>
+                            <h3>GST 2017</h3>
+                            <p>A festive revival of the classic 2017 Google Santa Tracker! 🎅</p>
+                        </div>
+                    </div>
+                    
                     <div class="activity-card" data-href="interactive/post-office.html">
-                        <span class="material-symbols-rounded">mail</span>
-                        <h3>North Pole Post Office</h3>
-                        <p>Write your letter to Santa and get a personalized response! 💌</p>
+                        <div class="activity-card-content">
+                            <span class="material-symbols-rounded">mail</span>
+                            <h3>North Pole Post Office</h3>
+                            <p>Write your letter to Santa and get a personalized response! 💌</p>
+                        </div>
                     </div>
-        
+                    
                     <div class="activity-card" data-href="interactive/jokes.html">
-                        <span class="material-symbols-rounded">sentiment_very_satisfied</span>
-                        <h3>Christmas Jokes</h3>
-                        <p>Get your daily dose of holiday humor! 😂</p>
+                        <div class="activity-card-content">
+                            <span class="material-symbols-rounded">sentiment_very_satisfied</span>
+                            <h3>Christmas Jokes</h3>
+                            <p>Get your daily dose of holiday humor! 😂</p>
+                        </div>
                     </div>
-        
+                    
                     <div class="activity-card locked" data-href="interactive/traditions.html" data-unlock="10">
-                        <span class="material-symbols-rounded">globe</span>
-                        <h3>Holiday Traditions</h3>
-                        <p>Explore Christmas around the world! 🌍</p>
-                        <div class="unlock-date">Unlocks December 10th</div>
+                        <div class="activity-card-content">
+                            <span class="material-symbols-rounded">globe</span>
+                            <h3>Holiday Traditions</h3>
+                            <p>Explore Christmas around the world! 🌍</p>
+                            <div class="unlock-date">Unlocks December 10th</div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        
     </div>
 
     <footer class="site-footer">
