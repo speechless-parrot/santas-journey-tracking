@@ -217,7 +217,7 @@
         /* SANTA CONTAINER */
         .santa-container {
     position: absolute;
-    bottom: 0;
+    bottom: 0;  /* ⬅️ THIS IS THE LIFE-SAVER */
     left: 50%;
     transform: translateX(-50%);
     width: 8vw;  /* Smaller on desktop */
@@ -479,6 +479,7 @@
     .santa-container {
         width: 15vw;  /* Make it bigger on mobile!  */
         height: 20vh;
+        bottom: calc(1vh + 30px); /* dynamic lift */
         max-width: none;  /* Remove the cap on mobile */
         max-height: none;
     }
@@ -508,7 +509,7 @@
 
     .start-screen {
     margin: 0;
-    padding: 1. 5rem;
+    padding: 1.5rem;
     max-width: 95vw;
     width: 95vw;
     max-height: 85vh;
