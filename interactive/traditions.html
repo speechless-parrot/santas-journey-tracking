@@ -400,11 +400,6 @@ const holidayTraditions = [
         tradition: "Turkish families celebrate Saint Nicholas's birthday in his birthplace of Demre! 🎅⛪ They visit the ancient church where the real Saint Nicholas served as bishop and leave gifts for children! It's amazing to celebrate Santa in the actual place where the legend began centuries ago! 🏛️✨"
     },
     {
-        country: "🇮🇱 Israel",
-        coordinates: [31.0461, 34.8516],
-        tradition: "Christian families in Bethlehem, the birthplace of Jesus, light candles in the Church of the Nativity! 🕯️⭐ Pilgrims from around the world come to touch the silver star marking the exact spot where Jesus was born! It's the most sacred Christmas celebration on Earth! 👶✨"
-    },
-    {
         country: "🇱🇧 Lebanon",
         coordinates: [33.8547, 35.8623],
         tradition: "Lebanese Christian families plant lentils, chickpeas, and wheat in cotton during Advent! 🌱✨ By Christmas, they have beautiful green sprouts that represent new life and hope! They place these 'Christmas gardens' around their Nativity scenes, creating the most living, breathing Christmas displays! 👶🌿"
@@ -573,7 +568,7 @@ const holidayTraditions = [
         const map = L.map('map').setView([20, 0], 3);
 
         // Add the tile layer (you can change the style)
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+         L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
             attribution: '© OpenStreetMap contributors'
         }).addTo(map);
 
