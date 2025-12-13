@@ -194,6 +194,32 @@
             color: var(--gold);
         }
 
+        /* --- NEW: Link to Chat Style --- */
+.chat-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1.5rem; /* Space above the link */
+    padding: 10px 20px;
+    background: var(--christmas-green);
+    color: white;
+    text-decoration: none;
+    border-radius: 25px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(22, 91, 51, 0.3); /* Subtle green glow */
+}
+
+.chat-link:hover {
+    background: #0d4a24; /* Darker green on hover */
+    transform: translateY(-2px); /* Lift effect */
+    box-shadow: 0 6px 12px rgba(22, 91, 51, 0.4);
+}
+
+.chat-link .material-symbols-rounded {
+    font-size: 20px;
+}
+
         @media (max-width: 600px) {
             .content {
                 padding: 1rem;
@@ -372,15 +398,19 @@
         </div>
 
         <div class="time-card">
-            <div class="section-title">
+            <h2 class="section-title">
                 <span class="material-symbols-rounded">stars</span>
                 Living the Elf Life
-            </div>
+            </h2>
             <p>
                 Every day as an elf is filled with <span class="highlight">magic, joy, and a sprinkle of chaos</span>! 
                 From dawn till dusk, we're creating Christmas magic, one toy and spell at a time. It's exhausting, 
                 exhilarating, and absolutely magical - and we wouldn't have it any other way! 🎄✨
             </p>
+
+            <a href="../interactive/elf-chat.html" class="chat-link">
+                <span class="material-symbols-rounded">chat</span> Chat with Tinsel, one of Santa's helper elves!
+            </a>
         </div>
     </div>
 </body>
