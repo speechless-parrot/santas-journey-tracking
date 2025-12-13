@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Santa Tracking 🗺️</title>
+    <link rel="icon" type="image/png" href="../assets/santa-chimney-waving.png">
+    <link href="https://fonts.googleapis.com/css?family=Google+Sans:100,300,400,500,700,900,100i,300i,400i,500i,700i,900i" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,400,1,0">
+    <style>
+        :root {
+            --christmas-red: #d42426;
+            --christmas-green: #165b33;
+            --snow-white: #ffffff;
+            --gold: #ffd700;
+            --paper: #f8f9fa;
+            --text: #2c3e50;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Google Sans', sans-serif;
+        }
+
+        body {
+            background-color: var(--paper);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .top-bar {
+            background: linear-gradient(135deg, var(--christmas-red), var(--christmas-green));
+            padding: 1rem;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .page-title {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 500;
+        }
+
+        .home-button {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .home-button:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.1);
+        }
+
+        .content {
+            max-width: 800px;
+            margin: 80px auto 40px;
+            padding: 2rem;
+        }
+
+        .story-card {
+            background: white;
+            border-radius: 24px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .story-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--christmas-red), var(--gold), var(--christmas-green));
+        }
+
+        .story-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--christmas-red);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .step-number {
+            background: var(--christmas-red);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            margin-right: 0.5rem;
+        }
+
+        .highlight {
+            color: var(--christmas-green);
+            font-weight: 500;
+        }
+
+        ul {
+            list-style: none;
+            padding-left: 1.5rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+            position: relative;
+        }
+
+        li::before {
+            content: "✨";
+            position: absolute;
+            left: -1.5rem;
+        }
+
+        .fun-fact {
+            background: linear-gradient(135deg, #fff5f5, #f0f8ff);
+            padding: 1rem;
+            border-radius: 12px;
+            margin-top: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .fun-fact .material-symbols-rounded {
+            color: var(--gold);
+        }
+
+        @media (max-width: 600px) {
+            .content {
+                padding: 1rem;
+            }
+
+            .story-card {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <h1 class="page-title">Santa Tracking 🗺️</h1>
+        <button class="home-button" onclick="window.location.href='../index.html'">
+            <span class="material-symbols-rounded">home</span>
+        </button>
+    </div>
+
+    <div class="content">
+        <div class="story-card">
+            <div class="section-title">
+                <span class="material-symbols-rounded">satellite_alt</span>
+                Real-Time Santa Location Tracking
+            </div>
+            <ul>
+                <li>We combine <span class="highlight">real-time satellite imagery</span> with advanced North Pole tech 🛰️</li>
+                <li>Top-secret elf radar scans the skies for sleigh movement 🎄</li>
+                <li>Magical signals from Santa’s sleigh provide super-accurate positioning ✨</li>
+                <li>Location updates every single second—no refreshing required! ⚡</li>
+            </ul>
+            <div class="fun-fact">
+                <span class="material-symbols-rounded">tips_and_updates</span>
+                <span>Elves invented encrypted ‘SleighBeams’—signals only SantaTech can decode! 🪄</span>
+            </div>
+        </div>
+
+        <div class="story-card">
+            <div class="section-title">
+                <span class="material-symbols-rounded">featured_seasonal_and_gifts</span>
+                Tracking Presents, Cookies & More
+            </div>
+            <ul>
+                <li>Live counter shows how many presents have been delivered 🎁</li>
+                <li>Cookie tracker logs how many treats Santa enjoys 🍪</li>
+                <li>Arrival time estimates calculate how soon Santa reaches your closest stop 🎯</li>
+                <li>Live pictures from Santa appear as he travels around the world 📸</li>
+            </ul>
+        </div>
+
+        <div class="story-card">
+            <div class="section-title">
+                <span class="material-symbols-rounded">update</span>
+                Stop Detection & Journey Optimization
+            </div>
+            <ul>
+                <li>Magical sensors detect when Santa completes a delivery stop 🏠</li>
+                <li>North Pole AI refines stop accuracy in real-time 🔧</li>
+                <li>Each year, more stops are added to improve global precision 🌍</li>
+                <li>This is our <span class="highlight">first year</span> tracking Santa—tech improving fast! 🚀</li>
+            </ul>
+        </div>
+
+        <div class="story-card">
+            <div class="section-title">
+                <span class="material-symbols-rounded">hourglass_top</span>
+                Pre-Tracking From the North Pole
+            </div>
+            <ul>
+                <li>Pre-tracking starts <span class="highlight">Dec 24, 8:30 AM UTC</span> 🌨️</li>
+                <li>Live behind-the-scenes updates: sleigh checks, reindeer prep, and elf logistics 🦌</li>
+                <li>Magical sensors monitor Santa’s launch countdown in real-time ⏳</li>
+                <li>Special North Pole broadcasts show festive chaos as departure nears 🎬</li>
+            </ul>
+        </div>
+
+        <div class="story-card">
+            <div class="section-title">
+                <span class="material-symbols-rounded">star</span>
+                The Technology & Magic Behind the Tracker
+            </div>
+            <p>
+                Using a seamless blend of <span class="highlight">cutting-edge tracking systems</span>, magical sleigh telemetry, satellite scans,
+                and encrypted elf-beam radar, Santa’s journey becomes fully visible around the world.
+                Every second is analyzed, transmitted, and displayed with pinpoint accuracy—so you always
+                know exactly where Santa is, how fast he's going, what he's delivering, and how soon he'll reach you. 🎅✨
+            </p>
+        </div>
+    </div>
+</body>
+</html>
