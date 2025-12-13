@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Family Guide - Santa's Journey Tracking 👨‍👩‍👧‍👦</title>
+    <title>Family Guide 👨‍👩‍👧‍👦</title>
     <link rel="icon" type="image/png" href="assets/santa-chimney-waving.png">
     <link href="https://fonts.googleapis.com/css?family=Google+Sans:100,300,400,500,700,900,100i,300i,400i,500i,700i,900i" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
@@ -142,11 +142,6 @@
             margin-bottom: 0.5rem;
         }
 
-        .highlight {
-            color: var(--christmas-red);
-            font-weight: 500;
-        }
-
         .tip-box {
             background: linear-gradient(135deg, #fff5f5, #f0f8ff);
             padding: 1rem;
@@ -160,6 +155,19 @@
         .tip-box .material-symbols-rounded {
             color: var(--gold);
             flex-shrink: 0;
+        }
+
+        .photo-feed {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .photo-feed img {
+            width: 100%;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
         @media (max-width: 768px) {
@@ -187,7 +195,8 @@
     <div class="content">
         <div class="intro-card">
             <h2>Welcome to the Family Guide! 👨‍👩‍👧‍👦</h2>
-            <p>Let's make this Christmas season magical together! Here's your complete guide to enjoying all the festive activities with your loved ones.</p>
+            <p>Get ready for the most magical family adventure of the year! This guide helps you follow Santa, discover new traditions, play together, laugh together, and make December unforgettable.</p>
+            <p>Everything here is designed for families to share special moments—whether you're cozy on the sofa, baking cookies, or eagerly waiting for Santa's sleigh to appear in the night sky.</p>
         </div>
 
         <div class="section-card">
@@ -195,35 +204,39 @@
                 <span class="material-symbols-rounded">track_changes</span>
                 Tracking Santa on the Big Day
             </div>
-            <p>December 24th is the highlight of our magical journey! Gather the family around as we track Santa's global gift-giving adventure.</p>
-            
+            <p>December 24th is the most exciting day of the year! Follow Santa's journey together and turn your living room into Mission Control for the North Pole.</p>
+            <p><strong>NEW:</strong> Starting <strong>8:30 AM UTC</strong>, enjoy <em>pre-tracking updates</em> straight from the North Pole, featuring Santa’s final preparations, workshop checkups, reindeer warm‑ups, and exclusive behind‑the‑scenes photos!</p>
+
             <div class="activity-grid">
-                <div class="activity-card" onclick="window.location.href='tracker.html'">
-                    <h3>
-                        <span class="material-symbols-rounded">map</span>
-                        Live Santa Tracker
-                    </h3>
-                    <p>Watch Santa's journey in real-time, starting from Provideniya, Russia! 🗺️</p>
+                <div class="activity-card">
+                    <h3><span class="material-symbols-rounded">map</span> Live Santa Tracker</h3>
+                    <p>Watch Santa move across the globe in real-time! 🗺️</p>
                 </div>
                 <div class="activity-card">
-                    <h3>
-                        <span class="material-symbols-rounded">timer</span>
-                        ETA Updates
-                    </h3>
-                    <p>Know exactly when Santa will reach your area! ⏰</p>
+                    <h3><span class="material-symbols-rounded">timer</span> ETA Updates</h3>
+                    <p>Get accurate arrival times for your home—perfect for bedtime planning! ⏰</p>
                 </div>
                 <div class="activity-card">
-                    <h3>
-                        <span class="material-symbols-rounded">inventory_2</span>
-                        Present Counter
-                    </h3>
-                    <p>Watch the gift count climb into billions! 🎁</p>
+                    <h3><span class="material-symbols-rounded">featured_seasonal_and_gifts</span> Present Counter</h3>
+                    <p>Watch the worldwide gift tally race into the billions! 🎁</p>
+                </div>
+                <div class="activity-card">
+                    <h3><span class="material-symbols-rounded">cookie</span> Cookies Eaten</h3>
+                    <p>Keep track of how many cookies Santa has devoured on his journey! 🍪</p>
+                </div>
+                <div class="activity-card">
+                    <h3><span class="material-symbols-rounded">chat</span> Live Updates from Santa</h3>
+                    <p>As Santa travels, he sends back updates and snapshots from his sleigh! Perfect for sharing moments of magic throughout the day. 💬</p>
+                </div>
+                <div class="activity-card" onclick="window.location.href='knowledge/tracking.html'">
+                    <h3><span class="material-symbols-rounded">satellite_alt</span> How We Track Santa</h3>
+                    <p>Discover the magic and science behind Santa tracking! 🛰️</p>
                 </div>
             </div>
 
             <div class="tip-box">
                 <span class="material-symbols-rounded">tips_and_updates</span>
-                <p>Pro Tip: Put the tracker on your TV for a family mission control experience! 📺✨</p>
+                <p>Pro Tip: Put the tracker on your TV and turn the whole room into Santa HQ! 📺✨</p>
             </div>
         </div>
 
@@ -232,29 +245,32 @@
                 <span class="material-symbols-rounded">extension</span>
                 Family Activities
             </div>
-            <p>Explore these magical activities together while waiting for Santa!</p>
+            <p>These festive games and experiences are perfect for bringing the whole family together.</p>
 
             <div class="activity-grid">
                 <div class="activity-card" onclick="window.location.href='games/memory-match.html'">
-                    <h3>
-                        <span class="material-symbols-rounded">extension</span>
-                        Memory Match
-                    </h3>
-                    <p>Challenge the family to find matching holiday pairs! 🃏</p>
+                    <h3><span class="material-symbols-rounded">extension</span> Santa's Memory Match</h3>
+                    <p>Match the festive pairs in this jolly memory game! 🃏</p>
                 </div>
                 <div class="activity-card" onclick="window.location.href='games/quiz.html'">
-                    <h3>
-                        <span class="material-symbols-rounded">quiz</span>
-                        Christmas Quiz
-                    </h3>
-                    <p>Test your family's holiday knowledge! 🎄</p>
+                    <h3><span class="material-symbols-rounded">quiz</span> Christmas Quiz</h3>
+                    <p>Test your holiday knowledge with family-friendly trivia! 🎄</p>
+                </div>
+                <div class="activity-card" onclick="window.location.href='games/gift-catch.html'">
+                    <h3><span class="material-symbols-rounded">sports_esports</span> Santa's Gift Catch</h3>
+                    <p>Catch the falling gifts while avoiding sneaky snowflakes! 🎁</p>
                 </div>
                 <div class="activity-card" onclick="window.location.href='interactive/post-office.html'">
-                    <h3>
-                        <span class="material-symbols-rounded">mail</span>
-                        North Pole Post Office
-                    </h3>
-                    <p>Write letters to Santa together! 💌</p>
+                    <h3><span class="material-symbols-rounded">mail</span> North Pole Post Office</h3>
+                    <p>Write letters to Santa and receive magical replies! 💌</p>
+                </div>
+                <div class="activity-card" onclick="window.location.href='interactive/jokes.html'">
+                    <h3><span class="material-symbols-rounded">sentiment_very_satisfied</span> Christmas Jokes</h3>
+                    <p>Share a laugh each day with your family! 😂</p>
+                </div>
+                <div class="activity-card" onclick="window.location.href='interactive/traditions.html'">
+                    <h3><span class="material-symbols-rounded">public</span> Holiday Traditions</h3>
+                    <p>Explore celebrations from around the world! 🌍</p>
                 </div>
             </div>
         </div>
@@ -262,70 +278,187 @@
         <div class="section-card">
             <div class="section-title">
                 <span class="material-symbols-rounded">calendar_month</span>
-                Month-Long Celebration
+                Knowledge & Christmas Learning
             </div>
-            <p>Make every December day special with these festive activities!</p>
+            <p>Discover the magic behind Santa’s world with fun educational experiences—perfect for curious kids and families who love learning together!</p>
 
             <div class="activity-grid">
-                <div class="activity-card" onclick="window.location.href='interactive/jokes.html'">
-                    <h3>
-                        <span class="material-symbols-rounded">sentiment_very_satisfied</span>
-                        Daily Christmas Jokes
-                    </h3>
-                    <p>Share laughs at dinner time! 😂</p>
+                <div class="activity-card" onclick="window.location.href='knowledge/sleigh.html'">
+                    <h3><span class="material-symbols-rounded">snowmobile</span> Santa's Sleigh</h3>
+                    <p>Learn what makes Santa’s ride so magical! 🛷</p>
+                </div>
+                <div class="activity-card" onclick="window.location.href='knowledge/route.html'">
+                    <h3><span class="material-symbols-rounded">map</span> Santa's Route</h3>
+                    <p>See how Santa plans his global trip! 🗺️</p>
                 </div>
                 <div class="activity-card" onclick="window.location.href='knowledge/workshop.html'">
-                    <h3>
-                        <span class="material-symbols-rounded">engineering</span>
-                        Santa's Workshop Tour
-                    </h3>
-                    <p>Discover how the magic happens! 🛠️</p>
+                    <h3><span class="material-symbols-rounded">engineering</span> Santa's Workshop</h3>
+                    <p>Take a peek inside the magical toy factory! 🛠️</p>
                 </div>
-                <div class="activity-card" onclick="window.location.href='interactive/traditions.html'">
-                    <h3>
-                        <span class="material-symbols-rounded">public</span>
-                        Global Traditions
-                    </h3>
-                    <p>Explore Christmas around the world! 🌍</p>
+                <div class="activity-card" onclick="window.location.href='knowledge/elf-life.html'">
+                    <h3><span class="material-symbols-rounded">work</span> A Day in the Life of an Elf</h3>
+                    <p>Spend 24 hours as an elf! 🧝</p>
+                </div>
+                <div class="activity-card" onclick="window.location.href='knowledge/helpers.html'">
+                    <h3><span class="material-symbols-rounded">groups</span> Santa's Helpers</h3>
+                    <p>Meet the hardworking team behind the magic! 🧑‍🎄</p>
+                </div>
+                <div class="activity-card" onclick="window.location.href='knowledge/off-season.html'">
+                    <h3><span class="material-symbols-rounded">beach_access</span> Santa's Off-Season</h3>
+                    <p>What does Santa do when it's summer? 🏖️</p>
+                </div>
+                <div class="activity-card" onclick="window.location.href='knowledge/gift-journey.html'">
+                    <h3><span class="material-symbols-rounded">redeem</span> The Gift Journey</h3>
+                    <p>Follow a single present's magical adventure! 🎁</p>
+                </div>
+                <div class="activity-card" onclick="window.location.href='knowledge/tracking.html'">
+                    <h3><span class="material-symbols-rounded">satellite_alt</span> Santa Tracking</h3>
+                    <p>Discover how we track Santa every year! 🛰️</p>
+                </div>
+                <div class="activity-card" onclick="window.location.href='https://speechless-parrot.github.io/gst-2017'">
+                    <h3><span class="material-symbols-rounded">history</span> GST 2017</h3>
+                    <p>A revived classic! Explore the 2017 Santa Tracker. 🎅</p>
                 </div>
             </div>
         </div>
 
         <div class="section-card">
+
+            <div class="section-title">
+                <span class="material-symbols-rounded">auto_awesome</span>
+                Make Christmas Extra Magical
+            </div>
+        
+            <p>
+                This site isn’t just a tracker—it’s a full-on holiday adventure! Here’s how to use it to make your family’s Christmas unforgettable:
+            </p>
+        
+            <div class="activity-grid">
+        
+                <!-- Turn Tracking into a Family Event -->
+                <div class="activity-card">
+                    <h3><span class="material-symbols-rounded">satellite_alt</span> Make Tracking a Family Event</h3>
+                    <p>
+                        Watch Santa together on the live tracker, cheer at each milestone, and predict where he’ll go next. Add snacks, blankets, and festive music for full-on holiday vibes! 🛷
+                    </p>
+                </div>
+        
+                <!-- Use Photos & Updates for Fun -->
+<!-- Use Photos & Updates for Fun -->
+<div class="activity-card">
+    <h3><span class="material-symbols-rounded">chat</span> Follow Photos & Updates</h3>
+    <p>Enjoy live photos and updates from Santa’s journey, cheer at milestones, make guesses, or create fun family stories from what’s happening in real time! ✨🎄</p>
+</div>
+
+
+        
+                <!-- Turn Cookie Counter into a Game -->
+                <div class="activity-card">
+                    <h3><span class="material-symbols-rounded">cookie</span> Cookie Counter Challenge</h3>
+                    <p>
+                        Guess how many cookies Santa will eat next! Keep score as a family and award fun titles like “Best Cookie Predictor” or “North Pole Champion.” 🍪
+                    </p>
+                </div>
+        
+                <!-- Make Activities Mini Traditions -->
+                <div class="activity-card">
+                    <h3><span class="material-symbols-rounded">emoji_events</span> Mini Holiday Traditions</h3>
+                    <p>
+                        Turn games like Memory Match, Gift Catch, or the Christmas Quiz into recurring family moments. Schedule them for certain days, create friendly competitions, or pair them with storytelling and snacks. 🎄
+                    </p>
+                </div>
+        
+                <!-- Celebrate Each Step -->
+                <div class="activity-card">
+                    <h3><span class="material-symbols-rounded">celebration</span> Celebrate Every Milestone</h3>
+                    <p>
+                        Use the tracker, counters, and activity completions to mark little celebrations—cheer when Santa reaches your country, finish a game together, or hit a cookie milestone. Every small moment is magical! ✨
+                    </p>
+                </div>
+        
+            </div>
+        
+            <div class="tip-box">
+                <span class="material-symbols-rounded">tips_and_updates</span>
+                <p>Pro Tip: Mix the tracker, photos, counters, and games into a continuous family experience—laugh, guess, cheer, and create magical memories together all day long! 💖🎁</p>
+            </div>
+        
+        </div>
+        
+
+        <div class="section-card">
+
             <div class="section-title">
                 <span class="material-symbols-rounded">favorite</span>
                 Keeping the Magic Alive
             </div>
-            <p>The Christmas spirit doesn't have to end on December 25th! Here are ways to keep the joy going all year long:</p>
-
+        
+            <p>
+                Just because Christmas ends doesn’t mean the sparkle has to fade ✨<br><br>
+                Here are meaningful, fun, and super-doable ways your family can keep Santa’s spirit glowing all year.
+            </p>
+        
             <div class="activity-grid">
+        
+                <!-- Daily Kindness -->
                 <div class="activity-card">
-                    <h3>
-                        <span class="material-symbols-rounded">volunteer_activism</span>
-                        Daily Kindness
-                    </h3>
-                    <p>Spread joy like Santa's elves! 💖</p>
+                    <h3><span class="material-symbols-rounded">volunteer_activism</span> Daily Kindness</h3>
+                    <p>
+                        Bring a bit of North Pole kindness into every day!<br><br>
+                        Encourage kids (and grownups!) to do one tiny act of good each day —<br>
+                        holding a door, writing a “thank you” note, helping with a chore without being asked,<br>
+                        cheering up a friend, sharing toys, or even complimenting someone at school.<br><br>
+                        These little moments stack up like snowflakes and turn into real magic. 💖
+                    </p>
+                    <p>
+                        You can even make a <strong>Kindness Jar</strong>: every time someone does something thoughtful,<br>
+                        drop in a note. At the end of each month, read them together and celebrate!
+                    </p>
                 </div>
+        
+                <!-- Family Traditions -->
                 <div class="activity-card">
-                    <h3>
-                        <span class="material-symbols-rounded">event_repeat</span>
-                        Family Traditions
-                    </h3>
-                    <p>Create your own magical moments! 🌟</p>
+                    <h3><span class="material-symbols-rounded">event_repeat</span> Family Traditions</h3>
+                    <p>
+                        Traditions aren’t just for December! Build a few cozy year-round rituals your family<br>
+                        can look forward to:
+                    </p>
+                    <ul>
+                        <li>Monthly Family Night with hot chocolate + board games</li>
+                        <li>Seasonal “mini Christmases” where you decorate a tiny corner of your home</li>
+                        <li>Baking Day every few months to recreate your favorite holiday treats</li>
+                        <li>Charity Tradition: pick one cause each season to support as a family</li>
+                    </ul>
+                    <p>
+                        They don’t have to be big — just consistent, cozy, and yours ❤️
+                    </p>
                 </div>
+        
+                <!-- Year-Round Wonder -->
                 <div class="activity-card">
-                    <h3>
-                        <span class="material-symbols-rounded">magic_button</span>
-                        Year-Round Wonder
-                    </h3>
-                    <p>Keep the Christmas spirit alive! ✨</p>
+                    <h3><span class="material-symbols-rounded">magic_button</span> Year-Round Wonder</h3>
+                    <p>
+                        The world is basically a giant adventure if you look at it the North Pole way 🤩<br><br>
+                        Encourage curiosity, imagination, and that magical “what if?” feeling by:
+                    </p>
+                    <ul>
+                        <li>Doing family stargazing nights (Santa’s up there somewhere 👀🛷)</li>
+                        <li>Creating a Wonder List — questions your kids ask that you explore together</li>
+                        <li>Starting a Monthly Surprise Day where one person plans a small, secret activity</li>
+                        <li>Saving holiday stories, drawings, and thank-you letters in a Magic Memories Box</li>
+                    </ul>
+                    <p>
+                        When kids see magic in everyday moments, Christmas feels close all year long ✨
+                    </p>
                 </div>
+        
             </div>
-
             <div class="tip-box">
                 <span class="material-symbols-rounded">tips_and_updates</span>
                 <p>Remember: The real magic of Christmas lives in the kindness we share and the memories we make together! 💫</p>
             </div>
+        </div>
+        
         </div>
     </div>
 </body>
