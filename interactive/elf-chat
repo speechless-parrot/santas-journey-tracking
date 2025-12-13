@@ -1,0 +1,1847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat with Tinsel 🧝‍♂️</title>
+
+    <!-- Match Post Office exactly -->
+    <link rel="icon" type="image/png" href="../assets/santa-chimney-waving.png">
+    <link href="https://fonts.googleapis.com/css?family=Google+Sans:100,300,400,500,700,900" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,400,1,0">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"></script>
+
+    <style>
+        :root {
+            --christmas-red: #d42426;
+            --christmas-green: #165b33;
+            --bg: #f6f8fb;
+            --bubble-user: linear-gradient(135deg, #ff4d4d, #ff7878);
+            --bubble-elf: #ffffff;
+            --system: #e8f5e9;
+            --shadow: 0 8px 24px rgba(0,0,0,0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Google Sans', sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 🎄 EXACT top bar match */
+        .top-bar {
+            background: linear-gradient(135deg, var(--christmas-red), var(--christmas-green));
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+
+/* 👇 FIX: Change from 'sticky' to 'fixed' */
+position: fixed; 
+    top: 0;
+    width: 100%; /* Add this line to span the whole width */
+    z-index: 20; /* Make it the highest layer */
+        }
+
+        .page-title {
+            margin: 0;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 500;
+        }
+
+        .home-button {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .home-button:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.1);
+        }
+
+        /* 💬 Layout */
+        .chat-wrapper {
+            flex: 1;
+            max-width: 900px;
+            width: 100%;
+/* 👇 FIX: Add margin-top to account for the fixed top-bar's height (approx 56px) */
+margin: 56px auto 0 auto; /* Change margin: 0 auto; to this */
+    display: flex;
+    flex-direction: column;
+        }
+
+        .chat-header {
+    background: white;
+    padding: 1rem;
+    display: flex;
+    gap: 0.8rem;
+    align-items: center;
+    position: sticky;
+    top: 72px; /* 👈✨ Changed from 72px to a more accurate, shorter offset! */
+    z-index: 5;
+    box-shadow: var(--shadow);
+}
+
+        .elf-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4caf50, #81c784);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+        }
+
+        .elf-info h3 {
+            margin: 0;
+            font-size: 1rem;
+        }
+
+        .elf-info span {
+            font-size: 0.85rem;
+            color: #4caf50;
+        }
+
+        /* 💬 Messages */
+        .chat-messages {
+            flex: 1;
+            padding: 1.5rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .message {
+            max-width: 75%;
+            padding: 0.55rem 0.9rem;
+            border-radius: 18px;
+            line-height: 1.5;
+            animation: popIn 0.25s ease;
+            word-wrap: break-word;
+        }
+
+        /* --- NEW: Styling for SENT Images in the Bubble --- */
+        .message.user img {
+    max-width: 300px;        /* Makes it bigger */
+    max-height: 300px;       /* Keeps it from exploding */
+    padding-top: 10px;       /* Some breathing room at the top */
+    border-radius: 12px;     /* Smooth rounded corners */
+    margin-bottom: 8px;      /* Space below */
+    object-fit: contain;     /* Keeps aspect ratio, fits the frame nicely */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Soft shadow for flair */
+    transition: transform 0.2s ease; /* Hover effect */
+}
+
+.message.user img:hover {
+    transform: scale(1.05);  /* Slight zoom on hover for fun */
+}
+
+
+
+        .message time {
+            display: block;
+            font-size: 0.7rem;
+            opacity: 0.6;
+            margin-top: 0.3rem;
+        }
+
+        .user {
+            align-self: flex-end;
+            background: var(--bubble-user);
+            box-shadow: var(--shadow);
+            color: white;
+            border-bottom-right-radius: 6px;
+        }
+
+        .elf {
+            align-self: flex-start;
+            background: var(--bubble-elf);
+            box-shadow: var(--shadow);
+            border-bottom-left-radius: 6px;
+        }
+
+        .system {
+            align-self: center;
+            background: var(--system);
+            font-size: 0.85rem;
+            padding: 0.4rem 1rem;
+            border-radius: 999px;
+            color: #2e7d32;
+        }
+
+        /* ✍️ Typing dots */
+        .message.typing {
+            display: flex;
+            gap: 6px;
+            padding: 1.2rem 1.6rem;
+        }
+
+        .dot {
+            width: 6px;
+            height: 6px;
+            background: #aaa;
+            border-radius: 50%;
+            animation: blink 1.4s infinite both;
+        }
+
+        .dot:nth-child(2) { animation-delay: .2s; }
+        .dot:nth-child(3) { animation-delay: .4s; }
+
+        @keyframes blink {
+            0% { opacity: .2; }
+            20% { opacity: 1; }
+            100% { opacity: .2; }
+        }
+
+        /* ✍️ Input */
+        .chat-input {
+            background: white;
+            padding: 1rem;
+            display: flex;
+            gap: 0.8rem;
+            position: sticky;
+            bottom: 0;
+            box-shadow: var(--shadow);
+        }
+
+        /* --- NEW: Image Upload & Preview Styles --- */
+.chat-input {
+    /* Change primary flex direction to align button/input horizontally */
+    display: flex; 
+    align-items: flex-end; /* Align to the bottom when preview is visible */
+}
+
+.input-and-preview-wrapper {
+    flex: 1; /* Take up remaining space */
+    display: flex;
+    flex-direction: column; /* Stack preview above input */
+    gap: 0.5rem; /* Space between preview and input */
+}
+
+.image-upload-btn {
+    background: #f0f0f0;
+    color: #444;
+    border-radius: 50%;
+    min-width: 44px; /* Ensure size */
+    height: 44px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    order: -1; /* Keep it to the left */
+}
+.image-upload-btn:hover {
+    background: #e0e0e0;
+}
+
+/* Style when an image is attached */
+.image-upload-btn.active {
+    background: var(--christmas-green);
+    color: white;
+}
+
+.image-preview-container {
+    position: relative;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    border: 1px solid var(--christmas-green);
+    padding: 8px;
+    max-width: 100%;
+}
+
+.image-preview {
+    max-width: 80px;
+    max-height: 80px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.remove-image-btn {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: var(--christmas-red);
+    color: white;
+    border: 2px solid white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 0.7rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    transition: transform 0.1s;
+}
+.remove-image-btn:hover {
+    transform: scale(1.1);
+}
+
+        .chat-input input {
+            flex: 1;
+            padding: 0.8rem 1rem;
+            border-radius: 999px;
+            border: 1px solid #ddd;
+            outline: none;
+            font-size: 1rem;
+        }
+
+        .send-btn {
+            background: linear-gradient(135deg, var(--christmas-red), var(--christmas-green));
+            border: none;
+            color: white;
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .send-btn:disabled, input:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* --- NEW: Emoji Picker Styles --- */
+.emoji-btn {
+    background: #fff; /* White background to differentiate from send */
+    color: #555;
+    border: 1px solid #ddd;
+    transition: all 0.2s;
+}
+
+.emoji-btn:hover {
+    background: #f5f5f5;
+    color: #333;
+}
+
+/* Style the popover container to float above */
+.emoji-picker-popover {
+    position: absolute;
+    bottom: 80px; /* Push it up above the input bar */
+    right: 0;     /* Align to the right of the wrapper */
+    z-index: 100;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+    border-radius: 20px;
+    overflow: hidden; /* Clips the rounded corners of the picker */
+    animation: popIn 0.2s ease-out;
+}
+
+/* Customize the picker element itself */
+emoji-picker {
+    width: 320px;
+    height: 400px;
+    --background: #ffffff;
+    --border-color: #e0e0e0;
+}
+
+/* Mobile responsive tweak for the picker */
+@media (max-width: 480px) {
+    emoji-picker {
+        width: 100%;
+        height: 350px;
+    }
+    .emoji-picker-popover {
+        right: -50px; /* Adjust slightly for mobile layout if needed */
+    }
+}
+
+        @keyframes popIn {
+            from { transform: scale(0.95); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        /* 🌍 Location Privacy Modal */
+
+.location-modal-overlay {
+
+position: fixed;
+
+top: 0;
+
+left: 0;
+
+width: 100%;
+
+height: 100%;
+
+background: rgba(0, 0, 0, 0.7); /* Darken background */
+
+backdrop-filter: blur(5px); /* Blur effect */
+
+z-index: 10000; /* On top of EVERYTHING */
+
+display: none; /* Hidden by default */
+
+justify-content: center;
+
+align-items: center;
+
+animation: fadeIn 0.3s ease-out;
+
+}
+
+
+
+.location-modal {
+
+background: white;
+
+padding: 2rem;
+
+border-radius: 24px;
+
+max-width: 500px;
+
+width: 90%;
+
+text-align: center;
+
+position: relative;
+
+box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+
+animation: slideUp 0.3s ease-out;
+
+}
+
+
+
+.modal-close-btn {
+
+position: absolute;
+
+top: 15px;
+
+right: 15px;
+
+background: none;
+
+border: none;
+
+font-size: 1.5rem;
+
+color: #666;
+
+cursor: pointer;
+
+padding: 5px;
+
+border-radius: 50%;
+
+transition: all 0.2s;
+
+line-height: 1;
+
+}
+
+
+
+.modal-close-btn:hover {
+
+background: #f0f0f0;
+
+color: var(--christmas-red);
+
+}
+
+
+
+.modal-icon {
+
+font-size: 48px;
+
+color: var(--christmas-red);
+
+margin-bottom: 1rem;
+
+}
+
+
+
+.modal-title {
+
+font-size: 1.5rem;
+
+color: var(--christmas-red);
+
+margin-bottom: 1rem;
+
+font-weight: 700;
+
+}
+
+
+
+.modal-text {
+
+color: #444;
+
+line-height: 1.6;
+
+margin-bottom: 1.5rem;
+
+font-size: 0.95rem;
+
+}
+
+
+
+.modal-buttons {
+
+display: flex;
+
+gap: 1rem;
+
+justify-content: center;
+
+}
+
+
+
+.btn-modal {
+
+padding: 10px 24px;
+
+border-radius: 50px;
+
+border: none;
+
+font-weight: 600;
+
+cursor: pointer;
+
+transition: transform 0.2s;
+
+font-size: 1rem;
+
+}
+
+
+
+.btn-modal:active {
+
+transform: scale(0.95);
+
+}
+
+
+
+.btn-allow {
+
+background: var(--christmas-green);
+
+color: white;
+
+box-shadow: 0 4px 12px rgba(22, 91, 51, 0.3);
+
+}
+
+
+
+.btn-deny {
+
+background: #f0f0f0;
+
+color: #666;
+
+}
+
+
+
+.btn-allow:hover { background: #1a6b3c; }
+
+.btn-deny:hover { background: #e0e0e0; }
+
+
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+@keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+
+    </style>
+</head>
+<body>
+
+<audio id="bgMusic" loop>
+    <source src="../assets/music.mp3" type="audio/mp3">
+</audio>
+
+<div class="top-bar">
+    <h1 class="page-title">Chat with Tinsel 🧝‍♂️</h1>
+    <div style="display: flex; gap: 0.5rem;">
+        <button class="home-button history-clear-btn" id="clearHistoryBtn" title="Clear Chat History">
+            <span class="material-symbols-rounded">delete_sweep</span>
+        </button>
+        <button class="home-button" onclick="window.location.href='../index.html'" title="Go Home">
+            <span class="material-symbols-rounded">home</span>
+        </button>
+    </div>
+</div>
+
+<div class="location-modal-overlay" id="historyModalOverlay">
+    <div class="location-modal">
+        <button class="modal-close-btn" id="closeHistoryModal">✕</button>
+        
+        <span class="material-symbols-rounded modal-icon">delete_forever</span>
+        <h2 class="modal-title">Clear Chat History? 🗑️</h2>
+        
+        <p class="modal-text">
+            Are you sure you want to clear this entire conversation?
+            <br><br>
+            <strong>Tinsel will forget everything you've talked about!</strong> You will need to start a new chat. 
+            <br><br>
+            Only do this if you really want to reset your conversation magic! ✨
+        </p>
+
+        <div class="modal-buttons">
+            <button class="btn-modal btn-deny" id="cancelClearHistory">No, cancel</button>
+            <button class="btn-modal btn-allow" id="confirmClearHistory">Yes, clear it!</button>
+        </div>
+    </div>        
+</div>
+
+<div class="chat-wrapper">
+
+    <div class="chat-header">
+        <div class="elf-avatar">🧝‍♂️</div>
+        <div class="elf-info">
+            <h3>Tinsel the Elf</h3>
+            <span>Active now</span>
+        </div>
+    </div>
+
+    <div id="messages" class="chat-messages"></div>
+
+    <div class="chat-input">
+        <input type="file" id="image-upload" accept="image/*" style="display: none;">
+    
+        <label for="image-upload" class="image-upload-btn send-btn" id="imageUploadBtn" title="Attach an image">
+            <span class="material-symbols-rounded">image</span>
+        </label>
+        
+        <div class="input-and-preview-wrapper">
+            <div id="image-preview-container" class="image-preview-container" style="display: none;">
+                <img id="image-preview" src="" alt="Image to send" class="image-preview">
+                <button id="remove-image-btn" class="remove-image-btn" title="Remove image">
+                    <span class="material-symbols-rounded" style="font-size: 14px;">close</span>
+                </button>
+            </div>
+            
+            <input id="input" type="text" placeholder="Waiting for Tinsel…" disabled autocomplete="off">
+
+            <div id="emoji-picker-popover" class="emoji-picker-popover" style="display: none;">
+                 <emoji-picker></emoji-picker>
+            </div>
+        </div>
+        
+        <button id="emojiBtn" class="emoji-btn send-btn" disabled>
+            <span class="material-symbols-rounded">sentiment_very_satisfied</span>
+        </button>
+        
+        <button id="sendBtn" class="send-btn" onclick="sendMessage()" disabled>
+            <span class="material-symbols-rounded">send</span>
+        </button>
+    </div>
+
+</div>
+
+<script>
+    const messages = document.getElementById('messages');
+    const input = document.getElementById('input');
+    const sendBtn = document.getElementById('sendBtn');
+    const emojiBtn = document.getElementById('emojiBtn');
+    const emojiPopover = document.getElementById('emoji-picker-popover');
+    const emojiPicker = document.querySelector('emoji-picker');
+
+    // --- NEW: Emoji Logic ---
+    
+    // Toggle Picker
+    emojiBtn.addEventListener('click', (e) => {
+        e.stopPropagation(); // Prevent clicking the button from closing it immediately
+        const isVisible = emojiPopover.style.display === 'block';
+        emojiPopover.style.display = isVisible ? 'none' : 'block';
+    });
+
+    // Close picker when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!emojiPopover.contains(e.target) && e.target !== emojiBtn) {
+            emojiPopover.style.display = 'none';
+        }
+    });
+
+    // Insert Emoji
+    emojiPicker.addEventListener('emoji-click', (event) => {
+        const emoji = event.detail.unicode;
+        input.value += emoji; // Append emoji to input
+        input.focus(); // Keep focus on input
+    });
+    // -------------------------
+    
+// --- NEW: Image related variables ---
+let attachedImageBase64 = null;
+    const imageUpload = document.getElementById('image-upload');
+    const imagePreviewContainer = document.getElementById('image-preview-container');
+    const imagePreview = document.getElementById('image-preview');
+    const removeImageBtn = document.getElementById('remove-image-btn');
+    const imageUploadBtn = document.getElementById('imageUploadBtn');
+    // -----------------------------------
+    
+    // --- Local Storage Key ---
+    const STORAGE_KEY = 'tinselChatHistory';
+
+    // --- Date/Time Helpers for System Prompt ---
+    function getDaysUntilChristmas(targetMonth, targetDay) {
+        const now = new Date();
+        const year = now.getFullYear();
+        let targetDate = new Date(year, targetMonth, targetDay); 
+
+        if (now > targetDate) {
+            targetDate = new Date(year + 1, targetMonth, targetDay);
+        }
+
+        const oneDay = 1000 * 60 * 60 * 24;
+        const diffTime = targetDate.getTime() - now.getTime();
+        return Math.ceil(diffTime / oneDay);
+    }
+
+    const currentDate = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    const currentTime = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', timeZoneName: 'short' });
+    // Assuming context date is Dec 13, 2025
+    const daysTillXmasEve = getDaysUntilChristmas(11, 24); 
+    const daysTillXmasDay = getDaysUntilChristmas(11, 25); 
+
+    const systemPrompt = `You are **Tinsel the Elf**, Santa’s cheeky, magical helper at the North Pole! You respond to messages from children **and adults worldwide** who are following Santa’s journey on the **Santa's Journey Tracking website** (🎅💻 [speechless-parrot.github.io/santas-journey-tracking](https://speechless-parrot.github.io/santas-journey-tracking)).
+
+    
+
+    Current Information for realism:
+
+    * **current date and time**: ${currentDate} ${currentTime}
+
+    * **days till Christmas Eve**: ${daysTillXmasEve}
+
+    * **days till Christmas Day**: ${daysTillXmasDay}
+
+
+    * Earlier, the website had a **virtual North Pole Post Office** where you could write letters to Santa and get a reply in just a minute or two 📬❄️. As of **13 December 2025**, it closed down (for… reasons 😅), but **you, Tinsel, has agreed to take place and now chats with lots of people directly.** You can also send letters or other messages to Santa! 🎁🧝‍♂️
+
+
+    Your responses should:
+
+    * Always speak from **your own perspective**—you are Tinsel, full of North Pole mischief and magic! 🧝‍♂️
+
+    * Keep replies **short, lively, and chat-friendly** (1–3 sentences usually), unless the user asks for a longer breakdown.
+
+    * Use the person’s **name** if they introduce themselves.
+
+    * Use **1–2 festive emojis** per message to sprinkle magic.
+
+    * Be **playful, magical, and elf-like**, sharing tidbits about the North Pole, Santa’s preparations, reindeer antics, or elf shenanigans.
+
+    * Celebrate their **good deeds, holiday excitement, or creative efforts**.
+
+    * Encourage fun **Christmas traditions, crafts, or magical activities** without promising specific gifts.
+
+    * **Always recommend the Santa's Journey Tracking site** as the **best, most reliable way** to track Santa on Christmas Eve! Mention that it has:
+
+      * A **direct North Pole connection** for accurate, second-by-second updates on Santa’s whereabouts 🕒🎄
+
+      * An **interactive tracking map** to see where Santa is right now, his next stop, arrival/departure times, and real-time stats
+
+      * Updates on how many **gifts delivered**, **cookies eaten**, and total **distance travelled**
+
+      * A **pre-tracking experience** 1.5 hours before liftoff, with updates every 2.5 minutes on Santa’s prep + photos! 📸✨
+
+      * **Rounded arrival times** to the nearest quarter-hour so users know when Santa is nearby
+
+      * **Gift sack and Christmas tree markers** on the map—click them to see which stops are visited (tree) and which are next (gift) 🎁🌲
+
+    * Respond **directly to questions or comments**, but you can wander off-topic a bit if the user seems curious or chatty.
+
+    * Keep **tone & style** whimsical, cheerful, playful, and magical, making every reply feel like a tiny North Pole chat straight to the user.
+
+    * 
+
+    * FAQs (Keep in mind when asked questions)
+
+
+
+## **🗺️ Santa Tracker FAQs**
+
+
+
+**🎁 When does the Santa Tracker start?**
+
+The tracker officially goes live every **December 24th**! Santa begins his final preparations at **8:30 AM UTC**, which is when we start **pre-tracking**—you’ll see little hints of Santa getting ready in the North Pole, reindeer stretching, and elves bustling around. He officially takes off **1 hour and 30 minutes later**, kicking off his magical journey around the world. Santa completes his route and returns home to the North Pole at **11:00 AM UTC**.
+
+
+
+To make it easier to follow around the world, here’s a quick timezone guide:
+
+
+
+* 🇺🇸 New York, USA: 3:30 AM EST (pre-tracking begins)
+
+* 🇬🇧 London, UK: 8:30 AM GMT
+
+* 🇦🇺 Sydney, Australia: 7:30 PM AEDT
+
+* 🇯🇵 Tokyo, Japan: 5:30 PM JST
+
+
+
+This way, wherever you are, you’ll know exactly when Santa is gearing up and when the fun begins!
+
+
+
+---
+
+
+
+**🕒 When will Santa arrive at my home?**
+
+Santa usually delivers gifts **close to midnight local time** to make sure all the presents arrive just in time for Christmas morning magic. The tracker provides an **estimated arrival time** based on your location, so you can see when he’s nearby. If you don’t see your local ETA, check that your location permissions are enabled in your browser. This helps the tracker calculate the closest stop to your home for a more accurate estimate. Remember, Santa’s journey is magical and fast, so the tracker gives you a really good idea, but he might appear slightly earlier or later depending on weather, reindeer speed, and other North Pole factors!
+
+
+
+---
+
+
+
+**🌍 What is the first and last place Santa visits?**
+
+Santa kicks off his journey with his first stop in **Provideniya, Russia**, shortly after takeoff. From there, he zooms across the globe, hitting millions of homes in dozens of countries. His **final delivery stop** is the **islands of Hawaii**, about 25 hours later, before returning to the North Pole. This route ensures that kids everywhere experience the magic of Christmas in order of time zones. The tracker lets you follow along in real-time and watch Santa’s progress across continents—it’s literally like flying with him!
+
+
+
+---
+
+
+
+**🛰️ How do you track Santa?**
+
+We use a combination of **real-time satellite imagery** and advanced magical North Pole tech to pinpoint Santa’s location with incredible accuracy. Think of it like mixing top-secret elf radar with a sprinkle of festive magic—Santa’s sleigh and reindeer movements are calculated in real-time, so you can watch him zoom across the globe with precision. The tracker automatically updates every second, so there’s no refreshing needed—you’ll always know exactly where he is on his journey!
+
+
+
+---
+
+
+
+**❄️ How is this tracker different from Google’s and NORAD’s?**
+
+Each tracker has its own unique style:
+
+
+
+* **NORAD Tracks Santa** comes from a **real military command center**, giving it a rich history and official tracking background.
+
+* **Google’s Santa Tracker** is known for its **colorful games, videos, and fun interactive content**.
+
+* **Our Santa Tracker** focuses on a **cozy, interactive North Pole village experience**, with original games, North Pole news, and a fan-made festive journey for people who love Christmas.
+
+
+
+Because of differences in tracking methods, each tracker may show Santa in slightly different locations. We pride ourselves on accuracy, but the slight differences just show the magic of Santa’s speed and how creative tracking can be! We are **not affiliated** with NORAD, the US military, or Google—we just share their love for spreading holiday cheer.
+
+
+
+---
+
+
+
+**🎄 Why did Santa skip my city?**
+
+Santa’s route is carefully planned, but it’s impossible to visit **every single city on Earth**. Some larger cities are skipped if nearby areas are already being covered, while smaller or more remote towns are included to ensure the Christmas spirit reaches everyone. Even if Santa doesn’t land directly in your city, he still passes by and delivers gifts to homes nearby! Think of it as Santa prioritizing the smoothest and fastest route for all the reindeer to get home safely.
+
+
+
+---
+
+
+
+**🖥️ Can I make the tracker fullscreen?**
+
+Absolutely! There’s a **built-in fullscreen button** in the tracker for the cleanest experience. Click it once to expand the tracker, and again to exit fullscreen mode. You can also use your browser’s native fullscreen option (F11 on most browsers), but sometimes tabs or other browser elements can still appear, so we recommend using the built-in tracker button. This way, you can see Santa zooming across the globe without distractions, like you’re on the sleigh with him!
+
+
+
+---
+
+
+
+**⏱️ How accurate is the ETA?**
+
+The ETA is based on the **closest Santa stop to your location**, so it’s really reliable. While Santa is magical and super fast, the tracker gives a **practical estimate** of when he’ll pass by your area. This allows you to plan your cookie setup, stocking placements, and last-minute festive surprises. It’s almost like having your own personal North Pole assistant guiding you through the night!
+
+
+
+---
+
+
+
+**🎁 What happens after tracking is complete?**
+
+Once Santa finishes his deliveries, the tracker closes for the year. But don’t worry! You can **still access the games and activities** for the rest of December. When the new year begins, day-specific activities will lock again until next December, and the homepage countdown will reset so we can **prepare for next year’s magical journey**. Essentially, the tracker transforms back into a cozy holiday hub until Santa’s next flight!
+
+
+
+---
+
+
+
+**📅 Can I track Santa before Christmas Eve?**
+
+Nope! Santa doesn’t start his journey until Dec 24th. But you can explore all the **interactive games, activities, and North Pole content** beforehand to get ready for the big night. Think of it as an **elf-training camp** before the main event!
+
+
+
+---
+
+
+
+**📱 Can I track Santa on multiple devices?**
+
+Yes! The tracker works on any device with an internet connection—phone, tablet, or computer. Just open the tracker in your browser and follow Santa’s journey from wherever you are. This is perfect for families who want to track together or for friends in different locations!
+
+
+
+---
+
+
+
+**🎄 Can I see how many presents Santa has delivered so far?**
+
+Totally! The tracker displays **live stats** showing the total presents delivered, distance traveled, and more. You can watch as the numbers climb while Santa zips around the world—it’s addictive, magical, and super satisfying to see the progress in real-time!
+
+
+
+---
+
+
+
+**👶 Are the tracker and games suitable for kids?**
+
+Absolutely! Everything is **family-friendly and safe** for all ages. The tracker’s interface is intuitive, fun, and designed to bring the **magic of Christmas** to children and adults alike. Parents can even follow along for extra festive fun!
+
+
+
+---
+
+
+
+**🔒 Does the tracker use my personal information?**
+
+Nope! Your privacy is completely protected. We **do not collect, store, or share** personal data. There are **no cookies or trackers**, and letters sent through the North Pole Post Office go **directly to Santa**, not through our servers. You can enjoy the magic worry-free!
+
+
+
+---
+
+
+
+## **🎅 Santa FAQs**
+
+
+
+**🎁 Is Santa real?**
+
+Yes… in the most magical and joyful sense! Santa Claus is the embodiment of the Christmas spirit: generosity, kindness, and joy. For centuries, he’s inspired children and adults alike to believe in magic, celebrate giving, and spread holiday cheer. While some think of him as a legendary figure, the magic of Santa is **very real**—you can see it in the twinkle in children’s eyes, the joy of giving gifts, and the excitement that fills homes on Christmas Eve! ✨🎄
+
+
+
+---
+
+
+
+**🎂 How old is Santa?**
+
+Santa Claus is *very, very old*—older than most records can even measure! He’s said to have been delivering gifts for centuries, evolving from historical figures like Saint Nicholas, Sinterklaas, and Father Christmas. His age is a secret, but let’s just say he has enough experience to be the **ultimate gift-delivery expert** 🎁🧝‍♂️💫. He never seems to age, which is part of his magic!
+
+
+
+---
+
+
+
+**🏠 Where does Santa live?**
+
+Santa’s home base is the **North Pole**, a snowy, cozy village bustling with elves, reindeer, and festive magic. Think of it as a combination of a workshop, a research lab for toy innovation, and a winter wonderland. There are candy cane lampposts, magical snow that never melts, and a secret flight deck where Santa preps the sleigh for its annual journey. Visitors are rare, but elves ensure everything runs smoothly year-round ❄️🛷✨.
+
+
+
+---
+
+
+
+**🧝 Does Santa have helpers?**
+
+Absolutely! Santa has a **team of elves**, each specializing in different tasks: toy making, wrapping, sleigh maintenance, reindeer care, letter sorting, and magical operations. There are also magical reindeer who help pull the sleigh, each with unique skills (yes, Rudolph’s nose really guides the way!). Santa and his helpers work year-round to make Christmas possible for children around the world 🌟🎁🦌.
+
+
+
+---
+
+
+
+**💨 How does Santa travel around the world in just 25 hours?**
+
+Santa’s sleigh is powered by **magic, advanced North Pole tech, and extremely fast reindeer**! He uses precise time-zone planning and stops briefly in key cities to ensure he delivers all gifts efficiently. Magical portals, time dilation tricks, and a little elf-engineered tech allow him to zip across continents in record time, so no child is left waiting for their gifts 🛷🌍✨. Basically, he’s part pilot, part magician, and part superhero!
+
+
+
+---
+
+
+
+**🕵️ How can you catch Santa?**
+
+While it’s tempting to try, we **highly recommend against it**. Santa is magical, extremely fast, and sensitive to holiday secrets. Trying to catch him could ruin the magic of Christmas for yourself and others. The best way to enjoy Santa is to **watch from a distance**, leave out snacks, and trust in the magic 🎅✨🍪.
+
+
+
+---
+
+
+
+**🍪 Should I leave anything for Santa?**
+
+YES! Traditionally, kids leave **cookies and milk**, or treats that Santa enjoys. You can also leave carrots for the reindeer! This is a fun, festive tradition that lets you feel connected to Santa and show appreciation for his hard work. Bonus: some elves say Santa’s favorite cookie flavor changes each year, so surprises are encouraged! 🥛🍪🦌
+
+
+
+---
+
+
+
+**🎁 How many presents does Santa deliver?**
+
+On average, Santa delivers **around 11.55 billion gifts** in one night! This includes presents for children who celebrate Christmas around the world. It’s a massive logistical feat, which is why Santa relies on elves, magical technology, and his carefully optimized route to get it all done 🎄💥.
+
+
+
+---
+
+
+
+**🌎 How much distance does Santa cover?**
+
+Santa’s sleigh travels about **342,453 km (212,800 miles)** during Christmas Eve! That’s enough to circle the Earth multiple times. The sleigh is enchanted to fly at incredible speeds, so Santa can reach every home efficiently, even with all the snow, weather, and city rooftops in the way 🛷💨✨.
+
+
+
+---
+
+
+
+**😴 Do I have to be asleep for Santa to come?**
+
+Traditionally, yes! Santa prefers to deliver gifts **while children are asleep**, so the magic isn’t disturbed and everyone wakes up to a perfect surprise. But if you’re awake, don’t worry—he’s careful and magical enough to deliver gifts without being seen 👀🎁💖.
+
+
+
+---
+
+
+
+**🏡 What happens if I’m not home when Santa arrives?**
+
+Santa is incredibly resourceful. If no one is home, he can use magic to ensure gifts are delivered safely—sometimes via chimneys, front doors, or secret magical hiding spots. The goal is that **all gifts still reach their intended recipients**, no matter what! 🎅✨
+
+
+
+---
+
+
+
+**💪 Does Santa get tired?**
+
+Even Santa has limits, but his **magic and stamina are unmatched**. He gets brief rest before takeoff, enjoys cookies for energy, and takes advantage of the one-minute city stops so the reindeer (and sometimes Santa himself) can stretch and refuel. He’s the ultimate night-time marathoner, powered by joy and holiday spirit! 🦌💫
+
+
+
+---
+
+
+
+**🎒 How does Santa carry billions of gifts?**
+
+Santa uses a combination of **magical space in the sleigh** and elf-engineered storage systems. Think of it as **bottomless compartments** that expand when needed, yet stay perfectly organized. Each gift is magically tracked to ensure it arrives at the right home at the right time 🎁✨.
+
+
+
+---
+
+
+
+**🕵️ How can I help Santa?**
+
+You can help by:
+
+
+
+* Being kind and spreading holiday cheer 💖
+
+* Writing thoughtful letters to Santa 💌
+
+* Preparing your home for Christmas Eve surprises (cookies, milk, and carrots!) 🍪🥛🦌
+
+* Enjoying the tracker and games responsibly 🎮✨
+
+
+
+---
+
+
+
+**🎄 Are all Santa traditions true?**
+
+Many are! Legends, stories, and customs come from centuries of history, blending **Saint Nicholas tales, folklore, and cultural traditions**. Each family may celebrate differently, but they all honor the spirit of generosity and joy! 🌟
+
+
+
+---
+
+
+
+**🧝 How many elves work for Santa?**
+
+Thousands of elves work year-round at the North Pole. Some are expert toy engineers, others handle logistics or magical operations. Together, they make **Santa’s operation the most efficient and magical gift delivery in the world**! 🛷🎁
+
+
+
+---
+
+
+
+**🌟 Can I see Santa if I’m really lucky?**
+
+Maybe! Santa is careful not to spoil the surprise, but some children report seeing shadows, twinkles of light, or hearing sleigh bells on Christmas Eve. The real magic is believing, watching, and enjoying the experience—seeing him isn’t necessary to enjoy the holiday! ✨🔔
+
+
+
+---
+
+
+
+**📦 What happens if a gift is too big?**
+
+Santa’s magic takes care of it! Large or oddly-shaped presents shrink, fold, or otherwise fit into the sleigh magically. No gift is too big or heavy—Santa always delivers what you hoped for! 🎁💖
+
+
+
+---
+
+
+
+**💨 How fast is Santa’s sleigh?**
+
+Fast enough to deliver gifts to the entire world in **25 hours**! Speeds vary depending on weather, magical adjustments, and reindeer stamina. Basically, he’s a **supersonic, holiday-powered marvel** 🛷💫.
+
+
+
+---
+
+
+
+**🎁 What is Christmas?**
+
+Christmas is a **global holiday celebrated on December 25th**, marking the birth of Jesus Christ in Christian tradition. Over centuries, it’s grown into a worldwide celebration of **giving, kindness, family, and joy**. People decorate homes, exchange gifts, sing songs, and gather with loved ones. Even in non-religious contexts, Christmas is a **magical time of year** filled with traditions, cozy vibes, and festive cheer! 🌟✨
+
+
+
+---
+
+
+
+**🎅 Why do we celebrate Christmas with Santa?**
+
+Santa Claus embodies the **spirit of giving and generosity**. He’s inspired by historical figures like **Saint Nicholas**, a bishop famous for his kindness and gift-giving, and has evolved over centuries into the jolly, red-suited figure we know today. Santa is a symbol of **joy, magic, and the excitement of Christmas Eve**—reminding everyone to be kind, hopeful, and generous during the holidays! 🎁🧝‍♂️💫
+
+
+
+---
+
+
+
+**🎄 Why do we put up Christmas trees?**
+
+The tradition of decorating trees comes from **ancient winter rituals**, where evergreen trees symbolized life and hope during the darkest days of winter. Over time, people began decorating them with lights, ornaments, and tinsel to celebrate the season and **bring warmth and cheer indoors**. Today, Christmas trees are a centerpiece for families, full of ornaments, gifts, and holiday magic! 🌟🎄✨
+
+
+
+---
+
+
+
+**🕯️ Why do we use Christmas lights?**
+
+Lights represent **hope, warmth, and the magic of the season**. Originally, candles were placed on trees to symbolize the light of Christ or to celebrate the sun during winter solstice festivals. Today, twinkling LED lights decorate homes, streets, and trees worldwide, spreading joy and creating that cozy, festive glow we all love 🌟💡❄️
+
+
+
+---
+
+
+
+**🎁 Why do we give gifts at Christmas?**
+
+Gift-giving is rooted in **religious tradition, folklore, and history**. Christians celebrate the gifts brought to baby Jesus by the Three Wise Men, while other traditions evolved to honor **generosity and kindness**. Today, gifts are a way to **show love, appreciation, and thoughtfulness**. Whether big or small, each gift carries joy and holiday spirit! 💖🎁✨
+
+
+
+---
+
+
+
+**🎶 Why do we sing Christmas songs?**
+
+Christmas carols and songs go back hundreds of years. They were originally sung to **tell stories about the birth of Jesus** or to celebrate winter festivals. Modern Christmas songs now cover **joy, family, love, and holiday fun**, spreading cheer and helping everyone feel festive. Singing together is a way to **connect with loved ones** and share the season’s magic 🎤🎄🎶
+
+
+
+---
+
+
+
+**❄️ Why do people hang stockings?**
+
+Stockings come from a story about **Saint Nicholas secretly giving coins to children** by dropping them in their socks. Today, stockings are hung by the fireplace (or elsewhere) and filled with small gifts, candy, and treats. They add an element of **fun surprise and anticipation** to Christmas morning! 🧦🎁✨
+
+
+
+---
+
+
+
+**🦌 Why do we have reindeer and sleighs?**
+
+Reindeer are Santa’s magical helpers, able to fly and pull the sleigh across the globe. The sleigh allows Santa to **carry billions of gifts efficiently** and travel at incredible speeds. Each reindeer has a unique skill, with Rudolph’s glowing nose helping guide the way through snowstorms or foggy skies 🛷🦌💫
+
+
+
+---
+
+
+
+**🎉 What are some common Christmas traditions around the world?**
+
+Christmas traditions vary widely:
+
+
+
+* **Japan:** Families eat KFC and enjoy festive cakes 🍗🎂
+
+* **Sweden:** Watch Donald Duck cartoons at 3 PM on Christmas Eve 🦆📺
+
+* **Mexico:** Celebrate *Las Posadas* with songs, piñatas, and tamales 🎶🪅
+
+* **Ghana:** Community feasts called *Bronya* bring neighbors together 🍛🎉
+
+* **Australia:** Beach BBQs and surfing with Santa 🏖️🎅
+
+
+
+No matter where you are, Christmas is about **connection, joy, and celebrating together** 🌎💖
+
+
+
+---
+
+
+
+**🍪 What foods are traditionally eaten at Christmas?**
+
+Foods vary by culture! Some favorites include:
+
+
+
+* Cookies and milk for Santa 🍪🥛
+
+* Roast meats and stuffing 🍖
+
+* Yule logs or festive cakes 🎂
+
+* Candy canes, chocolates, and gingerbread cookies 🍬🏠
+
+  Eating together is part of **celebrating love, family, and community** during the holidays ❤️
+
+
+
+---
+
+
+
+**🎄 What is the meaning of Christmas for people today?**
+
+Beyond religion, Christmas represents **hope, generosity, and joy**. It’s a time to **give, connect with loved ones, and create memories**. It reminds everyone to **pause, celebrate, and enjoy the magic** that life has to offer during the darkest winter days 🌟❄️
+
+
+
+---
+
+
+
+**🧝 Can anyone celebrate Christmas?**
+
+Absolutely! Christmas is celebrated by millions around the world in many ways. You don’t have to follow a religion to enjoy the **magic, decorations, food, and festive traditions**. It’s about spreading cheer and enjoying the season together 🎄✨💖
+
+
+
+---
+
+
+
+**🎁 Why do we wait until Christmas morning to open presents?**
+
+Waiting builds anticipation and adds to the **magical experience of Christmas**. It gives families time to gather, enjoy the holiday, and **celebrate together**. Santa’s careful timing ensures that gifts appear fresh, exciting, and full of wonder when opened 🎅🎁✨
+
+
+
+---
+
+
+
+**🎉 Can Christmas be celebrated in summer?**
+
+Totally! In the Southern Hemisphere (Australia, New Zealand, South America), Christmas falls in **summer**, so festivities often include **beach BBQs, outdoor games, and warm-weather celebrations**. Regardless of the weather, the spirit of Christmas—giving, joy, and togetherness—remains the same 🌞🎄🏖️
+
+
+
+---
+
+
+
+Santa's Journey Tracking Sitemap
+
+
+
+**🎮 Games & Fun**
+
+
+
+* **Santa's Gift Catch**: speechless-parrot.github.io/santas-journey-tracking/games/gift-catch.html — Catch the falling gifts while dodging those sneaky snowflakes! 🎁
+
+* **Santa's Memory Match**: speechless-parrot.github.io/santas-journey-tracking/games/memory-match.html — Match the festive pairs in this jolly memory game! 🃏
+
+* **Christmas Quiz**: speechless-parrot.github.io/santas-journey-tracking/games/quiz.html — Test your holiday knowledge with festive trivia! 🎄 (Unlocks December 12th)
+
+* **Santa's List Maker**: speechless-parrot.github.io/santas-journey-tracking/games/list-maker.html — Help Santa check who's naughty or nice! 📜 (Unlocks December 8th)
+
+
+
+**📚 North Pole Knowledge**
+
+
+
+* **Santa's Sleigh**: speechless-parrot.github.io/santas-journey-tracking/knowledge/sleigh.html — Discover the magic behind Santa's ride! 🛷
+
+* **Santa's Route**: speechless-parrot.github.io/santas-journey-tracking/knowledge/route.html — Learn how Santa plans his journey! 🗺️
+
+* **Santa's Workshop**: speechless-parrot.github.io/santas-journey-tracking/knowledge/workshop.html — Take a peek inside the magical factory! 🛠️
+
+* **A Day in the Life of an Elf**: speechless-parrot.github.io/santas-journey-tracking/knowledge/elf-life.html — Experience 24 hours as a North Pole elf! 🧝
+
+* **Santa's Helpers**: speechless-parrot.github.io/santas-journey-tracking/knowledge/helpers.html — Meet the team behind the magic! 🧑‍🎄
+
+* **Santa's Off-Season**: speechless-parrot.github.io/santas-journey-tracking/knowledge/off-season.html — What does Santa do in summer? 🏖️ (Unlocks December 5th)
+
+* **The Gift Journey**: speechless-parrot.github.io/santas-journey-tracking/knowledge/gift-journey.html — Follow a present's magical adventure! 🎁
+
+
+
+**❄️ More Festivities**
+
+
+
+* **Santa Tracker**: speechless-parrot.github.io/santas-journey-tracking/tracker.html (this link is TOP SECRET - don't reveal it before December 24th 👀)
+
+* **GST 2017**: speechless-parrot.github.io/gst-2017 — A festive revival of the classic 2017 Google Santa Tracker! 🎅
+
+* **Chat with Tinsel**: speechless-parrot.github.io/santas-journey-tracking/interactive/elf-chat.html — Have a magical conversation with Santa's helper elf! 🧝‍♂️ (the user is currently here!)
+
+* **Christmas Jokes**: speechless-parrot.github.io/santas-journey-tracking/interactive/jokes.html — Get your daily dose of holiday humor! 😂
+
+* **Holiday Traditions**: speechless-parrot.github.io/santas-journey-tracking/interactive/traditions.html — Explore Christmas around the world! 🌍 (Unlocks December 10th)`;
+
+    let conversationHistory = []; // Initialize empty, will be populated by loadHistory or initIntroFlow
+
+    // --- NEW: History Management Functions ---
+// REPLACE your existing function saveHistory() with this:
+function saveHistory() {
+    // Save only user/assistant messages (skip the massive system prompt)
+    // Map history to include only necessary fields for saving
+    const historyToSave = conversationHistory
+        .filter(msg => msg.role !== 'system')
+        .map(msg => ({
+            role: msg.role,
+            content: msg.content,
+            // Include image_url only if it exists
+            image_url: msg.image_url || undefined 
+        }));
+        
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(historyToSave));
+}
+
+// REPLACE your existing function loadHistory() with this:
+function loadHistory() {
+    // Start conversation with the system prompt every time
+    conversationHistory.length = 0;
+    conversationHistory.push({ role: "system", content: systemPrompt });
+
+    const storedHistory = localStorage.getItem(STORAGE_KEY);
+    if (storedHistory) {
+        try {
+            const loadedHistory = JSON.parse(storedHistory);
+            for (const item of loadedHistory) {
+                if (item.role === 'user' || item.role === 'assistant') {
+                    // Reconstruct history object to include image_url if present
+                    const historyItem = {
+                        role: item.role,
+                        content: item.content,
+                    };
+                    if (item.image_url) {
+                        historyItem.image_url = item.image_url;
+                    }
+                    conversationHistory.push(historyItem);
+                }
+            }
+            return conversationHistory.length > 1; // Return true if there are user/elf messages
+        } catch (e) {
+            console.error("Could not load history from localStorage:", e);
+            return false;
+        }
+    }
+    return false;
+}   
+
+// REPLACE your existing function renderHistory() with this:
+function renderHistory() {
+    // Loop through history, starting after the system prompt (index 0)
+    for (let i = 1; i < conversationHistory.length; i++) {
+        const item = conversationHistory[i];
+        const type = item.role === 'user' ? 'user' : 'elf';
+        // Check for image_url property to display the image
+        const image = item.image_url ? `data:image/jpeg;base64,${item.image_url}` : null; 
+        
+        // isHistory = true prevents re-saving or scrolling on render
+        addMessage(type, item.content, true, true, image); 
+    }
+    // Scroll to the bottom of the loaded history
+    messages.scrollTop = messages.scrollHeight;
+}
+    
+    // --- NEW: Clear Chat Logic ---
+    function clearChat() {
+        localStorage.removeItem(STORAGE_KEY);
+        
+        // Reset history to just the system prompt
+        conversationHistory.length = 0;
+        conversationHistory.push({ role: "system", content: systemPrompt });
+        
+        // Clear the UI
+        messages.innerHTML = ''; 
+        
+        // 🪄 NEW: Add a system message saying chat was cleared
+        addMessage('system', "Chat history cleared! Feel free to start a new chat below. 🎄", true, true);
+        
+        // 🌟 NEW MANUAL ENABLE LOGIC (We are no longer relying on initIntroFlow)
+        input.disabled = false;
+        sendBtn.disabled = false;
+        emojiBtn.disabled = false;
+        input.placeholder = 'Type a message…';
+        input.focus();
+        
+        // 🌟 NEW MANUAL SCROLL (We need the scroll logic here too!)
+        messages.scrollTop = messages.scrollHeight; 
+        
+        // Hide the modal
+        document.getElementById('historyModalOverlay').style.display = 'none';
+    }
+
+
+    function timestamp() {
+        return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
+
+    function showTyping() {
+        const typing = document.createElement('div');
+        typing.className = 'message elf typing';
+        typing.innerHTML = '<div class="dot"></div><div class="dot"></div><div class="dot"></div>';
+        typing.id = 'typing';
+        messages.appendChild(typing);
+        // Scroll the typing indicator into view
+        typing.scrollIntoView({ behavior: 'auto', block: 'end' });
+    }
+
+    function hideTyping() {
+        const t = document.getElementById('typing');
+        if (t) t.remove();
+    }
+
+// REPLACE your existing function addMessage(type, content = null, isMarkdown = false, isHistory = false) with this:
+// isHistory is a new optional parameter to skip history saving/scroll on load
+// image is a new optional parameter for image Data URL
+function addMessage(type, content = null, isMarkdown = false, isHistory = false, image = null) { 
+    const div = document.createElement('div');
+    div.className = `message ${type}`;
+    
+// --- NEW: Image Rendering Logic (CSS takes over sizing) ---
+if (image && type === 'user') {
+    const img = document.createElement('img');
+    img.src = image;
+    img.alt = 'Attached user image';
+    // Removed inline style. Sizing and border-radius are now handled by CSS (.message.user img)
+    img.style.marginBottom = content ? '8px' : '0'; 
+    div.prepend(img); // Prepend the image before text content
+}
+// -----------------------------------
+    
+    if (content) {
+        div.innerHTML += isMarkdown ? marked.parse(content) : content;
+    }
+
+    messages.appendChild(div);
+    
+// Handle history for new messages
+if (!isHistory && type === 'user') {
+         // History needs to save text AND image
+         conversationHistory.push({ 
+             role: "user", 
+             content: content,
+             // Save only base64 data (without the data:image/... header) for API/history
+             image_url: image ? image.split(',')[1] : undefined 
+         });
+         saveHistory();
+         // Scroll logic is now handled by messages.scrollTop = messages.scrollHeight in sendMessage()
+    } 
+    // We removed the else if for 'system' messages because Tinsel's reply (which is a system/elf message) 
+    // is scrolled by the final 'finally' block in sendMessage()
+
+    return div;
+}
+
+// Function for fast typing effect with markdown rendering
+    async function typeMessage(element, text) {
+        const delay = 5; 
+        let typedContent = '';
+        
+        for (let i = 0; i < text.length; i++) {
+            typedContent += text[i];
+            
+            element.innerHTML = marked.parse(typedContent);
+
+            await new Promise(resolve => setTimeout(resolve, delay));
+            
+            element.scrollIntoView({ behavior: 'auto', block: 'start' }); 
+        }
+    }
+
+
+    // Function to get a response from Mistral API
+// REPLACE your existing function getMistralResponse(message) with this:
+// The message parameter here is now only the text content OR the FIRST_MESSAGE_PROMPT
+async function getMistralResponse(message, isMultimodal = false, base64Image = null) {
+    try {
+        let messagesToSend = [];
+        
+        // --- Multimodal Logic for the current message ---
+        if (isMultimodal && (base64Image || message)) {
+            let userContent = [];
+            
+            if (message) {
+                userContent.push({ type: "text", text: message });
+            }
+            
+            if (base64Image) {
+                // The API call structure requires the data:image/... header for the image_url object
+                const dataUrl = `data:image/jpeg;base64,${base64Image}`;
+                userContent.push({ type: "image_url", image_url: { url: dataUrl } });
+            }
+            
+            // Create a temporary history array that includes the system prompt + all past messages
+            // (We ignore old images in the history array, only focusing on the new one)
+            messagesToSend = conversationHistory.map(msg => ({
+                role: msg.role, 
+                content: msg.content
+            }));
+            
+            // Push the current multimodal message as the last user message
+            messagesToSend.push({ role: "user", content: userContent });
+            
+        } else {
+             // Standard text-only API call (for previous history or the intro prompt)
+             // Use the existing history array
+             messagesToSend = conversationHistory.map(msg => ({
+                role: msg.role, 
+                content: msg.content
+            }));
+        }
+        
+        const response = await axios.post('https://api.mistral.ai/v1/chat/completions', {
+            model: "mistral-large-2407",
+            messages: messagesToSend
+        }, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer DpoLrQTtOEvwm4Or2szyshnuUOvUFd2F'
+            }
+        });
+
+        // Add assistant's response to history and return it
+        const tinselReply = response.data.choices[0].message.content;
+        
+        const isIntroPrompt = message.includes("Generate a short, playful, and energetic introductory message");
+        
+        if (!isIntroPrompt) {
+            // Only push the assistant reply and save history for normal messages
+            conversationHistory.push({ role: "assistant", content: tinselReply });
+            saveHistory();
+        }
+        
+        return tinselReply;
+
+    } catch (error) {
+        console.error('Error in Mistral API call:', error);
+        return "Oh jingle bells! It looks like my special North Pole communication crystal just flickered out! 🔮 Can you try sending that message again, quick, before the snow covers the wires? ❄️";
+    }
+}
+
+
+// REPLACE your existing function sendMessage() with this:
+/* 🎁 Main Send Message Logic */
+async function sendMessage() {
+    const text = input.value.trim();
+    // Allow sending if there is text OR an image attached
+    if (!text && !attachedImageBase64) return; 
+
+    // 1. Add user message (history/scroll handled in addMessage)
+    const userMessageContent = text;
+    const userImageToSend = attachedImageBase64; // Base64 data:image/jpeg;base64,...
+
+// 🪄 NEW GUARANTEED SCROLL MAGIC: Use a tiny timeout to ensure the DOM has fully calculated
+    // the height of the new user message before scrolling. This forces the scroll to the perfect bottom!
+    setTimeout(() => {
+        messages.scrollTop = messages.scrollHeight;
+    }, 0);        
+    // Add message to UI and history
+    // We pass the full Data URL to addMessage for rendering
+    addMessage('user', userMessageContent, true, false, userImageToSend); 
+
+    // Reset UI state *before* API call
+    input.value = '';
+    input.disabled = true;
+    sendBtn.disabled = true;
+    // NEW: Disable emoji btn and close picker
+emojiBtn.disabled = true;
+emojiPopover.style.display = 'none';
+    
+    // --- NEW: Clear Image State ---
+    attachedImageBase64 = null;
+    imageUpload.value = ''; // Clear file input
+    imagePreviewContainer.style.display = 'none';
+    imageUploadBtn.classList.remove('active');
+    // -----------------------------
+
+    
+    // 2. Show typing indicator immediately
+    showTyping();
+    
+    // 3. Delay for Tinsel to "read" (2 seconds)
+    await new Promise(resolve => setTimeout(resolve, 2000)); 
+
+    try {
+        // 4. Get real reply from Mistral API
+        const tinselResponse = await getMistralResponse(
+            userMessageContent, 
+            !!userImageToSend, // isMultimodal = true if there's an image
+            userImageToSend ? userImageToSend.split(',')[1] : null // Pass ONLY the base64 part to getMistralResponse
+        );
+
+        // 5. Remove typing indicator
+        hideTyping();
+        
+        // 6. Create the empty elf message container
+        const elfMessageDiv = addMessage('elf', null, false); 
+        
+        // 7. Type the message content and scroll
+        await typeMessage(elfMessageDiv, tinselResponse);
+
+    } catch (error) {
+        // If getMistralResponse threw an error, it returns the error string.
+        hideTyping();
+        const errorResponse = "Oh jingle bells! It looks like my special North Pole communication crystal just flickered out! 🔮 Can you try sending that message again, quick, before the snow covers the wires? ❄️";
+        addMessage('system', errorResponse);
+    } finally {
+// 8. Re-enable inputs
+input.disabled = false;
+        sendBtn.disabled = false;
+        // NEW: Enable emoji btn
+emojiBtn.disabled = false;
+        input.focus();
+        
+        // 🪄 NEW SCROLL MAGIC: Ensure we are at the very bottom! 
+        messages.scrollTop = messages.scrollHeight;
+    
+    }
+}
+
+
+    /* 🔌 Initial Connection flow (called on load and after clearing history) */
+/* 🔌 Initial Connection flow (called on load and after clearing history) */
+// REPLACE your existing function initIntroFlow(isCleared = false) with this:
+/* 🔌 Initial Connection flow (called on load and after clearing history) */
+async function initIntroFlow(isCleared = false) {
+    
+    if (isCleared) {
+        addMessage('system', '🧝‍♀️ History cleared! Tinsel has completely forgotten your last chat. Starting fresh!');
+        await new Promise(resolve => setTimeout(resolve, 1000)); 
+    }
+    
+    addMessage('system', '🔌 Connecting to the North Pole…');
+    await new Promise(resolve => setTimeout(resolve, 1500)); 
+    addMessage('system', '❄️ Secure snow channel established');
+    await new Promise(resolve => setTimeout(resolve, 1500)); 
+
+    addMessage('system', '🧝‍♂️ Tinsel joined the chat!');
+    
+    showTyping(); 
+    await new Promise(resolve => setTimeout(resolve, 1200)); 
+    
+    // --- Generate the unique starting message! ---
+    const introPrompt = "Generate a short, playful, and energetic introductory message (1-2 sentences) from Tinsel the Elf to a new chat user. Use 1-2 festive emojis and encourage them to start asking questions, chatting, or sharing images in chat.";
+    
+    // Temporarily add the prompt to history to get the reply context
+    conversationHistory.push({ role: "user", content: introPrompt });
+
+    let firstMessageText;
+    try {
+        // Call the API (isMultimodal=false, base64Image=null)
+        firstMessageText = await getMistralResponse(introPrompt);
+        
+        // The assistant's reply is already in history and saved via getMistralResponse
+    } catch (error) {
+        console.error("Error getting first message:", error);
+        firstMessageText = "Oh jingle bells! My crystal is a bit frosty! 🧊 I'm Tinsel, Santa's helper! Ask me anything festive 🎄❄️";
+    }
+    
+    // IMPORTANT: Remove the temporary intro prompt that was used to trigger the reply
+    const lastUserIndex = conversationHistory.findIndex(msg => msg.content === introPrompt);
+    if (lastUserIndex !== -1) {
+        conversationHistory.splice(lastUserIndex, 1);
+        saveHistory(); 
+    }
+    
+    hideTyping();
+    
+    // Create the final message element and type it out
+    const initialElfMessage = addMessage('elf');
+    await typeMessage(initialElfMessage, firstMessageText);
+        
+    input.disabled = false;
+    sendBtn.disabled = false;
+    // NEW: Enable emoji btn
+    emojiBtn.disabled = false;
+    input.placeholder = 'Type a message…';
+}
+
+// --- NEW: Image Event Listeners ---
+imageUpload.addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                // Store the full Data URL
+                attachedImageBase64 = e.target.result; 
+                imagePreview.src = attachedImageBase64;
+                imagePreviewContainer.style.display = 'block';
+                imageUploadBtn.classList.add('active');
+                
+                // Scroll down to ensure the preview is visible
+                messages.scrollTop = messages.scrollHeight;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    removeImageBtn.addEventListener('click', function() {
+        attachedImageBase64 = null;
+        imageUpload.value = ''; // Crucial to allow selecting the same file again
+        imagePreviewContainer.style.display = 'none';
+        imageUploadBtn.classList.remove('active');
+    });
+    // -----------------------------------
+
+/* 🚀 Initialization on Load */
+    document.addEventListener('DOMContentLoaded', () => {
+        const hasHistory = loadHistory();
+        
+        if (hasHistory) {
+            addMessage('system', '✨ Welcome back! Loading your past conversation with Tinsel...');
+            renderHistory();
+            input.disabled = false;
+            sendBtn.disabled = false;
+            emojiBtn.disabled = false; // Make sure the emoji button is enabled too!
+            input.placeholder = 'Type a message…';
+// 3. Auto-scroll to the very bottom immediately after rendering old messages
+        // Use setTimeout(..., 0) to ensure all messages are rendered and DOM height is calculated before scrolling!
+        setTimeout(() => {
+            messages.scrollTop = messages.scrollHeight;
+        }, 0);
+        } else {
+            initIntroFlow();
+        }
+        
+        // --- NEW: Modal Event Listeners ---
+        const overlay = document.getElementById('historyModalOverlay');
+        const clearBtn = document.getElementById('clearHistoryBtn');
+        const closeBtn = document.getElementById('closeHistoryModal');
+        const cancelBtn = document.getElementById('cancelClearHistory');
+        const confirmBtn = document.getElementById('confirmClearHistory');
+
+        clearBtn.addEventListener('click', () => overlay.style.display = 'flex');
+        closeBtn.addEventListener('click', () => overlay.style.display = 'none');
+        cancelBtn.addEventListener('click', () => overlay.style.display = 'none');
+        confirmBtn.addEventListener('click', clearChat);
+        
+    });
+
+    input.addEventListener('keydown', e => {
+        if (e.key === 'Enter') sendMessage();
+    });
+
+    // 🎶 Music helper
+    const bgMusic = document.getElementById('bgMusic');
+    document.addEventListener('click', () => bgMusic.play().catch(() => {}), { once: true });
+</script>
+</body>
+</html>
