@@ -287,40 +287,81 @@ body {
     overflow: hidden;
 }
 
-/* Snowy ground */
+/* 🏔️ POWER-UP: DEEPER SNOW BANKS - NOW WORKING! */
 .village-section::before {
     content: '';
     position: absolute;
     bottom: 0;
     left: 0;
     right: 0;
-    height: 150px;
-    background: linear-gradient(to top, 
-        rgba(255,255,255,0.9) 0%, 
-        rgba(255,255,255,0.6) 40%, 
-        transparent 100%);
+    height: 150px; /* Reduced height, as shadows will create the rest! */
+    
+    /* ADD A BASE WHITE BACKGROUND SO THE GROUND IS VISIBLE! */
+    background: var(--snow-white); 
+    
     pointer-events: none;
     z-index: 1;
+    
+    /* THE MAGICAL 3D SNOW EFFECT - NOW WITH NEGATIVE OFFSETS! */
+    box-shadow: 
+        /* Front Snow Bank (chunkiest/closest) */
+        0 -10px 0 0 rgba(255, 255, 255, 1), /* The immediate lip */
+        
+        /* Middle Snow Bank (medium) */
+        0 -40px 0 0 rgba(255, 255, 255, 0.6), /* Lifted further up */
+        
+        /* Back Snow Bank (faintest) */
+        0 -80px 0 0 rgba(255, 255, 255, 0.4); /* The highest, most distant peak */
+    
+    /* You can remove the mask, or keep it—the base background helps immensely! */
+    -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,1) 70%, transparent 100%);
+    mask-image: linear-gradient(to top, rgba(0,0,0,1) 70%, transparent 100%);
 }
 
 /* Subtle northern lights */
+/* 🌌 THE MEGA-VIBRANT AURORA RAMPAGE */
 .village-section::after {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
-    height: 250px;
+    height: 400px; /* Taller so it flows down behind the cards */
     background: 
-        radial-gradient(ellipse at 40% 10%, rgba(124, 207, 255, 0.15) 0%, transparent 50%),
-        radial-gradient(ellipse at 70% 20%, rgba(186, 230, 253, 0.1) 0%, transparent 40%);
-    animation: aurora 25s infinite alternate ease-in-out;
+        /* Neon Pink Streak */
+        radial-gradient(ellipse at 80% 20%, rgba(255, 20, 147, 0.4) 0%, transparent 60%),
+        /* Electric Blue Streak */
+        radial-gradient(ellipse at 50% 15%, rgba(0, 191, 255, 0.5) 0%, transparent 70%),
+        /* Toxic Green Streak - The classic! */
+        radial-gradient(ellipse at 20% 30%, rgba(50, 205, 50, 0.4) 0%, transparent 60%),
+        /* This adds the "curtain" texture */
+        repeating-linear-gradient(90deg, transparent, rgba(255,255,255,0.05) 50px, transparent 100px);
+    
+    /* Mix blend mode makes colors POP against the blue background! */
+    mix-blend-mode: screen; 
+    
+    /* Faster animation so you can actually see it moving! */
+    animation: aurora-rave 15s infinite alternate ease-in-out; 
     pointer-events: none;
+    z-index: 1;
 }
 
-@keyframes aurora {
-    0%, 100% { opacity: 0.5; }
-    50% { opacity: 0.8; }
+@keyframes aurora-rave {
+    0% { 
+        opacity: 0.3;
+        transform: scale(1) translateY(0);
+        filter: hue-rotate(0deg) blur(5px);
+    }
+    50% { 
+        opacity: 0.8;
+        transform: scale(1.1) translateY(-10px);
+        filter: hue-rotate(30deg) blur(2px); /* Colors actually shift slightly! */
+    }
+    100% { 
+        opacity: 0.4;
+        transform: scale(1.05) translateY(5px);
+        filter: hue-rotate(-20deg) blur(8px);
+    }
 }
 
 .village-section h2 {
@@ -611,6 +652,48 @@ footer a {
   color: var(--snow-white);
 }
 
+/* --- BACK TO TOP BUTTON (New! Smooth Scroll Beast) --- */
+.back-to-top {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: var(--christmas-red); /* Using your primary red */
+    color: var(--snow-white);
+    border: none;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    opacity: 0; /* Starts invisible! */
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+    z-index: 99; /* Make sure it sits above everything! */
+}
+
+.back-to-top:hover {
+    background: var(--christmas-green); /* Fun hover color switch! */
+    transform: scale(1.1);
+}
+
+.back-to-top.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Ensure mobile screens don't hide it with other stuff */
+@media (max-width: 768px) {
+    .back-to-top {
+        width: 45px;
+        height: 45px;
+        bottom: 15px;
+        right: 15px;
+    }
+}
 
 /* Responsive */
 @media (max-width: 768px) {
@@ -635,6 +718,41 @@ footer a {
         grid-template-columns: 1fr;
         gap: 2rem;
     }
+
+/* --- NEW AND IMPROVED MOBILE COUNTDOWN FIX --- */
+.countdown-boxes {
+    /* We need to let the boxes wrap, but also use the full width */
+    width: 100%; 
+    
+    /* Make the gap slightly bigger than last time to match the visual */
+    gap: 0.75rem; 
+    
+    /* VERY IMPORTANT: Override the generous desktop margin */
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.countdown-box {
+    /* Tell the box to take up slightly less than half the width (45%) */
+    /* This forces 2 boxes per row, triggering the 2x2 wrap! */
+    width: 45%; 
+    
+    /* Shrink the minimum size so 2 can fit on a tiny screen! */
+    min-width: unset; /* Remove the desktop min-width constraint */
+    
+    padding: 0.75rem 0.5rem; 
+}
+
+.countdown-value {
+    /* Make the number slightly smaller so it doesn't overflow */
+    font-size: 2rem; 
+}
+
+.countdown-label {
+    /* Make the label text a tiny bit smaller */
+    font-size: 0.75rem; 
+}
+/* --- END OF NEW MOBILE COUNTDOWN FIX --- */
     
     .village-section h2 {
         font-size: 2.2rem;
@@ -842,6 +960,10 @@ footer a {
         </div>
     </footer>
 
+    <button class="back-to-top" id="backToTopBtn" title="Go to top">
+        <span class="material-symbols-rounded">arrow_upward</span>
+    </button>
+
     <script>
         // Test mode configuration - Change these values to test different dates
         const TEST_MODE = false; // Set to true to enable test mode
@@ -1020,6 +1142,28 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
+// --- BACK TO TOP BUTTON LOGIC ---
+const backToTopBtn = document.getElementById('backToTopBtn');
+        const scrollThreshold = 400; // Show button after scrolling 400px
+
+        // 1. Check Scroll Position (Making it visible/invisible)
+        window.onscroll = function() {
+            if (document.body.scrollTop > scrollThreshold || document.documentElement.scrollTop > scrollThreshold) {
+                backToTopBtn.classList.add('show');
+            } else {
+                backToTopBtn.classList.remove('show');
+            }
+        };
+
+        // 2. Smooth Scrolling Function (The real magic!)
+        backToTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth' // This is the line that makes it glide like Rudolph!
+            });
+        });
+        // --- END BACK TO TOP BUTTON LOGIC ---
     </script>
 </body>
 </html>
