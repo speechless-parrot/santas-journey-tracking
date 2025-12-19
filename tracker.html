@@ -109,6 +109,7 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css">
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css">
 <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+<script src="https://unpkg.com/leaflet.antimeridian@1.0.0/dist/leaflet.antimeridian-src.js"></script>
     <style>
 :root {
     --christmas-red: #d42426;
@@ -140,7 +141,7 @@ body {
 }
 
 .leaflet-container {
-    background: #0b1026 !important; /* Deep dark blue instead of grey */
+    background: #0B1025 !important; /* Deep dark blue instead of grey */
 }
 
 .santa-glow-icon {
@@ -1524,7 +1525,7 @@ const santaChimneyIcon = L.icon({
 // Initialize the map centered on Santa with custom options
 const map = L.map('map', {
     center: santaPosition,
-    zoom: 8,
+    zoom: 10,
     dragging: ! isLocked,
     keyboard: ! isLocked,
     zoomControl: true,
@@ -1557,8 +1558,36 @@ const map = L.map('map', {
         // Add Santa marker
         const santaMarker = L.marker(santaPosition, {
             icon: santaSleighIcon,
-            zIndexOffset: 999999 // put santa ABOVE THE GODS
+            zIndexOffset: 999999, // put santa ABOVE THE GODS
+            opacity: 0
         }).addTo(map);
+
+        // 🏔️ STEP 1: Define the North Pole Icon (keeping it crisp & huge!) ❄️
+        const northPoleIcon = L.icon({
+    iconUrl: 'https://raw.githubusercontent.com/google/santa-tracker-web/refs/heads/main/static/img/tracker/northpole.png',
+    iconSize: [132, 100], 
+    // 📍 CHANGE THIS: Center the anchor so the icon sits evenly 
+    // [Width/2, Height/2]
+    iconAnchor: [66, 50], 
+    popupAnchor: [0, -50],
+    className: 'north-pole-marker'
+});
+
+// 📍 STEP 2: Fix it at the literal top of the world! [90, 0] 🌍
+L.marker([84.6, 168], { 
+    icon: northPoleIcon,
+    zIndexOffset: -1000, // 🛷 Keeps it BEHIND Santa so he stays the main character!
+    interactive: false   // 🚫 It's just there for the vibes (non-clickable)
+}).addTo(map);
+
+// 🎀 Initialize the Magical Trail (Start it empty)
+const santaPath = L.Wrapped.wrappedPolyline([], {
+    color: '#d42426',
+    weight: 4,
+    opacity: 0.7,
+    dashArray: '1, 12', // ❄️ Makes it look like a trail of snowflakes/sparkles
+    className: 'santa-trail-glow'
+}).addTo(map);
 
         
     
@@ -1655,7 +1684,7 @@ function updateSantaPosition() {
     // Determine if Santa should be visible and which icon to use
     if (now < takeoffTime || now > endTime) {
         // Hide Santa before takeoff or after landing
-        santaMarker.setIcon(santaChimneyIcon);
+        santaMarker.setOpacity(0);
     } else {
         // Show Santa during the journey
         santaMarker.setOpacity(1);
@@ -1670,8 +1699,24 @@ function updateSantaPosition() {
         santaMarker.setIcon(icon);
     }
     
-    // Update marker position
-    santaMarker.setLatLng(newPosition);
+// Update marker position
+santaMarker.setLatLng(newPosition);
+
+// --- 🎅 NEW: Update Santa's Path So Far! ---
+const pathPoints = [[84.6, 168]]; // 🏠 Start at the North Pole
+
+// Loop through all stops and add the ones he already visited
+destinations.forEach(stop => {
+    if (now >= stop.arrival) {
+        pathPoints.push([stop.location.lat, stop.location.lng]);
+    }
+});
+
+// Finish the path at Santa's current exact location
+pathPoints.push(newPosition);
+
+// Update the line on the map!
+santaPath.setLatLngs(pathPoints);
     
     // Update map view if locked
     if (isLocked) {
