@@ -270,6 +270,31 @@ body {
     word-break: break-word;
 }
 
+/* 🎅 CLEAN & SNATCHED MOBILE UI 🎅 */
+
+
+@media (max-width: 600px) {
+    /* 2. Title Swap Magic: Changing text ONLY on mobile 🪄 */
+    .title {
+        font-size: 1.1rem !important;
+        visibility: hidden;
+        position: relative;
+        white-space: nowrap;
+    }
+
+    .title::after {
+        content: "🎅 Santa Tracking 🗺️"; /* Short & Sweet version! */
+        visibility: visible;
+        position: absolute;
+        left: 0; /* Keeping it left-aligned, no centering here! 💅 */
+    }
+
+    .santa-update-bar {
+        padding: 0.5rem 1rem !important; /* Compact & clean */
+        font-size: 0.85rem !important;
+    }
+}
+
 /* Responsive Breakpoints */
 @media (max-width: 768px) {
     #map {
@@ -1458,18 +1483,17 @@ body {
         </div>
     </div>
 
-    <!-- Add this right after the top-bar div -->
-<div class="santa-update-bar">
-    <div class="update-content">
-        <span class="material-symbols-rounded update-icon">chat</span>
-        <div class="update-text">
-            <p class="update-message">Ho ho ho! Just delivered presents to all the good children in Tokyo! The reindeer loved the carrots! 🥕</p>
-            <p class="next-update">Next update in: <span class="update-countdown">05:00</span></p>
+    <div id="map"></div>
+
+    <div class="santa-update-bar">
+        <div class="update-content">
+            <span class="material-symbols-rounded update-icon">chat</span>
+            <div class="update-text">
+                <p class="update-message">Ho ho ho! Just delivered presents to all the good children in Tokyo! The reindeer loved the carrots! 🥕</p>
+                <p class="next-update">Next update in: <span class="update-countdown">05:00</span></p>
+            </div>
         </div>
     </div>
-</div>
-
-    <div id="map"></div>
 
     <div class="stats-bar">
         <div class="stat-box">
