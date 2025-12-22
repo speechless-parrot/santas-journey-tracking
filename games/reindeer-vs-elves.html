@@ -538,13 +538,13 @@ this.cooldownTime = 80; // milliseconds, change to taste!
         currentScore = this.elvesScore;
     }
 
-    // ----- Confetti on milestone -----
-    if (
-        currentScore > 0 &&
-        (currentScore % 100 === 0 || currentScore % 500 === 0 || currentScore % 1000 === 0)
-    ) {
-        launchConfetti(team);
-    }
+// ----- Confetti on BIG milestones only! 🥊 -----
+if (
+    currentScore > 0 &&
+    (currentScore % 1000 === 0 || currentScore % 5000 === 0)
+) {
+    launchConfetti(team);
+}
 
     this.savePersonalScores();
     this.updateUI();
@@ -576,24 +576,22 @@ initFirebaseListeners() {
             animateScore('elves',    data.elves    || 0);
             globalScores = { ...data };
 
-            // After updating the local scores from data.reindeer and data.elves, and before or just after your animateScore calls:
-
-// Check reindeer milestone
+// Check reindeer milestone (BIG MOMENTS ONLY! 🦌🔥)
 let r = data.reindeer || 0;
 if (
     r > 0 &&
-    (r % 100 === 0 || r % 500 === 0 || r % 1000 === 0) &&
+    (r % 1000 === 0 || r % 5000 === 0 || r % 10000 === 0) && // Only every 1k, 5k, or 10k!
     r !== lastReindeerMilestone
 ) {
     launchConfetti('reindeer');
     lastReindeerMilestone = r;
 }
 
-// Check elves milestone
+// Check elves milestone (LEGENDARY STATUS! 🧝‍♂️✨)
 let e = data.elves || 0;
 if (
     e > 0 &&
-    (e % 100 === 0 || e % 500 === 0 || e % 1000 === 0) &&
+    (e % 1000 === 0 || e % 5000 === 0 || e % 10000 === 0) && // Keeping it exclusive!
     e !== lastElvesMilestone
 ) {
     launchConfetti('elves');
