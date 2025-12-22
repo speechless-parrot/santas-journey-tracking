@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reindeer vs Elves 🥊</title>
+    <link rel="icon" type="image/png" href="../assets/santa-chimney-waving.png">
+    <link href="https://fonts.googleapis.com/css?family=Google+Sans:100,300,400,500,700,900,100i,300i,400i,500i,700i,900i" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,400,1,0">
+    <style>
+        :root {
+            --christmas-red: #d42426;
+            --christmas-green: #165b33;
+            --snow-white: #ffffff;
+            --gold:  #ffd700;
+            --paper:  #f8f9fa;
+            --text:  #2c3e50;
+            --reindeer-brown: #8B4513;
+            --elf-green: #228B22;
+            --reindeer-bg: linear-gradient(120deg, #fff5ee 30%, #ecd4b0 100%);
+            --elves-bg: linear-gradient(120deg, #f1fff0 30%, #b7e4c7 100%);
+        }
+
+        * {
+            margin: 0;
+            padding:  0;
+            box-sizing: border-box;
+            font-family: 'Google Sans', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(115deg, #fff5f5 0%, #f0f8ff 100%);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .top-bar {
+            background: linear-gradient(135deg, var(--christmas-red), var(--christmas-green));
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            z-index: 100;
+        }
+
+        .page-title {
+            color: white;
+            font-size: 1.5rem;
+            font-weight:  500;
+            letter-spacing: 0.01em;
+        }
+
+        .home-button {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .home-button:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.1);
+        }
+
+        .online-players-btn {
+    background: rgba(255,255,255,0.29);
+    color: white;
+    border: none;
+    padding: 0.5rem 0.95rem 0.5rem 0.7rem;
+    border-radius: 2.2em;
+    display: flex;
+    align-items: center;
+    gap: 0.33em;
+    font-size: 1.06rem;
+    cursor: pointer;
+    box-shadow: 0 1.5px 8px 0 rgba(80,50,0,0.07);
+    transition: background 0.23s, transform 0.13s;
+}
+.online-players-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.1);
+        }
+
+.online-players-btn .material-symbols-rounded {
+    font-size: 1.45em;
+    margin-right: 0.18em;
+    filter: drop-shadow(0 1px 6px #00994032);
+}
+
+        .game-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            text-align: center;
+            background: linear-gradient(135deg, var(--christmas-red), var(--christmas-green));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 2rem 0 1.5rem 0;
+            letter-spacing: -0.01em;
+            text-shadow: 0 4px 24px rgba(34, 139, 34, 0.08);
+        }
+
+        /* Split-Screen Battlefield */
+        .battlefield {
+    flex: 1 1 auto;
+    display: flex;
+    width: 100vw;
+    min-height: 0;
+    min-width: 0;
+    transition: background 0.5s;
+    /* Add: */
+    height: calc(100vh - 72px); /* Adjust 72px if your top-bar is a different height */
+    max-height: 100vh;
+}
+
+        .battle-side {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 2rem 1rem 1rem 1rem;
+            cursor: pointer;
+            user-select: none;
+            transition: flex-basis 0.5s cubic-bezier(.82,-0.01,.16,.97), background 0.5s;
+            min-width: 110px;
+            will-change: flex-basis;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.06) inset;
+        }
+
+        .battle-side.reindeer {
+    /* Vibrant warm Christmassy brown gradient */
+    background:
+        linear-gradient(120deg, #fff8f0 60%, #ecd4b0 100%),
+        url('https://www.transparenttextures.com/patterns/xmas.png');
+    border-right: 7px solid var(--christmas-red);
+    box-shadow:
+        0 0 20px 3px #ffe9c3,
+        0 12px 38px 7px #8B451325;
+    position: relative;
+    overflow: hidden;
+}
+
+.battle-side.elves {
+    /* Energetic green snow/foliage gradient with sparkle */
+    background:
+        linear-gradient(111deg, #e8ffd9 66%, #c9ffc0 100%),
+        url('https://www.transparenttextures.com/patterns/hexellence.png');
+    border-left: 7px solid var(--elf-green);
+    box-shadow:
+        0 0 20px 3px #ccffe0,
+        0 12px 38px 7px #228b2225;
+    position: relative;
+    overflow: hidden;
+}
+
+.card-main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    background: rgba(255,255,255,0.82);
+    border-radius: 38px;
+    box-shadow:
+        0 6px 48px #0002,
+        0 2px 8px #fff5,
+        0 0 0 7px rgba(255,255,255,0.18);
+    border: 4px solid #fff;
+    padding: 2.5rem 1rem 2rem 1rem;
+    position: relative;
+    z-index: 2;
+}
+.side-title {
+    font-size: 2.4rem;
+    font-weight: 900;
+    color: inherit;
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    margin-bottom: -0.4rem;
+    letter-spacing: 0.04em;
+    text-shadow:
+        0 4px 24px #fff9,
+        0 2px 18px var(--christmas-green),
+        0 0px 8px #d4242625;
+    filter: drop-shadow(0 8px 28px #0001);
+}
+
+.side-title .icon {
+    font-size: 2.9rem;
+    filter: drop-shadow(0 0 5px #fff8);
+}
+
+.reindeer .side-title {
+    color: var(--reindeer-brown);
+    text-shadow: 0 2px 12px #ddc29f88, 0 0 1px #6f3e1e, 0 3px 12px #fffde672;
+}
+
+.elves .side-title {
+    color: var(--elf-green);
+    text-shadow: 0 2px 12px #a3ffbf77, 0 0 2px #156c2b, 0 4px 16px #fffde672;
+}
+
+        .score-row {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: end;
+        }
+        .score {
+    font-weight: 900;
+    background:
+        linear-gradient(96deg, #fffbe0 74%, #ffe8bb 100%);
+    border-radius: 28px;
+    padding: 0.2em 0.9em 0.2em 0.9em;
+    margin: 0.15em 0 0 0;
+    box-shadow:
+        0 2px 24px #ffd70080,
+        0 6px 36px #fff6,
+        0 0 0 4px #fff;
+    border-bottom: 4px solid var(--gold);
+    letter-spacing: -0.03em;
+    color: inherit;
+    /* 👇 Enable dynamic sizing */
+    font-size: clamp(2.1rem, 7vw, 4.2rem);
+    transition: font-size 0.1s linear;
+    word-break: keep-all;
+    line-height: 1.08;
+}
+
+@media (max-width: 430px) {
+    .score {
+        font-size: clamp(1.5rem, 8vw, 2.7rem);
+        padding: 0.15em 0.65em 0.15em 0.65em;
+    }
+}
+        .reindeer .score {
+            color: var(--reindeer-brown);
+            border-color: var(--reindeer-brown);
+        }
+        .elves .score {
+            color: var(--elf-green);
+            border-color: var(--elf-green);
+        }
+
+        /* Point Message (Scored points yourself) */
+        .side-personal-score {
+            margin-top: 1.5rem;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5em;
+            color: #555;
+            letter-spacing: 0.01em;
+            padding: 0.7em 1.1em;
+            background: rgba(255,255,255,0.67);
+            border-radius: 16px;
+            box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+            font-weight: 500;
+        }
+        .reindeer .side-personal-score .side-emoji {
+            font-size: 1.6em;
+            margin-right: 0.09em;
+        }
+        .elves .side-personal-score .side-emoji {
+            font-size: 1.5em;
+            margin-right: 0.08em;
+        }
+        @media (max-width: 970px) {
+            .game-title { font-size: 2rem; margin: 1.2rem 0 0.7rem 0;}
+            .score { font-size: 3rem; }
+            .side-title { font-size: 1.6rem; }
+            .side-personal-score { font-size: 1.08rem;}
+        }
+
+        /* Responsive Split to Top & Bottom Battle Royale 🥊 */
+        @media (max-width: 700px) {
+            .battlefield {
+                flex-direction: column;
+                height: calc(100vh - 72px);  /* Again, match top-bar height */
+                width: 100vw;
+                min-height: 0;
+            }
+            .battle-side {
+                border: none;
+                border-bottom: 4px solid #eee;
+                border-left: none;
+                border-right: none;
+                min-width: 0;
+                padding: 1.2rem 0.5rem;
+                min-height: 110px;
+                height: 100%;
+            }
+            .battle-side.reindeer { border-bottom: 4px solid var(--christmas-red); border-right: none; }
+            .battle-side.elves { border-top: 4px solid var(--christmas-green); border-left: none; }
+            .card-main { gap: 0.89rem; }
+        }
+
+        .confetti-canvas {
+    position: absolute;
+    left: 0; top: 0; right: 0; bottom: 0;
+    pointer-events: none;
+    width: 100%;
+    height: 100%;
+    z-index: 20;
+}
+
+
+        /* Floating +1 Anim */
+        .floating-points {
+            position: fixed;
+            font-weight: 900;
+            font-size: 2.7rem;
+            pointer-events: none;
+            z-index: 140;
+            filter: drop-shadow(0 0 20px rgba(0, 0, 0, 0.8));
+            letter-spacing: 0.14em;
+            white-space: nowrap;
+            margin: 0;
+            padding: 0;
+            transform-origin: center center;
+            font-family: 'Google Sans', sans-serif;
+        }
+        .floating-points.animate {
+            animation: float-points 1.2s ease-out forwards;
+        }
+        @keyframes float-points {
+            0% {
+                opacity: 1;
+                transform: scale(0.5) translateY(0);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.18) translateY(-39px);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(1.44) translateY(-99px);
+            }
+        }
+        .points-reindeer {
+            color: var(--reindeer-brown);
+            text-shadow: 0 0 10px rgba(139, 69, 19, 0.8),0 0 20px rgba(139, 69, 19, 0.5);
+        }
+        .points-elves {
+            color: var(--elf-green);
+            text-shadow: 0 0 10px rgba(34, 139, 34, 0.8),0 0 20px rgba(34, 139, 34, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <audio id="bgMusic" loop>
+        <source src="../assets/game-music.mp3" type="audio/mp3">
+    </audio>
+    <div class="top-bar">
+        <h1 class="page-title">Reindeer vs Elves 🥊</h1>
+        <div style="display: flex; gap: 0.7em; align-items: center;">
+            <button class="online-players-btn" id="online-players-btn" title="Players Online">
+                <span class="material-symbols-rounded">groups</span>
+                <span id="player-count" style="font-weight:600;">1</span>
+            </button>
+            <button class="home-button" onclick="window.location.href='../index.html'">
+                <span class="material-symbols-rounded">home</span>
+            </button>
+        </div>
+    </div>
+    <main>
+        <div class="battlefield" id="battlefield">
+            <!-- Reindeer Side -->
+            <div class="battle-side reindeer" id="reindeer-side" onclick="game.addPoint('reindeer', event)">
+                <div class="card-main">
+                    <div class="side-title">
+                        <span class="icon">🦌</span>
+                        Reindeer
+                    </div>
+                    <div class="score-row">
+                        <span class="score" id="reindeer-score">0</span>
+                    </div>
+                    <div class="side-personal-score" id="reindeer-personal">
+                        🙌 You've scored 0 for Reindeer!
+                    </div>
+                </div>
+            </div>
+            <!-- Elves Side -->
+            <div class="battle-side elves" id="elves-side" onclick="game.addPoint('elves', event)">
+                <div class="card-main">
+                    <div class="side-title">
+                        <span class="icon">🧝‍♂️</span>
+                        Elves
+                    </div>
+                    <div class="score-row">
+                        <span class="score" id="elves-score">0</span>
+                    </div>
+                    <div class="side-personal-score" id="elves-personal">
+                        🤩 You've scored 0 for Elves!
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<script>
+  // Your web app's Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyBYChmzTAQaOui9AItpshGIT6i6HimdMrk",
+    authDomain: "reindeer-vs-elves.firebaseapp.com",
+    projectId: "reindeer-vs-elves",
+    storageBucket: "reindeer-vs-elves.firebasestorage.app",
+    messagingSenderId: "63863698914",
+    appId: "1:63863698914:web:39de5cd0aef565797af5bb"
+  };
+firebase.initializeApp(firebaseConfig);
+// Get Firestore instance
+const db = firebase.firestore();
+let globalScores = { reindeer: 0, elves: 0 };
+</script>
+    <script>
+let lastReindeerMilestone = 0;
+let lastElvesMilestone = 0;
+
+const onlineRef = db.collection('online').doc('players');
+
+// PERSIST userId in sessionStorage: stays the same unless this TAB is actually closed
+let userId = sessionStorage.getItem('rvse-userid');
+if (!userId) {
+  userId = Math.random().toString(36).slice(2) + Date.now();
+  sessionStorage.setItem('rvse-userid', userId);
+}
+const HEARTBEAT_INTERVAL = 6000; // ms
+const PLAYER_GRACE = 20000;      // ms
+
+let heartbeatTimer = null;
+
+// Heartbeats (keeps this tab "alive")
+function heartbeat() {
+    onlineRef.set(
+        { [userId]: firebase.firestore.FieldValue.serverTimestamp() },
+        { merge: true }
+    );
+}
+heartbeat();
+heartbeatTimer = setInterval(heartbeat, HEARTBEAT_INTERVAL);
+
+// Try to delete *this tab's ID* on clean exit
+window.addEventListener('unload', () => {
+    clearInterval(heartbeatTimer);
+    onlineRef.update({ [userId]: firebase.firestore.FieldValue.delete() }).catch(()=>{});
+});
+
+// How many are present (use the timestamps logic as before)
+onlineRef.onSnapshot(doc => {
+    const data = doc.data() || {};
+    const now = Date.now();
+    let count = 0;
+    Object.values(data).forEach(ts => {
+        if (ts && ts.toDate && (now - ts.toDate().getTime() < PLAYER_GRACE)) count++;
+    });
+    document.getElementById('player-count').textContent = count;
+});
+        // THE JS CODE IS LEFT UNTOUCHED except for DOM and tug-of-war feature!
+        class ReindeerVsElves {
+            constructor() {
+                this.reindeerScore = 0;
+                this.elvesScore = 0;
+                this.cooldown = false;
+this.cooldownTime = 80; // milliseconds, change to taste!
+                this.loadScores();
+
+                // Per-device score!
+                this.userReindeerScore = Number(localStorage.getItem('user-reindeerScore')) || 0;
+                this.userElvesScore = Number(localStorage.getItem('user-elvesScore')) || 0;
+
+                this.updateUI();
+                this.setupBackgroundMusic();
+                this.updateTugOfWar();
+                this.setupResizeListener();
+
+                this.clickBuffer = { reindeer: 0, elves: 0 };
+    this.lastSent = Date.now();
+    this.initFirebaseListeners();
+    setInterval(() => this.sendClicks(), 1500); // Send buffer every 1.5s 💨
+
+            }
+
+            loadScores() {
+                const saved = localStorage.getItem('reindeer-vs-elves');
+                if (saved) {
+                    const data = JSON.parse(saved);
+                    this.reindeerScore = data.reindeerScore || 0;
+                    this.elvesScore = data.elvesScore || 0;
+                }
+            }
+
+            saveScores() {
+                const data = {
+                    reindeerScore: this.reindeerScore,
+                    elvesScore: this.elvesScore
+                };
+                localStorage.setItem('reindeer-vs-elves', JSON.stringify(data));
+            }
+
+            savePersonalScores() {
+                localStorage.setItem('user-reindeerScore', this.userReindeerScore);
+                localStorage.setItem('user-elvesScore', this.userElvesScore);
+            }
+            addPoint(team, event) {
+    if (this.cooldown) return;
+    this.cooldown = true;
+    setTimeout(() => { this.cooldown = false; }, this.cooldownTime);
+
+    let currentScore = 0;
+    if (team === 'reindeer') {
+        this.reindeerScore++;
+        this.userReindeerScore++;
+        this.clickBuffer.reindeer++;
+        this.showFloatingPoints(team, event);
+        currentScore = this.reindeerScore;
+    } else if (team === 'elves') {
+        this.elvesScore++;
+        this.userElvesScore++;
+        this.clickBuffer.elves++;
+        this.showFloatingPoints(team, event);
+        currentScore = this.elvesScore;
+    }
+
+    // ----- Confetti on milestone -----
+    if (
+        currentScore > 0 &&
+        (currentScore % 100 === 0 || currentScore % 500 === 0 || currentScore % 1000 === 0)
+    ) {
+        launchConfetti(team);
+    }
+
+    this.savePersonalScores();
+    this.updateUI();
+    this.updateTugOfWar();
+}
+
+            updateUI() {
+    document.getElementById('reindeer-score').textContent = this.reindeerScore;
+    document.getElementById('elves-score').textContent = this.elvesScore;
+    document.getElementById('reindeer-personal').textContent =
+        `🙌 You've scored ${this.userReindeerScore} for Reindeer!`;
+    document.getElementById('elves-personal').textContent =
+        `🤩 You've scored ${this.userElvesScore} for Elves!`;
+}
+
+// Listen to battle changes from ALL USERS - real time 🌍🎉
+initFirebaseListeners() {
+    db.collection('battle').doc('totals').onSnapshot(doc => {
+        const data = doc.data();
+        if (data) {
+            if (globalScores.reindeer === 0 && globalScores.elves === 0 && (data.reindeer || data.elves)) {
+                this.reindeerScore = data.reindeer || 0;
+                this.elvesScore = data.elves || 0;
+                this.updateUI();
+                // Keep this updateTugOfWar here too (first load)
+                this.updateTugOfWar();
+            }
+            animateScore('reindeer', data.reindeer || 0);
+            animateScore('elves',    data.elves    || 0);
+            globalScores = { ...data };
+
+            // After updating the local scores from data.reindeer and data.elves, and before or just after your animateScore calls:
+
+// Check reindeer milestone
+let r = data.reindeer || 0;
+if (
+    r > 0 &&
+    (r % 100 === 0 || r % 500 === 0 || r % 1000 === 0) &&
+    r !== lastReindeerMilestone
+) {
+    launchConfetti('reindeer');
+    lastReindeerMilestone = r;
+}
+
+// Check elves milestone
+let e = data.elves || 0;
+if (
+    e > 0 &&
+    (e % 100 === 0 || e % 500 === 0 || e % 1000 === 0) &&
+    e !== lastElvesMilestone
+) {
+    launchConfetti('elves');
+    lastElvesMilestone = e;
+}
+
+            // 👇 ADD THIS so it always runs after number change!
+            this.reindeerScore = data.reindeer || 0;
+            this.elvesScore = data.elves || 0;
+            this.updateTugOfWar();
+        }
+    });
+}
+
+// Push your spammed clicks up: buffer system!
+sendClicks() {
+    // Copy buffer & reset fast so new clicks keep coming
+    const reindeerToAdd = this.clickBuffer.reindeer;
+    const elvesToAdd = this.clickBuffer.elves;
+    this.clickBuffer = { reindeer: 0, elves: 0 };
+
+    if (reindeerToAdd > 0 || elvesToAdd > 0) {
+        // Atomically increment scores in Firestore
+        db.collection('battle').doc('totals').set({
+            reindeer: firebase.firestore.FieldValue.increment(reindeerToAdd),
+            elves: firebase.firestore.FieldValue.increment(elvesToAdd)
+        }, { merge: true });
+    }
+}
+
+// This will animate the expansion/contraction according to the point totals!
+updateTugOfWar() {
+    let r = this.reindeerScore;
+    let e = this.elvesScore;
+
+    // Minimums: desktop = 25%, mobile = 40% (so never lower than 40% on mobile)
+    const minFractionDesktop = 0.25;
+    const minFractionMobile = 0.40;
+    let rPercent = 0.5, ePercent = 0.5;
+
+    if (r + e > 0) {
+        rPercent = r / (r + e);
+        ePercent = 1 - rPercent;
+
+        if (window.innerWidth > 700) {
+            // Desktop clamp
+            if (rPercent < minFractionDesktop) {
+                rPercent = minFractionDesktop;
+                ePercent = 1 - minFractionDesktop;
+            } else if (ePercent < minFractionDesktop) {
+                ePercent = minFractionDesktop;
+                rPercent = 1 - minFractionDesktop;
+            }
+        } else {
+            // Mobile: even stricter clamp!
+            if (rPercent < minFractionMobile) {
+                rPercent = minFractionMobile;
+                ePercent = 1 - minFractionMobile;
+            } else if (ePercent < minFractionMobile) {
+                ePercent = minFractionMobile;
+                rPercent = 1 - minFractionMobile;
+            }
+        }
+    }
+
+    if (window.innerWidth > 700) {
+        document.getElementById('reindeer-side').style.flexBasis = (rPercent * 100) + '%';
+        document.getElementById('elves-side').style.flexBasis = (ePercent * 100) + '%';
+        document.getElementById('reindeer-side').style.height = '';
+        document.getElementById('elves-side').style.height = '';
+    } else {
+        document.getElementById('reindeer-side').style.flexBasis = '';
+        document.getElementById('elves-side').style.flexBasis = '';
+        document.getElementById('reindeer-side').style.height = (rPercent * 100) + 'vh';
+        document.getElementById('elves-side').style.height = (ePercent * 100) + 'vh';
+    }
+}
+
+            setupResizeListener() {
+                window.addEventListener('resize', () => this.updateTugOfWar());
+            }
+
+            showFloatingPoints(team, clickEvent) {
+                const floatingPoints = document.createElement('div');
+                floatingPoints.className = 'floating-points';
+                floatingPoints.textContent = '+1';
+
+                if (team === 'reindeer') {
+                    floatingPoints.classList.add('points-reindeer');
+                } else {
+                    floatingPoints.classList.add('points-elves');
+                }
+
+                // Show from mouse or touch point if available, else center of card
+                let x = window.innerWidth/2, y = window.innerHeight/2;
+                if (clickEvent && (clickEvent.touches?.[0] || clickEvent.clientX)) {
+                    let touch = clickEvent.touches?.[0];
+                    if (touch) {
+                        x = touch.clientX; y = touch.clientY;
+                    } else {
+                        x = clickEvent.clientX; y = clickEvent.clientY;
+                    }
+                } else if (clickEvent && clickEvent.target) {
+                    const card = clickEvent.target.closest('.battle-side');
+                    if (card) {
+                        const rect = card.getBoundingClientRect();
+                        x = rect.left + rect.width/2;
+                        y = rect.top + rect.height/2;
+                    }
+                }
+                floatingPoints.style.left = x + 'px';
+                floatingPoints.style.top = y + 'px';
+                floatingPoints.style.translate = '-50% -50%';
+
+                document.body.appendChild(floatingPoints);
+
+                requestAnimationFrame(() => {
+                    floatingPoints.classList.add('animate');
+                });
+                setTimeout(() => floatingPoints.remove(), 1200);
+            }
+
+            setupBackgroundMusic() {
+                document.addEventListener('DOMContentLoaded', () => {
+                    const bgMusic = document.getElementById('bgMusic');
+                    bgMusic.play().catch(() => {});
+                    document.addEventListener('click', function startMusic() {
+                        bgMusic.play().catch(() => {});
+                        document.removeEventListener('click', startMusic);
+                    }, { once: true });
+                    document.addEventListener('visibilitychange', () => {
+                        if (! document.hidden) {
+                            bgMusic.play().catch(() => {});
+                        }
+                    });
+                });
+            }
+        }
+
+        const game = new ReindeerVsElves();
+        function animateScore(side, newScore) {
+    let display = document.getElementById(side + '-score');
+    let start = Number(display.textContent);
+
+    if (start === newScore) {
+        game.updateTugOfWar();
+        return;
+    }
+
+    let diff = Math.abs(newScore - start);
+    // Dynamic steps: more steps for small changes, fewer for big ones
+    let minSteps = 6;
+    let maxSteps = 24;
+    let steps = Math.min(maxSteps, Math.max(minSteps, Math.round(diff / 2)));
+    // Dynamic interval: faster for big jumps, slower for small
+    let minInterval = 10; // ms
+    let maxInterval = 32; // ms
+    // If big jump, go faster
+    let interval = Math.max(minInterval, maxInterval - Math.round(diff * 0.85));
+    // Clamp interval so it never goes too low or too high
+    interval = Math.max(minInterval, Math.min(maxInterval, interval));
+
+    let current = start;
+    let direction = newScore > start ? 1 : -1;
+    let stepSize = Math.max(1, Math.ceil(diff / steps));
+
+    function step() {
+        if (direction > 0) {
+            current = Math.min(current + stepSize, newScore);
+        } else {
+            current = Math.max(current - stepSize, newScore);
+        }
+        display.textContent = current;
+        game.reindeerScore = Number(document.getElementById('reindeer-score').textContent);
+        game.elvesScore = Number(document.getElementById('elves-score').textContent);
+        game.updateTugOfWar();
+        if (current !== newScore) {
+            setTimeout(step, interval);
+        }
+    }
+    step();
+}
+        // Background music handling (copy-paste from prev, just for legacy browsers :D)
+        document.addEventListener('DOMContentLoaded', function() {
+            const bgMusic = document.getElementById('bgMusic');
+            bgMusic.play().catch(function(error) {
+                // Autoplay sometimes blocked!
+            });
+            document.addEventListener('click', function startMusic() {
+                bgMusic.play().catch(function(error) {});
+                document.removeEventListener('click', startMusic);
+            }, { once: true });
+            document.addEventListener('visibilitychange', function() {
+                if (!document.hidden) {
+                    bgMusic.play().catch(function(error) {});
+                }
+            });
+        });
+
+        // --- Simple Confetti burst (no external libs!) ---
+        function launchConfetti(side) {
+    let id = side === 'reindeer' ? 'confetti-reindeer' : 'confetti-elves';
+    let parent = document.getElementById(side + '-side');
+    let old = document.getElementById(id);
+    if (old) old.remove();
+
+    let canvas = document.createElement('canvas');
+    canvas.id = id;
+    canvas.className = 'confetti-canvas';
+    canvas.width = parent.offsetWidth;
+    canvas.height = parent.offsetHeight;
+    parent.appendChild(canvas);
+
+    // Make it possible to fade!
+    canvas.style.transition = "opacity 0.5s";
+    canvas.style.opacity = "1";
+
+    let ctx = canvas.getContext('2d');
+    let pieces = [];
+    let colors = side === 'reindeer'
+        ? ['#f8d95a', '#ffe7a0', '#d42426', '#8B4513', '#fff']
+        : ['#39e178', '#fff', '#ffd700', '#228B22', '#b7e4c7'];
+
+    for(let i=0; i<48; ++i){
+        pieces.push({
+            x: Math.random()*canvas.width,
+            y: Math.random()*canvas.height*0.2 + canvas.height*0.3,
+            r: Math.random()*7+5,
+            color: colors[Math.floor(Math.random()*colors.length)],
+            vy: (Math.random()-0.5)*1.9-2,
+            vx: (Math.random()-0.5)*6,
+            ay: 0.16+Math.random()*0.16,
+            rot: Math.random()*Math.PI,
+            vr: (Math.random()-0.5)*0.25
+        });
+    }
+
+    let frames = 0;
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        pieces.forEach(p=>{
+            ctx.save();
+            ctx.translate(p.x, p.y);
+            ctx.rotate(p.rot);
+            ctx.fillStyle = p.color;
+            ctx.fillRect(-p.r/2, -p.r/4, p.r, p.r/2);
+            ctx.restore();
+
+            p.x += p.vx;
+            p.y += p.vy;
+            p.vy += p.ay;
+            p.rot += p.vr;
+        });
+        ++frames;
+        if (frames < 56) {
+            requestAnimationFrame(draw);
+        } else {
+            // When finished animating, fade out smoothly then remove
+            canvas.style.opacity = "0";
+            setTimeout(() => { canvas.remove(); }, 550);
+        }
+    }
+    draw();
+}
+</script>
+</body>
+</html>
